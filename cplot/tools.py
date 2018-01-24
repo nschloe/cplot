@@ -14,7 +14,12 @@ def colormap_test_function(X):
 
 
 def colormap_test(colormap):
+    return
 
+
+def show_linear(vals):
+    plt.imshow(numpy.multiply.outer(numpy.ones(60), vals.T))
+    plt.show()
     return
 
 
@@ -60,5 +65,4 @@ def create_colormap():
 
     # show the colors
     vals = srgb.to_srgb1(vals)
-    plt.imshow(numpy.multiply.outer(numpy.ones(60), vals.T))
-    plt.show()
+    return vals
