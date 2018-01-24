@@ -23,11 +23,33 @@ def show_linear(vals):
     return
 
 
-def create_colormap():
+def show_circular(vals, rot=0.0):
+    n = 256
+    x, y = numpy.meshgrid(numpy.arange(-n, n+1) / n, numpy.arange(-n, n+1) / n)
+
+    alpha = numpy.mod(numpy.arctan2(y, x)-rot, 2*numpy.pi)
+
+    m = vals.shape[1]
+    r = numpy.interp(
+        alpha.reshape(-1), 2*numpy.pi*numpy.arange(m)/m, vals[0]
+        ).reshape(alpha.shape)
+    g = numpy.interp(
+        alpha.reshape(-1), 2*numpy.pi*numpy.arange(m)/m, vals[1]
+        ).reshape(alpha.shape)
+    b = numpy.interp(
+        alpha.reshape(-1), 2*numpy.pi*numpy.arange(m)/m, vals[2]
+        ).reshape(alpha.shape)
+    out = numpy.array([r, g, b])
+
+    plt.imshow(out.T)
+    plt.show()
+    return
+
+
+def create_colormap(L=50):
     # Go into the CAM16-UCS color space and find the circle in the L=50-plane
     # with the center (50, 0, 0) such that it's as large as possible while
     # still being in the SRGB gamut.
-    L = 60
     n = 256
     alpha = numpy.arange(n) / n * 2*numpy.pi
 
