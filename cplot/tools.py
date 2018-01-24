@@ -3,17 +3,37 @@
 from __future__ import division
 
 import colorio
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy
 
 
-def colormap_test_function(X):
-    '''Modeled after Peter Kovesi <https://arxiv.org/abs/1509.03700>.
+def show_kovesi(rgb):
+    '''Visual color map test after Peter Kovesi
+    <https://arxiv.org/abs/1509.03700>.
     '''
-    return X[0] + X[1] * 0.1 * numpy.sin(50*numpy.pi*X[0])
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list(
+        'custom', rgb.T, N=len(rgb.T)
+        )
+    cmap = 'viridis'
 
+    n = 300
+    x = numpy.arange(n+1)/n
+    y = numpy.arange(n+1)/n / 3
+    X, Y = numpy.meshgrid(x, y)
+    z = X + (3*Y)**2 * 0.05 * numpy.sin(100*numpy.pi*X)
 
-def colormap_test(colormap):
+    plt.imshow(
+        z, extent=(x.min(), x.max(), y.max(), y.min()),
+        interpolation='nearest', cmap=cmap,
+        origin='lower',
+        aspect='equal'
+        )
+
+    plt.xticks([])
+    plt.yticks([])
+
+    plt.show()
     return
 
 
@@ -56,7 +76,7 @@ def create_colormap(L=50):
     L_A = 64 / numpy.pi / 5
     cam = colorio.CAM16UCS(0.69, 20, L_A)
     # cam = colorio.CAM02('UCS', 0.69, 20, L_A)
-    # cam = colorio.CIELUV()
+    # cam = colorio.CIELAB()
     srgb = colorio.SrgbLinear()
 
     # bisection
@@ -71,8 +91,8 @@ def create_colormap(L=50):
             r * numpy.cos(alpha),
             r * numpy.sin(alpha),
             ])
-
         vals = srgb.from_xyz100(cam.to_xyz100(pts))
+
         if numpy.any(vals < 0) or numpy.any(vals > 1):
             r1 = r
         else:
