@@ -2,9 +2,10 @@
 #
 from __future__ import division
 
-import colorio
 import matplotlib.pyplot as plt
 import numpy
+
+import colorio
 
 
 def show_kovesi(cmap):
