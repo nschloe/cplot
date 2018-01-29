@@ -166,6 +166,7 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny):
     cam = colorio.CAM16UCS(0.69, 20, L_A)
     srgb = colorio.SrgbLinear()
     r0 = find_max_srgb_radius(cam, srgb, L=50)
+    # r0 = 30.0
 
     # map (r, angle) to a point in the color space
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
@@ -177,6 +178,9 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny):
 
     # now just translate to srgb and plot the image
     srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
+    # assert numpy.all(srgb.from_xyz100(cam.to_xyz100(cam_pts)) <= 1.0)
+    srgb_vals[srgb_vals > 1] = 1.0
+    srgb_vals[srgb_vals < 0] = 0.0
 
     plt.imshow(
         numpy.moveaxis(srgb_vals, 0, -1),
