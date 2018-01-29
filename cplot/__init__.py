@@ -4,7 +4,7 @@ from __future__ import print_function
 
 from .__about__ import (
     __author__,
-    __email__,
+    __author_email__,
     __copyright__,
     __credits__,
     __license__,
