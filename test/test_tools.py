@@ -13,8 +13,8 @@ def test_create():
         )
     # cmap = 'gray'
 
-    # cplot.show_linear(rgb)
-    # cplot.show_circular(rgb, rot=-numpy.pi * 4/12)
+    cplot.show_linear(rgb)
+    cplot.show_circular(rgb, rot=-numpy.pi * 4/12)
     # cplot.show_circular(rgb, rot=-numpy.pi * 18/12)
     cplot.show_kovesi(cmap)
     return
