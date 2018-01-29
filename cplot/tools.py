@@ -103,7 +103,7 @@ def create_colormap(L=50):
     r0 = find_max_srgb_radius(cam, srgb, L=L)
 
     n = 256
-    alpha = numpy.linspace(0, 2*numpy.pi, endpoint=False)
+    alpha = numpy.linspace(0, 2*numpy.pi, n, endpoint=False)
 
     pts = numpy.array([
         numpy.full(n, L),
