@@ -4,10 +4,11 @@ Plotting complex-valued functions.
 
 [![CircleCI](https://img.shields.io/circleci/project/github/nschloe/cplot/master.svg)](https://circleci.com/gh/nschloe/cplot/tree/master)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg)](https://codecov.io/gh/nschloe/cplot)
-[![awesome](https://img.shields.io/badge/awesome-yes-brightgreen.svg)](https://img.shields.io/badge/awesome-yes-brightgreen.svg)
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg)](https://pypi.python.org/pypi/cplot)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=social&label=Stars)](https://github.com/nschloe/cplot)
 
+cplot is an attempt at encoding complex-valued data in colors. The general idea is to map the absolute value to lightness and
+the complex argument (the "angle") to the chroma.
 
 ```python
 import cplot
