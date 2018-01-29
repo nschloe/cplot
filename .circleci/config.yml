@@ -20,7 +20,7 @@ jobs:
       # The actual test
       - run: pylint cplot/
       - run: pylint test/*.py
-      - run: cd test/ && pytest --cov cplot
+      - run: cd test/ && MPLBACKEND=Agg pytest --cov cplot
       # submit to codecov
       - run: apt-get install -y curl
       - run: bash <(curl -s https://codecov.io/bash)

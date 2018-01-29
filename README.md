@@ -17,6 +17,7 @@ import numpy
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 ```
 produces
+
 <img src="https://nschloe.github.io/cplot/tan.png" width="30%">
 
 ### Testing
