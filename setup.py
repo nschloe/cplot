@@ -28,7 +28,7 @@ setup(
     author=about['__author__'],
     author_email=about['__author_email__'],
     packages=find_packages(),
-    description='color maps for complex-valued functions',
+    description='plotting tools for complex-valued functions',
     long_description=read('README.rst'),
     url='https://github.com/nschloe/cplot',
     download_url='https://pypi.python.org/pypi/cplot',
