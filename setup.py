@@ -35,6 +35,8 @@ setup(
     license=about['__license__'],
     platforms='any',
     install_requires=[
+        'colorio',
+        'matplotlib',
         'numpy',
         'pipdate',
         ],
