@@ -7,8 +7,9 @@ Plotting complex-valued functions.
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg)](https://pypi.python.org/pypi/cplot)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
-cplot is an attempt at encoding complex-valued data in colors. The general idea is to map the absolute value to lightness and
-the complex argument (the "angle") to the chroma.
+cplot is an attempt at encoding complex-valued data in colors. The general idea is to
+map the absolute value to lightness and the complex argument (the "angle") to the
+chroma.
 
 ```python
 import cplot
@@ -16,11 +17,6 @@ import numpy
 
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 ```
-produces
-
-<img src="https://nschloe.github.io/cplot/tan.png" width="30%">
-
-### Examples
 
 <img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/z2.png" width="70%"> |
