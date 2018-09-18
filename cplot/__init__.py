@@ -11,7 +11,7 @@ from .__about__ import (
     __version__,
     __maintainer__,
     __status__,
-    )
+)
 
 
 from .tools import *
