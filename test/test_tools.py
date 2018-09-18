@@ -30,7 +30,7 @@ def test_show():
     # cplot.show(lambda z: numpy.real(z), -1, +1, -1, +1, 101, 101)
     # cplot.show(lambda z: 1j * numpy.imag(z), -1, +1, -1, +1, 101, 101)
 
-    # cplot.savefig("1z.png", lambda z: 1 / z, -1, +1, -1, +1, 101, 101)
+    cplot.savefig("1z.png", lambda z: 1 / z, -1, +1, -1, +1, 100, 100)
     # cplot.savefig("z+1-z-1.png", lambda z: (z + 1) / (z - 1), -5, +5, -5, +5, 101, 101)
     # cplot.savefig("z-1-z+1.png", lambda z: (z - 1) / (z + 1), -5, +5, -5, +5, 101, 101)
 
@@ -40,7 +40,7 @@ def test_show():
 
     # cplot.savefig("log.png", numpy.log, -5, +5, -5, +5, 200, 200)
     # cplot.savefig("exp.png", numpy.exp, -5, +5, -5, +5, 200, 200)
-    cplot.savefig("gamma.png", scipy.special.gamma, -5, +5, -5, +5, 200, 200)
+    # cplot.savefig("gamma.png", scipy.special.gamma, -5, +5, -5, +5, 200, 200)
     return
 
 
