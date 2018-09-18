@@ -12,13 +12,14 @@ from .__about__ import (
 
 
 from .main import (
-    show_kovesi,
+    show_kovesi_test_image,
     show_linear,
     show_circular,
     find_max_srgb_radius,
     create_colormap,
     show,
     plot,
+    savefig,
 )
 
 __all__ = [
@@ -30,11 +31,12 @@ __all__ = [
     "__maintainer__",
     "__status__",
     #
-    "show_kovesi",
+    "show_kovesi_test_image",
     "show_linear",
     "show_circular",
     "find_max_srgb_radius",
     "create_colormap",
     "show",
     "plot",
+    "savefig",
 ]
