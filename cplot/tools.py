@@ -137,8 +137,8 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny):
     angle = numpy.arctan2(val.imag, val.real)
     absval = numpy.abs(val)
 
-    # Map |f(z)| to [0, 1], and do it such that f(1/z) = 1-f(z). There are many
-    # possibilities for this, e.g.,
+    # Map |f(z)| to [0, 1] such that f(1/z) = 1-f(z). There are many possibilities
+    # for doing so, e.g.,
     #
     #   2/pi * arctan(z)
     #   z^alpha / (z^alpha+1) with any alpha > 0.
@@ -173,13 +173,14 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny):
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
     cam_pts = numpy.array([
         100 * absval_scaled,
-        rd * numpy.cos(angle),
-        rd * numpy.sin(angle),
+        rd * numpy.cos(angle + 0.7 * numpy.pi),
+        rd * numpy.sin(angle + 0.7 * numpy.pi),
         ])
 
     # now just translate to srgb and plot the image
     srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
     # assert numpy.all(srgb.from_xyz100(cam.to_xyz100(cam_pts)) <= 1.0)
+    print(numpy.any(numpy.isnan(srgb_vals)))
     srgb_vals[srgb_vals > 1] = 1.0
     srgb_vals[srgb_vals < 0] = 0.0
 

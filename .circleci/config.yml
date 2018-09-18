@@ -1,25 +1,20 @@
 version: 2
 
 jobs:
-
   build:
-    working_directory: ~/cplot
+    working_directory: ~/work
     docker:
-      - image: ubuntu:17.10
+      - image: ubuntu:18.04
     steps:
       - run: apt-get update
       - run: apt-get install -y git python3-pip
-      - run: pip3 install -U pytest pytest-cov pylint
+      - run: pip3 install -U pytest pytest-cov black flake8
       - checkout
       - run: pip3 install .
-      # make sure that rst converts correctly
-      - run: apt install -y pandoc
-      - run: pip3 install docutils pygments
-      - run: make README.rst
-      - run: python3 setup.py check -r -s
-      # The actual test
-      - run: pylint cplot/
-      - run: pylint test/*.py
+      # format and lint
+      - run: LC_ALL=C.UTF-8 black --check setup.py cplot/ test/*.py
+      - run: flake8 setup.py cplot/ test/*.py
+      # The tests
       - run: cd test/ && MPLBACKEND=Agg pytest --cov cplot
       # submit to codecov
       - run: apt-get install -y curl

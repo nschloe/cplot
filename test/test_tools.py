@@ -21,10 +21,11 @@ def test_create():
 
 
 def test_show():
-    # cplot.show(lambda z: (z+1)/(z-1), -10, +10, -10, +10, 101, 101)
+    cplot.show(lambda z: z**1, -2, +2, -2, +2, 101, 101)
+    # cplot.show(lambda z: (z+1)/(z-1), -5, +5, -5, +5, 101, 101)
     # cplot.show(lambda z: (z-1)/(z+1), -4, +4, -4, +4, 200, 200)
     # cplot.show(lambda z: z, -2, +2, -2, +2, 200, 200)
-    cplot.show(numpy.tan, -5, +5, -5, +5, 300, 300)
+    # cplot.show(numpy.tan, -5, +5, -5, +5, 300, 300)
     # cplot.show(numpy.sin, -5, +5, -5, +5, 200, 200)
 
     # import matplotlib.pyplot as plt
