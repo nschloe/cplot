@@ -20,6 +20,27 @@ produces
 
 <img src="https://nschloe.github.io/cplot/tan.png" width="30%">
 
+### Examples
+
+<img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z2.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z3.png" width="70%">
+:-------------------:|:------------------:|:----------:|
+`z**1`               |  `z**2`            |  `z**3`    |
+
+
+<img src="https://nschloe.github.io/cplot/1z.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z+1-z-1.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z-1-z+1.png" width="70%">
+:-------------------:|:------------------:|:-------------------:|
+`1/z`                |  `(z+1) / (z-1)`   |  `(z-1) / (z+1)`    |
+
+<img src="https://nschloe.github.io/cplot/sin.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/cos.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/tan.png" width="70%">
+:-------------------:|:------------------:|:-------------------------:|
+`numpy.exp`          |  `numpy.log`       |  `scipy.special.gamma`    |
+
 ### Testing
 
 To run the cplot unit tests, check out this repository and type
