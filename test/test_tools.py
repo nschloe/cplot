@@ -2,6 +2,7 @@
 #
 import matplotlib
 import numpy
+import scipy.special
 
 import cplot
 
@@ -16,23 +17,55 @@ def test_create():
     cplot.show_linear(rgb)
     cplot.show_circular(rgb, rot=-numpy.pi * 4 / 12)
     # cplot.show_circular(rgb, rot=-numpy.pi * 18/12)
-    cplot.show_kovesi(cmap)
+    cplot.show_kovesi_test_image(cmap)
     return
 
 
 def test_show():
-    cplot.show(lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
-    # cplot.show(lambda z: (z+1)/(z-1), -5, +5, -5, +5, 101, 101)
-    # cplot.show(lambda z: (z-1)/(z+1), -4, +4, -4, +4, 200, 200)
-    # cplot.show(lambda z: z, -2, +2, -2, +2, 200, 200)
-    # cplot.show(numpy.tan, -5, +5, -5, +5, 300, 300)
-    # cplot.show(numpy.sin, -5, +5, -5, +5, 200, 200)
+    # cplot.show(lambda z: -1j * z ** 0, -1, +1, -1, +1, 101, 101)
 
-    # import matplotlib.pyplot as plt
-    # cplot.plot(numpy.tan, -5, +5, -5, +5, 300, 300)
-    # plt.savefig('out.png', transparent=True)
+    cplot.savefig("z-absz.png", lambda z: z / abs(z), -2, +2, -2, +2, 100, 100)
+
+    cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
+    cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
+    cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, 101, 101)
+    # cplot.show(lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
+
+    # cplot.show(lambda z: numpy.real(z), -1, +1, -1, +1, 101, 101)
+    # cplot.show(lambda z: 1j * numpy.imag(z), -1, +1, -1, +1, 101, 101)
+
+    cplot.savefig("1z.png", lambda z: 1 / z, -1, +1, -1, +1, 100, 100)
+    cplot.savefig("z+1-z-1.png", lambda z: (z + 1) / (z - 1), -5, +5, -5, +5, 101, 101)
+    cplot.savefig("z-1-z+1.png", lambda z: (z - 1) / (z + 1), -5, +5, -5, +5, 101, 101)
+
+    cplot.savefig("tan.png", numpy.tan, -5, +5, -5, +5, 200, 200)
+    cplot.savefig("sin.png", numpy.sin, -5, +5, -5, +5, 200, 200)
+    cplot.savefig("cos.png", numpy.cos, -5, +5, -5, +5, 200, 200)
+
+    cplot.savefig("log.png", numpy.log, -5, +5, -5, +5, 200, 200)
+    cplot.savefig("exp.png", numpy.exp, -5, +5, -5, +5, 200, 200)
+    cplot.savefig("gamma.png", scipy.special.gamma, -5, +5, -5, +5, 200, 200)
+
+    # a = 10
+    # cplot.savefig("bessel0.png", lambda z: scipy.special.jv(0, z), -a, +a, -a, +a, 100, 100)
+    # cplot.savefig("bessel1.png", lambda z: scipy.special.jv(1, z), -a, +a, -a, +a, 100, 100)
+    # cplot.savefig("bessel2.png", lambda z: scipy.special.jv(2, z), -a, +a, -a, +a, 100, 100)
+    # cplot.savefig("bessel3.png", lambda z: scipy.special.jv(3, z), -a, +a, -a, +a, 100, 100)
     return
 
 
+def scaler_arctan(r):
+    # Fulfills f(1/r) = 1 - f(r).
+    return 2 / numpy.pi * numpy.arctan(r)
+
+
+def scaler_fraction(r):
+    # Fulfills f(1/r) = 1 - f(r).
+    # any alpha > 0 is good
+    alpha = 1.0
+    return r ** alpha / (r ** alpha + 1)
+
+
 if __name__ == "__main__":
+    # test_create()
     test_show()

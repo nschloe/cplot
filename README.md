@@ -7,18 +7,55 @@ Plotting complex-valued functions.
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg)](https://pypi.python.org/pypi/cplot)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
-cplot is an attempt at encoding complex-valued data in colors. The general idea is to map the absolute value to lightness and
-the complex argument (the "angle") to the chroma.
+cplot is an attempt at encoding complex-valued data in colors. The general idea is to
+map the absolute value to lightness and the complex argument (the "angle") to the chroma
+of the representing color.
+
+The representation is chosen such that
+  * values around 0 are black,
+  * values around infinity are white,
+  * values around +1 are green,
+  * values around -1 are red,
+  * values around +i are blue, and
+  * values around -i are yellow.
+
+See below for examples with some well-known functions.
+
 
 ```python
 import cplot
 import numpy
 
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
-```
-produces
 
-<img src="https://nschloe.github.io/cplot/tan.png" width="30%">
+# There is a tripcolor function as well for triangulated 2D domains
+# cplot.tripcolor(triang, z)
+```
+
+<img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z2.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z3.png" width="70%">
+:-------------------:|:------------------:|:----------:|
+`z**1`               |  `z**2`            |  `z**3`    |
+
+
+<img src="https://nschloe.github.io/cplot/1z.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z+1-z-1.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z-1-z+1.png" width="70%">
+:-------------------:|:------------------:|:-------------------:|
+`1/z`                |  `(z+1) / (z-1)`   |  `(z-1) / (z+1)`    |
+
+<img src="https://nschloe.github.io/cplot/sin.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/cos.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/tan.png" width="70%">
+:-------------------:|:------------------:|:-------------------------:|
+`numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
+
+<img src="https://nschloe.github.io/cplot/exp.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/log.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/gamma.png" width="70%">
+:-------------------:|:------------------:|:-------------------------:|
+`numpy.exp`          |  `numpy.log`       |  `scipy.special.gamma`    |
 
 ### Testing
 
