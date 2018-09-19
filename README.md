@@ -35,7 +35,7 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/tan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sin`          |  `numpy.cos`       |  `scipy.tan`    |
+`numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
 
 <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/log.png" width="70%"> |

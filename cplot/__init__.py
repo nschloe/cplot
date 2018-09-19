@@ -11,12 +11,14 @@ from .__about__ import (
 )
 
 
-from .main import (
+from .create import (
     show_kovesi_test_image,
     show_linear,
     show_circular,
     find_max_srgb_radius,
     create_colormap,
+)
+from .main import (
     show,
     plot,
     savefig,
