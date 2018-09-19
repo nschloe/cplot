@@ -8,8 +8,19 @@ Plotting complex-valued functions.
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
 cplot is an attempt at encoding complex-valued data in colors. The general idea is to
-map the absolute value to lightness and the complex argument (the "angle") to the
-chroma.
+map the absolute value to lightness and the complex argument (the "angle") to the chroma
+of the representing color.
+
+The representation is chosen such that
+  * values around 0 are black,
+  * values around infinity are white,
+  * values around +1 are green,
+  * values around -1 are red,
+  * values around +i are blue, and
+  * values around -i are yellow.
+
+See below for examples with some well-known functions.
+
 
 ```python
 import cplot
