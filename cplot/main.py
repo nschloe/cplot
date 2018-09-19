@@ -42,9 +42,11 @@ def get_variant_a(alpha):
         absval_scaled[is_smaller] = alpha * absval_scaled[is_smaller]
 
         beta = (2 * alpha - 1) / alpha
-        gamma = (1 - beta)**2 * alpha
+        gamma = (1 - beta) ** 2 * alpha
         delta = 1 - gamma
-        absval_scaled[~is_smaller] = gamma * (1 - 1 / (absval_scaled[~is_smaller] - beta)) + delta
+        absval_scaled[~is_smaller] = (
+            gamma * (1 - 1 / (absval_scaled[~is_smaller] - beta)) + delta
+        )
         #
         # absval_scaled = absval / (absval + 1)
         #

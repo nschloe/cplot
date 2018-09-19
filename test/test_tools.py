@@ -63,7 +63,7 @@ def scaler_fraction(r):
     # Fulfills f(1/r) = 1 - f(r).
     # any alpha > 0 is good
     alpha = 1.0
-    return r**alpha / (r**alpha + 1)
+    return r ** alpha / (r ** alpha + 1)
 
 
 if __name__ == "__main__":

@@ -18,11 +18,8 @@ from .create import (
     find_max_srgb_radius,
     create_colormap,
 )
-from .main import (
-    show,
-    plot,
-    savefig,
-)
+from .main import show, plot, savefig
+from .tripcolor import tripcolor
 
 __all__ = [
     "__author__",
@@ -41,4 +38,6 @@ __all__ = [
     "show",
     "plot",
     "savefig",
+    #
+    "tripcolor",
 ]
