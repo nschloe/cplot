@@ -16,6 +16,9 @@ import cplot
 import numpy
 
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
+
+# There is a tripcolor function as well for triangulated 2D domains
+# cplot.tripcolor(triang, z)
 ```
 
 <img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
