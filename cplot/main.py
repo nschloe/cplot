@@ -58,27 +58,27 @@ def get_srgb(angle, absval_scaled):
     assert numpy.all(absval_scaled >= 0)
     assert numpy.all(absval_scaled <= 1)
 
-    variant = "CAM16UCS"
-    if variant == "CAM16UCS":
-        L_A = 64 / numpy.pi / 5
-        cam = colorio.CAM16UCS(0.69, 20, L_A)
-        srgb = colorio.SrgbLinear()
-        # r0 = find_max_srgb_radius(cam, srgb, L=50)
-        r0 = 21.65824845433235
-    else:
-        assert False
+    # assert variant == "CAM16UCS":
+    L_A = 64 / numpy.pi / 5
+    cam = colorio.CAM16UCS(0.69, 20, L_A)
+    srgb = colorio.SrgbLinear()
+    # r0 = find_max_srgb_radius(cam, srgb, L=50)
+    r0 = 21.65824845433235
 
     # map (r, angle) to a point in the color space
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
+
+    # rotate the angles such a "green" color represents positive real values
+    offset = 1.0 * numpy.pi
     cam_pts = numpy.array(
         [
             100 * absval_scaled,
-            rd * numpy.cos(angle + 0.7 * numpy.pi),
-            rd * numpy.sin(angle + 0.7 * numpy.pi),
+            rd * numpy.cos(angle + offset),
+            rd * numpy.sin(angle + offset),
         ]
     )
 
-    # now just translate to srgb and plot the image
+    # now just translate to srgb
     srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
     # assert numpy.all(srgb.from_xyz100(cam.to_xyz100(cam_pts)) <= 1.0)
     srgb_vals[srgb_vals > 1] = 1.0
