@@ -16,8 +16,5 @@ def tripcolor(triang, z, abs_scaling=get_variant_a(0.5)):
     n = z.shape[0]
     z2 = numpy.arange(n)
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list('mymap', rgb, N=n)
-
     plt.tripcolor(triang, z2, shading="gouraud", cmap=cmap)
-    plt.gca().set_aspect("equal", "datalim")
-    plt.show()
     return
