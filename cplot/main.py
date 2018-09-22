@@ -35,7 +35,7 @@ def get_srgb(angle, absval_scaled):
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
 
     # rotate the angles such a "green" color represents positive real values
-    offset = 1.0 * numpy.pi
+    offset = 1.15 * numpy.pi
     cam_pts = numpy.array(
         [
             100 * absval_scaled,
