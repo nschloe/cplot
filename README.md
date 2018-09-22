@@ -56,9 +56,9 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
 
-<img src="https://nschloe.github.io/cplot/gamma.png" width="70%">
+<img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/zeta.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/zeta.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
 
