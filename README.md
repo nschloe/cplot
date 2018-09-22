@@ -9,9 +9,14 @@ Plotting complex-valued functions.
 
 cplot is an attempt at encoding complex-valued data in colors. The general idea is to
 map the absolute value to lightness and the complex argument (the "angle") to the chroma
-of the representing color.
+of the representing color. This follows the [domain
+coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach with the colors taken
+from the [CAM16](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract) to avoid
+perceptual distortion.  (It has been claimed that this leads to drab images, but the
+examples below prove the contrary.)
 
 The representation is chosen such that
+
   * values around 0 are black,
   * values around infinity are white,
   * values around +1 are green,
@@ -19,8 +24,11 @@ The representation is chosen such that
   * values around +i are blue, and
   * values around -i are yellow.
 
-See below for examples with some well-known functions.
+With this, it is easy to see where a function has very small and very large values, and
+the multiplicty of zeros and poles is instantly identified by counting the color wheel
+passes around a black or white point.
 
+See below for examples with some well-known functions.
 
 ```python
 import cplot
