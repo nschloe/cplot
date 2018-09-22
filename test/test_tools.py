@@ -31,25 +31,6 @@ def zeta(z):
 
 
 def test_show():
-    # cplot.show(lambda z: -1j * z ** 0, -1, +1, -1, +1, 101, 101)
-    # cplot.savefig(
-    #     "z3.png",
-    #     lambda z: z ** 3 - 1,
-    #     -2,
-    #     +2,
-    #     -2,
-    #     +2,
-    #     100,
-    #     100,
-    #     # abs_scaling=lambda r: r / (r + 1),
-    #     # abs_scaling=lambda r: r ** 0.8 / (r ** 0.8 + 1),
-    #     # abs_scaling=lambda r: 2/numpy.pi * numpy.arctan(r),
-    # )
-    # exit(1)
-
-    def f(r):
-        return r / (r + 1)
-
     cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, 101, 101)

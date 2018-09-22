@@ -38,12 +38,17 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 :-------------------:|:------------------:|:----------:|
 `z**1`               |  `z**2`            |  `z**3`    |
 
-
 <img src="https://nschloe.github.io/cplot/1z.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z-absz.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/z+1-z-1.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/z-1-z+1.png" width="70%">
-:-------------------:|:------------------:|:-------------------:|
-`1/z`                |  `(z+1) / (z-1)`   |  `(z-1) / (z+1)`    |
+:-------------------:|:------------------:|:----------:|
+`1/z`               |  `z / abs(z)`            |  `(z+1) / (z-1)`    |
+
+<img src="https://nschloe.github.io/cplot/sqrt.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/log.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/exp.png" width="70%">
+:-------------------:|:------------------:|:-------------------------:|
+`numpy.sqrt`          |  `numpy.log`       |  `numpy.exp`    |
 
 <img src="https://nschloe.github.io/cplot/sin.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> |
@@ -51,11 +56,11 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
 
-<img src="https://nschloe.github.io/cplot/exp.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/log.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/gamma.png" width="70%">
+<img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/zeta.png" width="70%"> |
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.exp`          |  `numpy.log`       |  `scipy.special.gamma`    |
+`scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
 
 ### Testing
 
