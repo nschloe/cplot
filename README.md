@@ -19,10 +19,10 @@ The representation is chosen such that
 
   * values around 0 are black,
   * values around infinity are white,
-  * values around +1 are green,
-  * values around -1 are red,
-  * values around +i are blue, and
-  * values around -i are yellow.
+  * values around +1 are teal,
+  * values around -1 are orange-red,
+  * values around +i are purple, and
+  * values around -i are yellow-green.
 
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
