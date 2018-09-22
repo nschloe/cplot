@@ -20,42 +20,6 @@ def savefig(filename, *args, **kwargs):
     return
 
 
-def get_variant_a(alpha):
-    def scaler(r):
-        #          ( alpha * r  if r < 1,
-        #   f(r) = {
-        #          ( gamma * (1 - 1/(r-beta)) + delta  otherwise.
-        #
-        # with
-        #
-        #   beta = (2*alpha - 1) / alpha
-        #   gamma = (1 - beta)**2 * alpha
-        #   delta = 1 - gamma
-        #
-        # The parameters are chosen such that the function is continuously
-        # differentiable and f(x) -> 1 for x -> infty. This choice of f has the
-        # advantage of being linear between 0 and 1 and can be scaled for lightness with
-        # alpha.
-        absval_scaled = r.copy()
-        is_smaller = absval_scaled < 1
-        alpha = 0.5
-        absval_scaled[is_smaller] = alpha * absval_scaled[is_smaller]
-
-        beta = (2 * alpha - 1) / alpha
-        gamma = (1 - beta) ** 2 * alpha
-        delta = 1 - gamma
-        absval_scaled[~is_smaller] = (
-            gamma * (1 - 1 / (absval_scaled[~is_smaller] - beta)) + delta
-        )
-        #
-        # absval_scaled = absval / (absval + 1)
-        #
-        # absval_scaled = 2/numpy.pi * numpy.arctan(absval)
-        return absval_scaled
-
-    return scaler
-
-
 def get_srgb(angle, absval_scaled):
     assert numpy.all(absval_scaled >= 0)
     assert numpy.all(absval_scaled <= 1)
@@ -71,7 +35,7 @@ def get_srgb(angle, absval_scaled):
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
 
     # rotate the angles such a "green" color represents positive real values
-    offset = 1.0 * numpy.pi
+    offset = 1.15 * numpy.pi
     cam_pts = numpy.array(
         [
             100 * absval_scaled,
@@ -89,7 +53,7 @@ def get_srgb(angle, absval_scaled):
     return numpy.moveaxis(srgb_vals, 0, -1)
 
 
-def plot(f, xmin, xmax, ymin, ymax, nx, ny, abs_scaling=get_variant_a(0.5)):
+def plot(f, xmin, xmax, ymin, ymax, nx, ny, abs_scaling=lambda r: r / (r + 1)):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx

@@ -4,10 +4,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy
 
-from .main import get_variant_a, get_srgb
+from .main import get_srgb
 
 
-def tripcolor(triang, z, abs_scaling=get_variant_a(0.5)):
+def tripcolor(triang, z, abs_scaling=lambda r: r / (r + 1)):
     angle = numpy.arctan2(z.imag, z.real)
     absval_scaled = abs_scaling(numpy.abs(z))
     rgb = get_srgb(angle, absval_scaled)
