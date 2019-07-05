@@ -1,7 +1,7 @@
 import matplotlib
+import mpmath
 import numpy
 import scipy.special
-import mpmath
 
 import cplot
 
@@ -31,7 +31,9 @@ def zeta(z):
 def test_show():
     cplot.savefig("exp1z.png", lambda z: numpy.exp(1 / z), -1, +1, -1, +1, 200, 200)
     cplot.savefig("sinh.png", numpy.sinh, -7, +7, -7, +7, 200, 200)
-    cplot.savefig("sin-sinh.png", lambda z: numpy.sin(z) - numpy.sinh(z), -7, +7, -7, +7, 200, 200)
+    cplot.savefig(
+        "sin-sinh.png", lambda z: numpy.sin(z) - numpy.sinh(z), -7, +7, -7, +7, 200, 200
+    )
 
     exit(1)
 

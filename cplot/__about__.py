@@ -1,4 +1,3 @@
-
 __author__ = "Nico Schlömer"
 __author_email__ = "nico.schloemer@gmail.com"
 __copyright__ = "Copyright (c) 2018-2019 {} <{}>".format(__author__, __author_email__)
