@@ -2,10 +2,11 @@
 
 Plotting complex-valued functions.
 
-[![CircleCI](https://img.shields.io/circleci/project/github/nschloe/cplot/master.svg)](https://circleci.com/gh/nschloe/cplot/tree/master)
-[![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg)](https://codecov.io/gh/nschloe/cplot)
-[![PyPi Version](https://img.shields.io/pypi/v/cplot.svg)](https://pypi.python.org/pypi/cplot)
-[![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
+[![CircleCI](https://img.shields.io/circleci/project/github/nschloe/cplot/master.svg?style=flat-square)](https://circleci.com/gh/nschloe/cplot/tree/master)
+[![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
+[![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.python.org/pypi/cplot)
+[![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
 cplot is an attempt at encoding complex-valued data in colors. The general idea is to
 map the absolute value to lightness and the complex argument (the "angle") to the chroma
