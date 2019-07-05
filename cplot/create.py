@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 import colorio
 import matplotlib.pyplot as plt
 import numpy

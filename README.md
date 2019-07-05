@@ -77,17 +77,6 @@ To run the cplot unit tests, check out this repository and type
 pytest
 ```
 
-### Distribution
-
-To create a new release
-
-1. bump the `__version__` number,
-
-2. tag and upload to PyPi:
-    ```
-    make publish
-    ```
-
 ### License
 
 cplot is published under the [MIT license](https://en.wikipedia.org/wiki/MIT_License).

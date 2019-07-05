@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 from .__about__ import (
     __author__,
     __author_email__,
@@ -18,7 +16,7 @@ from .create import (
     find_max_srgb_radius,
     create_colormap,
 )
-from .main import show, plot, savefig
+from .main import show, plot, savefig, get_srgb1
 from .tripcolor import tripcolor
 
 __all__ = [
@@ -38,6 +36,7 @@ __all__ = [
     "show",
     "plot",
     "savefig",
+    "get_srgb1",
     #
     "tripcolor",
 ]

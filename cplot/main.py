@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 from __future__ import division
 
 import matplotlib.pyplot as plt
@@ -20,7 +18,7 @@ def savefig(filename, *args, **kwargs):
     return
 
 
-def get_srgb(angle, absval_scaled):
+def get_srgb1(angle, absval_scaled):
     assert numpy.all(absval_scaled >= 0)
     assert numpy.all(absval_scaled <= 1)
 
@@ -66,7 +64,7 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny, abs_scaling=lambda r: r / (r + 1)):
 
     angle = numpy.arctan2(val.imag, val.real)
     absval_scaled = abs_scaling(numpy.abs(val))
-    srgb_vals = get_srgb(angle, absval_scaled)
+    srgb_vals = get_srgb1(angle, absval_scaled)
 
     plt.imshow(
         srgb_vals,

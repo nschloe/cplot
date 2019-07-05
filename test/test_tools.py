@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 import matplotlib
 import numpy
 import scipy.special
@@ -31,6 +29,12 @@ def zeta(z):
 
 
 def test_show():
+    cplot.savefig("exp1z.png", lambda z: numpy.exp(1 / z), -1, +1, -1, +1, 200, 200)
+    cplot.savefig("sinh.png", numpy.sinh, -7, +7, -7, +7, 200, 200)
+    cplot.savefig("sin-sinh.png", lambda z: numpy.sin(z) - numpy.sinh(z), -7, +7, -7, +7, 200, 200)
+
+    exit(1)
+
     cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, 101, 101)
@@ -39,9 +43,9 @@ def test_show():
     cplot.savefig("z-absz.png", lambda z: z / abs(z), -2, +2, -2, +2, 100, 100)
     cplot.savefig("z+1-z-1.png", lambda z: (z + 1) / (z - 1), -5, +5, -5, +5, 101, 101)
 
-    cplot.savefig("sqrt.png", numpy.sqrt, -5, +5, -5, +5, 200, 200)
-    cplot.savefig("log.png", numpy.log, -5, +5, -5, +5, 200, 200)
-    cplot.savefig("exp.png", numpy.exp, -5, +5, -5, +5, 200, 200)
+    cplot.savefig("sqrt.png", numpy.sqrt, -2, +2, -2, +2, 200, 200)
+    cplot.savefig("log.png", numpy.log, -2, +2, -2, +2, 200, 200)
+    cplot.savefig("exp.png", numpy.exp, -2, +2, -2, +2, 200, 200)
 
     cplot.savefig("sin.png", numpy.sin, -5, +5, -5, +5, 200, 200)
     cplot.savefig("cos.png", numpy.cos, -5, +5, -5, +5, 200, 200)
