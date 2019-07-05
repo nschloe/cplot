@@ -26,6 +26,7 @@ setup(
     platforms="any",
     install_requires=["colorio", "matplotlib", "numpy"],
     long_description_content_type="text/markdown",
+    python_requires=">=3",
     classifiers=[
         about["__status__"],
         about["__license__"],
