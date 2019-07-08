@@ -18,12 +18,12 @@ examples below prove the contrary.)
 
 The representation is chosen such that
 
-  * values around 0 are black,
-  * values around infinity are white,
-  * values around +1 are teal,
-  * values around -1 are orange-red,
-  * values around +i are purple, and
-  * values around -i are yellow-green.
+  * values around **0** are **black**,
+  * values around **infinity** are **white**,
+  * <span style="color:rgb(0,134,92)">values around **+1** are **green**,</span>
+  * <span style="color:rgb(162,81,134)">values around **-1** are **reddish pink**,</span>
+  * <span style="color:rgb(50,117,184)">values around **+i** are **blue**,</span> and
+  * <span style="color:rgb(155,101,0)">values around **-i** are **deep orange**.</span>
 
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
