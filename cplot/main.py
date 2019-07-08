@@ -24,14 +24,20 @@ def get_srgb1(angle, absval_scaled):
     L_A = 64 / numpy.pi / 5
     cam = colorio.CAM16UCS(0.69, 20, L_A)
     srgb = colorio.SrgbLinear()
+
+    # The max radius is about 21.7, but crank up colors a little bit to make the images
+    # more saturated. This leads to SRGB-cut-off of course.
     # r0 = find_max_srgb_radius(cam, srgb, L=50)
-    r0 = 21.65824845433235
+    # r0 = 21.65824845433235
+    r0 = 25.0
 
     # map (r, angle) to a point in the color space
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
 
-    # rotate the angles such a "green" color represents positive real values
-    offset = 1.15 * numpy.pi
+    # Rotate the angles such a "green" color represents positive real values. The
+    # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
+    # point 1.0.
+    offset = 0.916708 * numpy.pi
     cam_pts = numpy.array(
         [
             100 * absval_scaled,

@@ -35,8 +35,6 @@ def test_show():
         "sin-sinh.png", lambda z: numpy.sin(z) - numpy.sinh(z), -7, +7, -7, +7, 200, 200
     )
 
-    exit(1)
-
     cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, 101, 101)
