@@ -28,6 +28,15 @@ def zeta(z):
     return out
 
 
+def test_array():
+    numpy.random.seed(0)
+    n = 5
+    z = numpy.random.rand(n) + 1j * numpy.random.rand(n)
+    vals = cplot.get_srgb1(z)
+    assert vals.shape == (n, 3)
+    return
+
+
 def test_show():
     cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
@@ -67,18 +76,6 @@ def test_show():
     # cplot.savefig("bessel2.png", lambda z: scipy.special.jv(2, z), -a, +a, -a, +a, 100, 100)
     # cplot.savefig("bessel3.png", lambda z: scipy.special.jv(3, z), -a, +a, -a, +a, 100, 100)
     return
-
-
-def scaler_arctan(r):
-    # Fulfills f(1/r) = 1 - f(r).
-    return 2 / numpy.pi * numpy.arctan(r)
-
-
-def scaler_fraction(r):
-    # Fulfills f(1/r) = 1 - f(r).
-    # any alpha > 0 is good
-    alpha = 1.0
-    return r ** alpha / (r ** alpha + 1)
 
 
 if __name__ == "__main__":

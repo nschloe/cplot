@@ -5,10 +5,8 @@ import numpy
 from .main import get_srgb1
 
 
-def tripcolor(triang, z, abs_scaling=lambda r: r / (r + 1)):
-    angle = numpy.arctan2(z.imag, z.real)
-    absval_scaled = abs_scaling(numpy.abs(z))
-    rgb = get_srgb1(angle, absval_scaled)
+def tripcolor(triang, z):
+    rgb = get_srgb1(z)
 
     # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
     n = z.shape[0]

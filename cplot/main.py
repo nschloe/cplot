@@ -16,7 +16,27 @@ def savefig(filename, *args, **kwargs):
     return
 
 
-def get_srgb1(angle, absval_scaled):
+def get_srgb1(z):
+    def abs_scaling(r):
+        return r / (r + 1)
+
+    # Other possible scalings:
+    #
+    # def scaler_arctan(r):
+    #     # Fulfills f(1/r) = 1 - f(r).
+    #     return 2 / numpy.pi * numpy.arctan(r)
+    # def scaler_fraction(r):
+    #     # Fulfills f(1/r) = 1 - f(r).
+    #     # any alpha > 0 is good
+    #     alpha = 1.0
+    #     return r ** alpha / (r ** alpha + 1)
+
+    angle = numpy.arctan2(z.imag, z.real)
+    absval_scaled = abs_scaling(numpy.abs(z))
+
+    assert numpy.all(absval_scaled >= 0)
+    assert numpy.all(absval_scaled <= 1)
+
     # It'd be lovely if one could claim that the grayscale of the cplot represents
     # exactly the absolute value of the complex number. The grayscale is computed as the
     # Y component of the XYZ-representation of the color, for linear SRGB values as
@@ -25,10 +45,6 @@ def get_srgb1(angle, absval_scaled):
     #
     # Unfortunately, there is no perceptually uniform color space yet that uses
     # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
-    assert numpy.all(absval_scaled >= 0)
-    assert numpy.all(absval_scaled <= 1)
-
-    # assert variant == "CAM16UCS":
     L_A = 64 / numpy.pi / 5
     cam = colorio.CAM16UCS(0.69, 20, L_A)
     srgb = colorio.SrgbLinear()
@@ -56,14 +72,15 @@ def get_srgb1(angle, absval_scaled):
 
     # now just translate to srgb
     srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
-    # assert numpy.all(srgb.from_xyz100(cam.to_xyz100(cam_pts)) <= 1.0)
+    # Cut off the outliers. This restriction makes the representation less perfect, but
+    # that's what it is with the SRGB color space.
     srgb_vals[srgb_vals > 1] = 1.0
     srgb_vals[srgb_vals < 0] = 0.0
 
     return numpy.moveaxis(srgb_vals, 0, -1)
 
 
-def plot(f, xmin, xmax, ymin, ymax, nx, ny, abs_scaling=lambda r: r / (r + 1)):
+def plot(f, xmin, xmax, ymin, ymax, nx, ny):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
@@ -72,11 +89,10 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny, abs_scaling=lambda r: r / (r + 1)):
     y = numpy.linspace(ymin + hy / 2, ymax - hy / 2, ny)
 
     X = numpy.meshgrid(x, y)
-    val = f(X[0] + 1j * X[1])
 
-    angle = numpy.arctan2(val.imag, val.real)
-    absval_scaled = abs_scaling(numpy.abs(val))
-    srgb_vals = get_srgb1(angle, absval_scaled)
+    z = X[0] + 1j * X[1]
+
+    srgb_vals = get_srgb1(f(z))
 
     plt.imshow(
         srgb_vals,
