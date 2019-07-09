@@ -17,6 +17,14 @@ def savefig(filename, *args, **kwargs):
 
 
 def get_srgb1(angle, absval_scaled):
+    # It'd be lovely if one could claim that the grayscale of the cplot represents
+    # exactly the absolute value of the complex number. The grayscale is computed as the
+    # Y component of the XYZ-representation of the color, for linear SRGB values as
+    #
+    #     0.2126 * r + 0.7152 * g + 0.722 * b.
+    #
+    # Unfortunately, there is no perceptually uniform color space yet that uses
+    # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
     assert numpy.all(absval_scaled >= 0)
     assert numpy.all(absval_scaled <= 1)
 

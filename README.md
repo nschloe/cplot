@@ -25,6 +25,8 @@ The representation is chosen such that
   * <span style="color:rgb(50,117,184)">values around **+i** are **blue**</span> ![blue](https://nschloe.github.io/cplot/rgb_50_117_184.png "rgb(50,117,184)"), and
   * <span style="color:rgb(155,101,0)">values around **-i** are **deep orange**</span> ![orange](https://nschloe.github.io/cplot/rgb_155_101_0.png "rgb(155,101,0)").
 
+(Compare to the z<sup>1</sup> reference plot below.)
+
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
 passes around a black or white point.
