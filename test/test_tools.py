@@ -38,6 +38,19 @@ def test_array():
 
 
 def test_show():
+    # cplot.savefig("z6_1.png", lambda z: z ** 6 - 1, -2, +2, -2, +2, 200, 200)
+    # cplot.savefig(
+    #     "f025.png",
+    #     lambda z: (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j),
+    #     -3,
+    #     +3,
+    #     -3,
+    #     +3,
+    #     200,
+    #     200,
+    #     alpha=0.25
+    # )
+
     cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101)
     cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, 101, 101)

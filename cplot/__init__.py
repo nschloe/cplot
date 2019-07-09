@@ -14,8 +14,7 @@ from .create import (
     show_kovesi_test_image,
     show_linear,
 )
-from .main import get_srgb1, plot, savefig, show
-from .tripcolor import tripcolor
+from .main import get_srgb1, plot, savefig, show, tripcolor
 
 __all__ = [
     "__author__",

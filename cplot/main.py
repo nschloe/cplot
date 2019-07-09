@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy
 
@@ -16,20 +17,17 @@ def savefig(filename, *args, **kwargs):
     return
 
 
-def get_srgb1(z):
-    def abs_scaling(r):
-        return r / (r + 1)
+def get_srgb1(z, alpha=1):
+    assert alpha > 0
 
     # Other possible scalings:
-    #
-    # def scaler_arctan(r):
+    # def abs_scaling(r):
     #     # Fulfills f(1/r) = 1 - f(r).
-    #     return 2 / numpy.pi * numpy.arctan(r)
-    # def scaler_fraction(r):
-    #     # Fulfills f(1/r) = 1 - f(r).
-    #     # any alpha > 0 is good
-    #     alpha = 1.0
-    #     return r ** alpha / (r ** alpha + 1)
+    #    return 2 / numpy.pi * numpy.arctan(r)
+
+    def abs_scaling(r):
+        # Fulfills f(1/r) = 1 - f(r) for any alpha > 0
+        return r ** alpha / (r ** alpha + 1)
 
     angle = numpy.arctan2(z.imag, z.real)
     absval_scaled = abs_scaling(numpy.abs(z))
@@ -80,7 +78,7 @@ def get_srgb1(z):
     return numpy.moveaxis(srgb_vals, 0, -1)
 
 
-def plot(f, xmin, xmax, ymin, ymax, nx, ny):
+def plot(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
@@ -92,7 +90,7 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny):
 
     z = X[0] + 1j * X[1]
 
-    srgb_vals = get_srgb1(f(z))
+    srgb_vals = get_srgb1(f(z), alpha=alpha)
 
     plt.imshow(
         srgb_vals,
@@ -101,4 +99,15 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny):
         origin="lower",
         aspect="equal",
     )
+    return
+
+
+def tripcolor(triang, z, alpha=1):
+    rgb = get_srgb1(z, alpha=alpha)
+
+    # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
+    n = z.shape[0]
+    z2 = numpy.arange(n)
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list("mymap", rgb, N=n)
+    plt.tripcolor(triang, z2, shading="gouraud", cmap=cmap)
     return
