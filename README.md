@@ -41,6 +41,11 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
+
+# The function get_srgb1 returns the SRGB1 triple for every complex input value.
+# (Accepts arrays, too.)
+z = 2 + 5j
+val = cplot.get_srgb1(z)
 ```
 
 <img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
