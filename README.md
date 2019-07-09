@@ -96,6 +96,32 @@ val = cplot.get_srgb1(z)
 :-------------------:|:------------------:|:-------------------------:|
 `scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
 
+
+All functions have the optional parameter `alpha` (defaulting to `1`) which can be used
+to tune the images. A value less than 1 makes gives adds more color which can help
+isolating the roots and poles (which are still black and white, respectively). Consider
+the function
+```python
+import cplot
+
+def f(z):
+  return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
+
+cplot.savefig(
+    "out.png", f, -3, +3, -3, +3, 200, 200,
+    alpha=1.0
+    # alpha=0.5
+    # alpha=0.25
+)
+```
+
+<img src="https://nschloe.github.io/cplot/f10.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/f05.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/f025.png" width="70%">
+:-------------------:|:--------------------:|:------------------:|
+`alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.25`    |
+
+
 ### Testing
 
 To run the cplot unit tests, check out this repository and type
