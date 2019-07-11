@@ -53,7 +53,8 @@ def get_srgb1(z, alpha=1):
     # r0 = 21.65824845433235
     r0 = 25.0
 
-    # map (r, angle) to a point in the color space
+    # Map (r, angle) to a point in the color space; bicone mapping similar to what HSL
+    # looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
 
     # Rotate the angles such a "green" color represents positive real values. The

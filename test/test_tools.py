@@ -83,6 +83,13 @@ def test_show():
     cplot.savefig("digamma.png", scipy.special.digamma, -5, +5, -5, +5, 200, 200)
     cplot.savefig("zeta.png", zeta, -30, +30, -30, +30, 200, 200)
 
+    # First function from the SIAM-100-digit challenge
+    # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
+    def siam(z):
+        return numpy.cos(numpy.log(z) / z) / z
+
+    cplot.savefig("siam.png", siam, -1, 1, -1, 1, 230, 230, alpha=0.1)
+
     # a = 10
     # cplot.savefig("bessel0.png", lambda z: scipy.special.jv(0, z), -a, +a, -a, +a, 100, 100)
     # cplot.savefig("bessel1.png", lambda z: scipy.special.jv(1, z), -a, +a, -a, +a, 100, 100)

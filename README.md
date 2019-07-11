@@ -8,13 +8,29 @@ Plotting complex-valued functions.
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.python.org/pypi/cplot)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
-cplot is an attempt at encoding complex-valued data in colors. The general idea is to
-map the absolute value to lightness and the complex argument (the "angle") to the chroma
-of the representing color. This follows the [domain
-coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach with the colors taken
-from the [CAM16](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract) to avoid
-perceptual distortion.  (It has been claimed that this leads to drab images, but the
+cplot helps plotting complex-valued functions in a visually appealing manner.
+
+The general idea is to map the absolute value to lightness and the complex argument (the
+"angle") to the chroma of the representing color. This follows the [domain
+coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach, also described by
+
+  * [John D. Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/) and
+  * Elias Wegert in the book [Visual Complex Functions](https://www.springer.com/gp/book/9783034801799).
+
+Contrary to the approaches in the above works, cplot takes the colors from the
+perceptually uniform [CAM16 color
+space](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract) to avoid
+perceptual distortion.
+(It has been claimed that this leads to drab images, but the
 examples below prove the contrary.)
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
+
+> Since the HSL color space is not perceptually uniform, one can see streaks of
+> perceived brightness at yellow, cyan, and magenta (even though their absolute values
+> are the same as red, green, and blue) and a halo around L = 1 / 2 .  Use of the Lab
+> color space corrects this, making the images more accurate, but also makes them more
+> drab/pastel.
 
 The representation is chosen such that
 
@@ -98,7 +114,7 @@ val = cplot.get_srgb1(z)
 
 
 All functions have the optional parameter `alpha` (defaulting to `1`) which can be used
-to tune the images. A value less than 1 makes gives adds more color which can help
+to adjust the use of colors. A value less than 1 adds more color which can help
 isolating the roots and poles (which are still black and white, respectively). Consider
 the function
 ```python
