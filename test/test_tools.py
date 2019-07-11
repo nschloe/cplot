@@ -121,5 +121,28 @@ def test_hsl():
     return
 
 
+def test_cielab():
+    cplot.savefig(
+        "z1.png", lambda z: z ** 1, -2, +2, -2, +2, 101, 101, colorspace="cielab"
+    )
+    cplot.savefig(
+        "z2.png", lambda z: z ** 2, -2, +2, -2, +2, 101, 101, colorspace="cielab"
+    )
+    cplot.savefig(
+        "z3.png", lambda z: z ** 3, -2, +2, -2, +2, 101, 101, colorspace="cielab"
+    )
+
+    # cplot.savefig("root2.png", numpy.sqrt, -2, +2, -2, +2, 200, 200)
+
+    # cplot.savefig(
+    #     "gamma.png", scipy.special.gamma, -5, +5, -5, +5, 200, 200, colorspace="hsl"
+    # )
+    # cplot.savefig(
+    #     "digamma.png", scipy.special.digamma, -5, +5, -5, +5, 200, 200, colorspace="hsl"
+    # )
+    # cplot.savefig("zeta.png", zeta, -30, +30, -30, +30, 200, 200, colorspace="hsl")
+    return
+
+
 if __name__ == "__main__":
-    test_hsl()
+    test_cielab()
