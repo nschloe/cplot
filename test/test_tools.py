@@ -117,7 +117,7 @@ def test_compare_colorspaces():
         n,
         n,
         colorspace="hsl",
-        ignore_magnitude=True,
+        alpha=0
     )
     return
 

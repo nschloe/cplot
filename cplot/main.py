@@ -5,8 +5,8 @@ import numpy
 import colorio
 
 
-def get_srgb1(z, alpha=1, colorspace="CAM16", ignore_magnitude=False):
-    assert alpha > 0
+def get_srgb1(z, alpha=1, colorspace="CAM16"):
+    assert alpha >= 0
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
     # One desirable property is
     # (1)  f(1/r) = 1 - f(r).
@@ -27,10 +27,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16", ignore_magnitude=False):
     #    return 2 / numpy.pi * numpy.arctan(r)
 
     angle = numpy.arctan2(z.imag, z.real)
-    if ignore_magnitude:
-        absval_scaled = numpy.full(z.shape, 0.5)
-    else:
-        absval_scaled = abs_scaling(numpy.abs(z))
+    absval_scaled = abs_scaling(numpy.abs(z))
 
     assert numpy.all(absval_scaled >= 0)
     assert numpy.all(absval_scaled <= 1)
@@ -147,18 +144,7 @@ def save_img(filename, *args, **kwargs):
     return
 
 
-def _get_srgb_vals(
-    f,
-    xmin,
-    xmax,
-    ymin,
-    ymax,
-    nx,
-    ny,
-    alpha=1,
-    colorspace="cam16",
-    ignore_magnitude=False,
-):
+def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
@@ -170,12 +156,8 @@ def _get_srgb_vals(
 
     z = X[0] + 1j * X[1]
 
-    fz = f(z)
-    if ignore_magnitude:
-        fz /= numpy.abs(fz)
-
     return (
-        get_srgb1(fz, alpha=alpha, colorspace=colorspace),
+        get_srgb1(f(z), alpha=alpha, colorspace=colorspace),
         (x.min(), x.max(), y.min(), y.max()),
     )
 
