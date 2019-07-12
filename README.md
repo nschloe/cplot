@@ -64,15 +64,10 @@ alpha=1  # >= 0
 
 Consider the test function `(z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)`:
 
-  `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
-  :-------------------:|:--------------------:|:------------------:|
-  <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%">
-  :-------------------:|:--------------------:|:------------------:|
-  <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%">
+| `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
+| :----------:         |  :---------:         |  :--------:       |
+| <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%"> |
 
 The representation is chosen such that
 
