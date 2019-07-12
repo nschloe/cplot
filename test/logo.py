@@ -5,14 +5,13 @@ import numpy
 import cplot
 
 
-def test_tripcolor():
+def create_logo():
     # Adapted from
     # <https://matplotlib.org/gallery/images_contours_and_fields/tripcolor_demo.html#sphx-glr-gallery-images-contours-and-fields-tripcolor-demo-py>
     # First create the x and y coordinates of the points.
-    n_angles = 36
-    n_radii = 8
-    min_radius = 0.25
-    radii = numpy.linspace(min_radius, 0.95, n_radii)
+    n_angles = 314
+    n_radii = 100
+    radii = numpy.linspace(0.0, 1.0, n_radii)
 
     angles = numpy.linspace(0, 2 * numpy.pi, n_angles, endpoint=False)
     angles = numpy.repeat(angles[..., numpy.newaxis], n_radii, axis=1)
@@ -20,22 +19,26 @@ def test_tripcolor():
 
     x = (radii * numpy.cos(angles)).flatten()
     y = (radii * numpy.sin(angles)).flatten()
-    z = 2 * (x + 1j * y)
 
     # Create the Triangulation; no triangles so Delaunay triangulation created.
     triang = tri.Triangulation(x, y)
 
-    # Mask off unwanted triangles.
-    triang.set_mask(
-        numpy.hypot(x[triang.triangles].mean(axis=1), y[triang.triangles].mean(axis=1))
-        < min_radius
-    )
+    # print(triang)
+    # exit(1)
+    # import dmsh
+    # geo = dmsh.Circle([0.0, 0.0], 1.0)
+    # X, cells = dmsh.generate(geo, 0.1)
 
-    cplot.tripcolor(triang, z)
+    z = x + 1j * y
+    # z /= numpy.abs(z)
+
+    cplot.tripcolor(triang, z, alpha=0)
     plt.gca().set_aspect("equal", "datalim")
-    plt.show()
+    plt.axis("off")
+
+    plt.savefig("logo.png", transparent=True)
     return
 
 
 if __name__ == "__main__":
-    test_tripcolor()
+    create_logo()

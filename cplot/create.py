@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-#
-import colorio
 import matplotlib.pyplot as plt
 import numpy
+
+import colorio
 
 
 def show_kovesi_test_image(cmap):

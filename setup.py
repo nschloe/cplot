@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-#
 import codecs
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 # https://packaging.python.org/single_source_version/
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -28,6 +27,7 @@ setup(
     platforms="any",
     install_requires=["colorio", "matplotlib", "numpy"],
     long_description_content_type="text/markdown",
+    python_requires=">=3",
     classifiers=[
         about["__status__"],
         about["__license__"],
