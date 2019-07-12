@@ -9,13 +9,13 @@
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.python.org/pypi/cplot)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
-cplot helps plotting complex-valued functions in a visually appealing manner.
-The general idea is to map the absolute value to lightness and the complex argument (the
+cplot helps plotting complex-valued functions in a visually appealing manner.  The
+general idea is to map the absolute value to lightness and the complex argument (the
 "angle") to the chroma of the representing color. This follows the [domain
 coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach, also described by
-
-  * [John D. Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/) and
-  * Elias Wegert in the book [Visual Complex Functions](https://www.springer.com/gp/book/9783034801799).
+[John D. Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
+and Elias Wegert in the book [Visual Complex
+Functions](https://www.springer.com/gp/book/9783034801799) (with some tweaks).
 
 Install with
 ```
@@ -45,19 +45,11 @@ colorspace="cam16"  # "cielab", "hsl"
 alpha=1  # >= 0
 ```
 
-Consider the test function `(z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)`:
-
 * `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
   which can help isolating the roots and poles (which are still black and white,
   respectively). `alpha=0` ignores the magnitude of `f(z)` completely.
 
-  <img src="https://nschloe.github.io/cplot/f10.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/f05.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/f025.png" width="70%">
-  :-------------------:|:--------------------:|:------------------:|
-  `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.25`    |
-
-* `colorspace` can be set to `hsl` to get the common fully saturated, vibrant RGB
+* `colorspace` can be set to `hsl` to get the common fully saturated, vibrant
   colors. This is usually a bad idea since it creates artifacts which are not related
   with the underlying data. From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
 
@@ -70,12 +62,17 @@ Consider the test function `(z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
   Default is [`"cam16"`](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract);
   very similar is `"cielab"` (not shown here).
 
-  <img src="https://nschloe.github.io/cplot/cam16.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/hsl.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/hsl-ignore-magnitude.png" width="70%">
-  :-------------------:|:--------------------:|:------------------:|
-  `colorspace = "cam16"`          |  `colorspace = "hsl"`       |  `colorspace="hsl"`, `alpha=0`    |
+Consider the test function `(z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)`:
 
+  `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
+  :-------------------:|:--------------------:|:------------------:|
+  <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%">
+  :-------------------:|:--------------------:|:------------------:|
+  <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%">
 
 The representation is chosen such that
 

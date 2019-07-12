@@ -104,21 +104,17 @@ def test_compare_colorspaces():
         return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
 
     n = 201
-    cplot.save_fig("cam16.png", f, -3, +3, -3, +3, n, n, colorspace="cam16")
-    cplot.save_fig("cielab.png", f, -3, +3, -3, +3, n, n, colorspace="cielab")
-    cplot.save_fig("hsl.png", f, -3, +3, -3, +3, n, n, colorspace="hsl")
-    cplot.save_fig(
-        "hsl-ignore-magnitude.png",
-        f,
-        -3,
-        +3,
-        -3,
-        +3,
-        n,
-        n,
-        colorspace="hsl",
-        alpha=0
-    )
+    cplot.save_fig("cam16-10.png", f, -3, +3, -3, +3, n, n, colorspace="cam16")
+    cplot.save_fig("cielab-10.png", f, -3, +3, -3, +3, n, n, colorspace="cielab")
+    cplot.save_fig("hsl-10.png", f, -3, +3, -3, +3, n, n, colorspace="hsl")
+
+    cplot.save_fig("cam16-05.png", f, -3, +3, -3, +3, n, n, 0.5, "cam16")
+    cplot.save_fig("cielab-05.png", f, -3, +3, -3, +3, n, n, 0.5, "cielab")
+    cplot.save_fig("hsl-05.png", f, -3, +3, -3, +3, n, n, 0.5, "hsl")
+
+    cplot.save_fig("cam16-00.png", f, -3, +3, -3, +3, n, n, 0, "cam16")
+    cplot.save_fig("cielab-00.png", f, -3, +3, -3, +3, n, n, 0, "cielab")
+    cplot.save_fig("hsl-00.png", f, -3, +3, -3, +3, n, n, 0, "hsl")
     return
 
 
