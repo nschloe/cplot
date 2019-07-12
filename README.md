@@ -41,8 +41,8 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 ```
 All functions have the optional arguments (with their default values)
 ```python
-colorspace="cam16"  # "cielab", "hsl"
 alpha=1  # >= 0
+colorspace="cam16"  # "cielab", "hsl"
 ```
 
 * `alpha` can be used to adjust the use of colors. A value less than 1 adds more color

@@ -34,7 +34,7 @@ def create_logo():
 
     cplot.tripcolor(triang, z, alpha=0)
     plt.gca().set_aspect("equal", "datalim")
-    plt.axis('off')
+    plt.axis("off")
 
     plt.savefig("logo.png", transparent=True)
     return
