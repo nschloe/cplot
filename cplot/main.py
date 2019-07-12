@@ -5,18 +5,6 @@ import numpy
 import colorio
 
 
-def show(*args, **kwargs):
-    plot(*args, **kwargs)
-    plt.show()
-    return
-
-
-def save_fig(filename, *args, **kwargs):
-    plot(*args, **kwargs)
-    plt.savefig(filename, transparent=True, bbox_inches="tight")
-    return
-
-
 def get_srgb1(z, alpha=1, colorspace="CAM16"):
     assert alpha > 0
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
@@ -130,19 +118,33 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     return numpy.moveaxis(srgb_vals, 0, -1)
 
 
-def plot(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="hsl"):
-    vals, extent = _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha, colorspace)
-    plt.imshow(extent=extent, interpolation="nearest", origin="lower", aspect="equal")
+def show(*args, **kwargs):
+    plot(*args, **kwargs)
+    plt.show()
     return
 
 
-def save_img(filename, f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
-    vals, _ = _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha, colorspace)
+def save_fig(filename, *args, **kwargs):
+    plot(*args, **kwargs)
+    plt.savefig(filename, transparent=True, bbox_inches="tight")
+    return
+
+
+def plot(*args, **kwargs):
+    vals, extent = _get_srgb_vals(*args, **kwargs)
+    plt.imshow(
+        vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
+    )
+    return
+
+
+def save_img(filename, *args, **kwargs):
+    vals, _ = _get_srgb_vals(*args, **kwargs)
     matplotlib.image.imsave(filename, vals)
     return
 
 
-def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha, colorspace):
+def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
