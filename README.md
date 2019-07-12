@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/nschloe/cplot"><img alt="cplot" src="https://nschloe.github.io/cplot/cplot-logo.svg" width="60%"></a>
+  <a href="https://github.com/nschloe/cplot"><img alt="cplot" src="https://nschloe.github.io/cplot/cplot-logo.svg" width="50%"></a>
   <p align="center">Plot complex-valued functions with style.</p>
 </p>
 
