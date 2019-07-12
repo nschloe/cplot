@@ -1,6 +1,7 @@
-# cplot
-
-Plotting complex-valued functions.
+<p align="center">
+  <a href="https://github.com/nschloe/cplot"><img alt="cplot" src="https://nschloe.github.io/cplot/cplot-logo.svg" width="60%"></a>
+  <p align="center">Plot complex-valued functions with style.</p>
+</p>
 
 [![CircleCI](https://img.shields.io/circleci/project/github/nschloe/cplot/master.svg?style=flat-square)](https://circleci.com/gh/nschloe/cplot/tree/master)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
