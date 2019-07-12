@@ -5,7 +5,7 @@ import numpy
 import colorio
 
 
-def get_srgb1(z, alpha=1, colorspace="CAM16"):
+def get_srgb1(z, alpha=1, colorspace="CAM16", ignore_magnitude=False):
     assert alpha > 0
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
     # One desirable property is
@@ -27,7 +27,10 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     #    return 2 / numpy.pi * numpy.arctan(r)
 
     angle = numpy.arctan2(z.imag, z.real)
-    absval_scaled = abs_scaling(numpy.abs(z))
+    if ignore_magnitude:
+        absval_scaled = numpy.full(z.shape, 0.5)
+    else:
+        absval_scaled = abs_scaling(numpy.abs(z))
 
     assert numpy.all(absval_scaled >= 0)
     assert numpy.all(absval_scaled <= 1)
@@ -118,6 +121,14 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     return numpy.moveaxis(srgb_vals, 0, -1)
 
 
+def plot(*args, **kwargs):
+    vals, extent = _get_srgb_vals(*args, **kwargs)
+    plt.imshow(
+        vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
+    )
+    return
+
+
 def show(*args, **kwargs):
     plot(*args, **kwargs)
     plt.show()
@@ -130,21 +141,24 @@ def save_fig(filename, *args, **kwargs):
     return
 
 
-def plot(*args, **kwargs):
-    vals, extent = _get_srgb_vals(*args, **kwargs)
-    plt.imshow(
-        vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
-    )
-    return
-
-
 def save_img(filename, *args, **kwargs):
     vals, _ = _get_srgb_vals(*args, **kwargs)
     matplotlib.image.imsave(filename, vals)
     return
 
 
-def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
+def _get_srgb_vals(
+    f,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    nx,
+    ny,
+    alpha=1,
+    colorspace="cam16",
+    ignore_magnitude=False,
+):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
@@ -156,8 +170,12 @@ def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16
 
     z = X[0] + 1j * X[1]
 
+    fz = f(z)
+    if ignore_magnitude:
+        fz /= numpy.abs(fz)
+
     return (
-        get_srgb1(f(z), alpha=alpha, colorspace=colorspace),
+        get_srgb1(fz, alpha=alpha, colorspace=colorspace),
         (x.min(), x.max(), y.min(), y.max()),
     )
 
