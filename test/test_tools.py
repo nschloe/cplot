@@ -99,79 +99,29 @@ def test_cam16():
     return
 
 
-def test_hsl():
-    n = 401
-    cplot.save_img("z1.png", lambda z: z ** 1, -2, +2, -2, +2, n, n, colorspace="hsl")
-    cplot.save_img("z2.png", lambda z: z ** 2, -2, +2, -2, +2, n, n, colorspace="hsl")
-    cplot.save_img("z3.png", lambda z: z ** 3, -2, +2, -2, +2, n, n, colorspace="hsl")
+def test_compare_colorspaces():
+    def f(z):
+        return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
 
-    # cplot.save_fig("root2.png", numpy.sqrt, -2, +2, -2, +2, 200, 200)
-
-    # cplot.save_fig(
-    #     "gamma.png", scipy.special.gamma, -5, +5, -5, +5, 200, 200, colorspace="hsl"
-    # )
-    # cplot.save_fig(
-    #     "digamma.png", scipy.special.digamma, -5, +5, -5, +5, 200, 200, colorspace="hsl"
-    # )
-    # cplot.save_fig("zeta.png", zeta, -30, +30, -30, +30, 200, 200, colorspace="hsl")
-    return
-
-
-def test_cielab():
-    n = 101
-    cplot.save_img(
-        "z1.png",
-        lambda z: z ** 1,
-        -2,
-        +2,
-        -2,
-        +2,
+    n = 201
+    cplot.save_fig("cam16.png", f, -3, +3, -3, +3, n, n, colorspace="cam16")
+    cplot.save_fig("cielab.png", f, -3, +3, -3, +3, n, n, colorspace="cielab")
+    cplot.save_fig("hsl.png", f, -3, +3, -3, +3, n, n, colorspace="hsl")
+    cplot.save_fig(
+        "hsl-ignore-magnitude.png",
+        f,
+        -3,
+        +3,
+        -3,
+        +3,
         n,
         n,
-        colorspace="cielab",
-        ignore_magnitude=True,
-    )
-    cplot.save_img(
-        "z2.png",
-        lambda z: z ** 2,
-        -2,
-        +2,
-        -2,
-        +2,
-        n,
-        n,
-        colorspace="cielab",
-        ignore_magnitude=True,
-    )
-    cplot.save_img(
-        "z3.png",
-        lambda z: z ** 3,
-        -2,
-        +2,
-        -2,
-        +2,
-        n,
-        n,
-        colorspace="cielab",
-        ignore_magnitude=True,
-    )
-
-    cplot.save_img(
-        "z17.png",
-        lambda z: z ** 17 - 1,
-        -2,
-        +2,
-        -2,
-        +2,
-        n,
-        n,
-        colorspace="cielab",
+        colorspace="hsl",
         ignore_magnitude=True,
     )
     return
 
 
 if __name__ == "__main__":
-    # test_hsl()
-    test_cielab()
     # test_cam16()
+    test_compare_colorspaces()

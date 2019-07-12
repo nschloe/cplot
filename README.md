@@ -40,21 +40,12 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 ```
 All functions have the optional arguments (with their default values)
 ```python
-alpha=1,
 colorspace="cam16",  # "cielab", "hsl"
-ignore_magnitude=False
+ignore_magnitude=False,
+alpha=1,
 ```
 
-* `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
-  which can help isolating the roots and poles (which are still black and white,
-  respectively). Consider the function with the test function `(z ** 2 - 1) * (z - 2 - 1j)
-  ** 2 / (z ** 2 + 2 + 2j)`:
-
-  <img src="https://nschloe.github.io/cplot/f10.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/f05.png" width="70%"> |
-  <img src="https://nschloe.github.io/cplot/f025.png" width="70%">
-  :-------------------:|:--------------------:|:------------------:|
-  `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.25`    |
+Consider the test function `(z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)`:
 
 * `colorspace` can be set to `hsl` to get the common fully saturated, vibrant RGB
   colors. This is usually a bad idea since it creates artifacts which are not related
@@ -74,6 +65,16 @@ ignore_magnitude=False
   <img src="https://nschloe.github.io/cplot/hsl-ignore-magnitude.png" width="70%">
   :-------------------:|:--------------------:|:------------------:|
   `colorspace = "cam16"`          |  `colorspace = "hsl"`       |  `colorspace="hsl"`, `ignore_magnitude=True`    |
+
+* `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
+  which can help isolating the roots and poles (which are still black and white,
+  respectively).
+
+  <img src="https://nschloe.github.io/cplot/f10.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/f05.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/f025.png" width="70%">
+  :-------------------:|:--------------------:|:------------------:|
+  `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.25`    |
 
 
 The representation is chosen such that
