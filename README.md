@@ -55,6 +55,9 @@ import numpy
 
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 
+# cplot.save_fig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+# cplot.save_img("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
 
@@ -123,7 +126,7 @@ import cplot
 def f(z):
   return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
 
-cplot.savefig(
+cplot.save_fig(
     "out.png", f, -3, +3, -3, +3, 200, 200,
     alpha=1.0
     # alpha=0.5

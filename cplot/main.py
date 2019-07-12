@@ -11,7 +11,7 @@ def show(*args, **kwargs):
     return
 
 
-def savefig(filename, *args, **kwargs):
+def save_fig(filename, *args, **kwargs):
     plot(*args, **kwargs)
     plt.savefig(filename, transparent=True, bbox_inches="tight")
     return
@@ -92,7 +92,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         # Rotate the angles such a "green" color represents positive real values. The
         # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
         # point 1.0.
-        offset = 0.8936868 * numpy.pi
+        offset = 0.893_686_8 * numpy.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
@@ -131,6 +131,18 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
 
 
 def plot(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="hsl"):
+    vals, extent = _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha, colorspace)
+    plt.imshow(extent=extent, interpolation="nearest", origin="lower", aspect="equal")
+    return
+
+
+def save_img(filename, f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
+    vals, _ = _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha, colorspace)
+    matplotlib.image.imsave(filename, vals)
+    return
+
+
+def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha, colorspace):
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
@@ -142,16 +154,10 @@ def plot(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="hsl"):
 
     z = X[0] + 1j * X[1]
 
-    srgb_vals = get_srgb1(f(z), alpha=alpha, colorspace=colorspace)
-
-    plt.imshow(
-        srgb_vals,
-        extent=(x.min(), x.max(), y.max(), y.min()),
-        interpolation="nearest",
-        origin="lower",
-        aspect="equal",
+    return (
+        get_srgb1(f(z), alpha=alpha, colorspace=colorspace),
+        (x.min(), x.max(), y.min(), y.max()),
     )
-    return
 
 
 def tripcolor(triang, z, alpha=1):

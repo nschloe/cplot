@@ -14,7 +14,7 @@ from .create import (
     show_kovesi_test_image,
     show_linear,
 )
-from .main import get_srgb1, plot, savefig, show, tripcolor
+from .main import get_srgb1, plot, save_fig, save_img, show, tripcolor
 
 __all__ = [
     "__author__",
@@ -32,7 +32,8 @@ __all__ = [
     "create_colormap",
     "show",
     "plot",
-    "savefig",
+    "save_fig",
+    "save_img",
     "get_srgb1",
     #
     "tripcolor",
