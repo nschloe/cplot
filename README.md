@@ -28,16 +28,16 @@ import numpy
 
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 
-# cplot.save_fig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
-# cplot.save_img("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.save_fig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.save_img("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
 
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
 
 # The function get_srgb1 returns the SRGB1 triple for every complex input value.
 # (Accepts arrays, too.)
-# z = 2 + 5j
-# val = cplot.get_srgb1(z)
+z = 2 + 5j
+val = cplot.get_srgb1(z)
 ```
 All functions have the optional arguments (with their default values)
 ```python
