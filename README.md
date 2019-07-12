@@ -9,7 +9,6 @@ Plotting complex-valued functions.
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 
 cplot helps plotting complex-valued functions in a visually appealing manner.
-
 The general idea is to map the absolute value to lightness and the complex argument (the
 "angle") to the chroma of the representing color. This follows the [domain
 coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach, also described by
@@ -17,38 +16,11 @@ coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach, also describe
   * [John D. Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/) and
   * Elias Wegert in the book [Visual Complex Functions](https://www.springer.com/gp/book/9783034801799).
 
-Contrary to the approaches in the above works, cplot takes the colors from the
-perceptually uniform [CAM16 color
-space](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract) to avoid
-perceptual distortion.
-(It has been claimed that this leads to drab images, but the
-examples below prove the contrary.)
-
-From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
-
-> Since the HSL color space is not perceptually uniform, one can see streaks of
-> perceived brightness at yellow, cyan, and magenta (even though their absolute values
-> are the same as red, green, and blue) and a halo around L = 1 / 2 .  Use of the Lab
-> color space corrects this, making the images more accurate, but also makes them more
-> drab/pastel.
-
-The representation is chosen such that
-
-  * values around **0** are **black**,
-  * values around **infinity** are **white**,
-  * values around **+1** are **green**</span> ![green](https://nschloe.github.io/cplot/rgb_0_134_92.png "rgb(0,134,92)"),
-  * values around **-1** are [**deep purple**](https://youtu.be/zUwEIt9ez7M) ![purple](https://nschloe.github.io/cplot/rgb_162_81_134.png "rgb(162,81,134)"),
-  * values around **+i** are **blue** ![blue](https://nschloe.github.io/cplot/rgb_50_117_184.png "rgb(50,117,184)"), and
-  * values around **-i** are **deep orange** ![orange](https://nschloe.github.io/cplot/rgb_155_101_0.png "rgb(155,101,0)").
-
-(Compare to the z<sup>1</sup> reference plot below.)
-
-With this, it is easy to see where a function has very small and very large values, and
-the multiplicty of zeros and poles is instantly identified by counting the color wheel
-passes around a black or white point.
-
-See below for examples with some well-known functions.
-
+Install with
+```
+pip3 install cplot --user
+```
+and use as
 ```python
 import cplot
 import numpy
@@ -63,9 +35,65 @@ cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 
 # The function get_srgb1 returns the SRGB1 triple for every complex input value.
 # (Accepts arrays, too.)
-z = 2 + 5j
-val = cplot.get_srgb1(z)
+# z = 2 + 5j
+# val = cplot.get_srgb1(z)
 ```
+All functions have the optional arguments (with their default values)
+```python
+alpha=1,
+colorspace="cam16",  # "cielab", "hsl"
+ignore_magnitude=False
+```
+
+* `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
+  which can help isolating the roots and poles (which are still black and white,
+  respectively). Consider the function with the test function `(z ** 2 - 1) * (z - 2 - 1j)
+  ** 2 / (z ** 2 + 2 + 2j)`:
+
+  <img src="https://nschloe.github.io/cplot/f10.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/f05.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/f025.png" width="70%">
+  :-------------------:|:--------------------:|:------------------:|
+  `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.25`    |
+
+* `colorspace` can be set to `hsl` to get the common fully saturated, vibrant RGB
+  colors. This is usually a bad idea since it creates artifacts which are not related
+  with the underlying data. From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
+
+  > Since the HSL color space is not perceptually uniform, one can see streaks of
+  > perceived brightness at yellow, cyan, and magenta (even though their absolute values
+  > are the same as red, green, and blue) and a halo around L = 1 / 2 .  Use of the Lab
+  > color space corrects this, making the images more accurate, but also makes them more
+  > drab/pastel.
+
+  Default is [`"cam16"`](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract);
+  very similar is `"cielab"` (not shown here).
+
+  <img src="https://nschloe.github.io/cplot/cam16.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/hsl.png" width="70%"> |
+  <img src="https://nschloe.github.io/cplot/hsl-ignore-magnitude.png" width="70%">
+  :-------------------:|:--------------------:|:------------------:|
+  `colorspace = "cam16"`          |  `colorspace = "hsl"`       |  `colorspace="hsl"`, `ignore_magnitude=True`    |
+
+
+The representation is chosen such that
+
+  * values around **0** are **black**,
+  * values around **infinity** are **white**,
+  * values around **+1** are **green**,
+  * values around **-1** are [**deep purple**](https://youtu.be/zUwEIt9ez7M),
+  * values around **+i** are **blue**,
+  * values around **-i** are **orange**.
+
+(Compare to the z<sup>1</sup> reference plot below.)
+
+With this, it is easy to see where a function has very small and very large values, and
+the multiplicty of zeros and poles is instantly identified by counting the color wheel
+passes around a black or white point.
+
+#### Gallery
+
+All plots are created with default settings.
 
 <img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/z2.png" width="70%"> |
@@ -114,31 +142,6 @@ val = cplot.get_srgb1(z)
 <img src="https://nschloe.github.io/cplot/zeta.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
-
-
-All functions have the optional parameter `alpha` (defaulting to `1`) which can be used
-to adjust the use of colors. A value less than 1 adds more color which can help
-isolating the roots and poles (which are still black and white, respectively). Consider
-the function
-```python
-import cplot
-
-def f(z):
-  return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
-
-cplot.save_fig(
-    "out.png", f, -3, +3, -3, +3, 200, 200,
-    alpha=1.0
-    # alpha=0.5
-    # alpha=0.25
-)
-```
-
-<img src="https://nschloe.github.io/cplot/f10.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/f05.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/f025.png" width="70%">
-:-------------------:|:--------------------:|:------------------:|
-`alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.25`    |
 
 
 ### Testing
