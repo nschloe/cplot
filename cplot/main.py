@@ -16,10 +16,10 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).  The
     # function 2/pi * arctan(r) is _very_ close to g_(1/2) between 0 and 1 and has that
     # property, so this is good alternative. Here, we are using the simple r^a / r^a+1
-    # with a configurable a.
+    # with a configurable parameter a.
 
     def abs_scaling(r):
-        # Fulfills (1) for any alpha > 0
+        # Fulfills (1) for any alpha >= 0
         return r ** alpha / (r ** alpha + 1)
 
     # def abs_scaling(r):
