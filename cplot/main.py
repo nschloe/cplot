@@ -101,7 +101,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         assert (
             colorspace.upper() == "HSL"
         ), f"Illegal colorspace {colorspace}. Pick one of CAM16, CIELAB, HSL."
-        hsl = colorio.Hsl()
+        hsl = colorio.HSL()
         # rotate by 120 degrees to have green (0, 1, 0) for real positive numbers
         offset = 120
         hsl_vals = numpy.array(
