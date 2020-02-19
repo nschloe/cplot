@@ -3,26 +3,26 @@ version: 2
 jobs:
   lint:
     docker:
-      - image: ubuntu:18.04
+      - image: circleci/python:3
     steps:
       - checkout
-      - run: apt update
-      - run: apt install -y python3-pip
-      - run: pip3 install -U black flake8 isort
-      - run: LC_ALL=C.UTF-8 black --check .
-      - run: flake8 setup.py cplot/ test/*.py
+      - run: pip3 install black flake8 isort
+      - run: black --check .
+      - run: flake8 .
   build:
     working_directory: ~/work
     docker:
-      - image: ubuntu:18.04
+      - image: circleci/python:3
     steps:
-      - run: apt-get update
-      - run: apt-get install -y git python3-pip
-      - run: pip3 install -U pytest pytest-cov
+      - run: pip install -U pytest pytest-cov
       - checkout
-      - run: pip3 install .
+      - run: pip install .
       # The tests
-      - run: cd test/ && MPLBACKEND=Agg pytest --cov cplot
+      - run:
+          command: pytest --cov cplot
+          working_directory: test/
+          env:
+            MPLBACKEND: Agg
       # submit to codecov
       - run: apt-get install -y curl
       - run: bash <(curl -s https://codecov.io/bash)
