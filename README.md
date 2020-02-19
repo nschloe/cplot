@@ -7,6 +7,7 @@
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.python.org/pypi/cplot)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/cplot.svg?style=flat-square)](https://pypi.org/pypi/cplot/)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 [![PyPi downloads](https://img.shields.io/pypi/dm/cplot.svg?style=flat-square)](https://pypistats.org/packages/cplot)
 
@@ -25,7 +26,7 @@ Similar projects:
 
 Install with
 ```
-pip3 install cplot --user
+pip install cplot
 ```
 and use as
 ```python
@@ -106,17 +107,23 @@ All plots are created with default settings.
 :-------------------:|:------------------:|:----------:|
 `1/z`               |  `z / abs(z)`            |  `(z+1) / (z-1)`    |
 
+<img src="https://nschloe.github.io/cplot/zz.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/1zz.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/z1z.png" width="70%"> |
+:-------------------:|:------------------:|:----------:|
+`z ** z`               |  `(1/z) ** z`            |  `z ** (1/z)`    |
+
 <img src="https://nschloe.github.io/cplot/root2.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/root3.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/root4.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sqrt`          |  `x**(1/3)`       |  `x**(1/4)`    |
+`numpy.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
 
 <img src="https://nschloe.github.io/cplot/log.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/exp.png" width="70%">
 <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.log`          |  `numpy.exp`       |  `exp(1/x)`    |
+`numpy.log`          |  `numpy.exp`       |  `exp(1/z)`    |
 
 <img src="https://nschloe.github.io/cplot/sin.png" width="70%"> |
 <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> |
