@@ -28,7 +28,6 @@ setup(
         about["__license__"],
         "Intended Audience :: Science/Research",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
