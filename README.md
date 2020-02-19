@@ -25,7 +25,7 @@ Similar projects:
 
 Install with
 ```
-pip3 install cplot --user
+pip install cplot
 ```
 and use as
 ```python

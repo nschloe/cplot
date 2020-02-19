@@ -29,8 +29,9 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     angle = numpy.arctan2(z.imag, z.real)
     absval_scaled = abs_scaling(numpy.abs(z))
 
-    assert numpy.all(absval_scaled >= 0)
-    assert numpy.all(absval_scaled <= 1)
+    # We may have NaNs, so don't be too strict here.
+    # assert numpy.all(absval_scaled >= 0)
+    # assert numpy.all(absval_scaled <= 1)
 
     # It'd be lovely if one could claim that the grayscale of the cplot represents
     # exactly the absolute value of the complex number. The grayscale is computed as the
@@ -129,19 +130,16 @@ def plot(*args, **kwargs):
 def show(*args, **kwargs):
     plot(*args, **kwargs)
     plt.show()
-    return
 
 
 def save_fig(filename, *args, **kwargs):
     plot(*args, **kwargs)
     plt.savefig(filename, transparent=True, bbox_inches="tight")
-    return
 
 
 def save_img(filename, *args, **kwargs):
     vals, _ = _get_srgb_vals(*args, **kwargs)
     matplotlib.image.imsave(filename, vals)
-    return
 
 
 def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
@@ -170,4 +168,3 @@ def tripcolor(triang, z, alpha=1):
     z2 = numpy.arange(n)
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list("mymap", rgb, N=n)
     plt.tripcolor(triang, z2, shading="gouraud", cmap=cmap)
-    return
