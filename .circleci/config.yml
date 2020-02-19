@@ -16,6 +16,7 @@ jobs:
     steps:
       - run: pip install -U pytest pytest-cov
       - checkout
+      - run: pip install -r test_requirements.txt
       - run: pip install .
       # The tests
       - run:
