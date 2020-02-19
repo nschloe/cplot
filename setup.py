@@ -1,4 +1,3 @@
-import codecs
 import os
 
 from setuptools import find_packages, setup
@@ -10,10 +9,6 @@ with open(os.path.join(base_dir, "cplot", "__about__.py"), "rb") as f:
     exec(f.read(), about)
 
 
-def read(fname):
-    return codecs.open(os.path.join(base_dir, fname), encoding="utf-8").read()
-
-
 setup(
     name="cplot",
     packages=find_packages(),
@@ -21,7 +16,7 @@ setup(
     author=about["__author__"],
     author_email=about["__author_email__"],
     description="Plotting tools for complex-valued functions",
-    long_description=read("README.md"),
+    long_description=open("README.md").read(),
     url="https://github.com/nschloe/cplot",
     license=about["__license__"],
     platforms="any",
