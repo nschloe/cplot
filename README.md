@@ -95,57 +95,39 @@ passes around a black or white point.
 
 All plots are created with default settings.
 
-<img src="https://nschloe.github.io/cplot/z1.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/z2.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/z3.png" width="70%">
+<img src="https://nschloe.github.io/cplot/z1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z3.png" width="70%">
 :-------------------:|:------------------:|:----------:|
 `z**1`               |  `z**2`            |  `z**3`    |
 
-<img src="https://nschloe.github.io/cplot/1z.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/z-absz.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/z+1-z-1.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/1z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z+1-z-1.png" width="70%"> |
 :-------------------:|:------------------:|:----------:|
 `1/z`               |  `z / abs(z)`            |  `(z+1) / (z-1)`    |
 
-<img src="https://nschloe.github.io/cplot/zz.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/1zz.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/z1z.png" width="70%"> |
+<img src="https://nschloe.github.io/cplot/zz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1zz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z1z.png" width="70%"> |
 :-------------------:|:------------------:|:----------:|
 `z ** z`               |  `(1/z) ** z`            |  `z ** (1/z)`    |
 
-<img src="https://nschloe.github.io/cplot/root2.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/root3.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/root4.png" width="70%">
+<img src="https://nschloe.github.io/cplot/root2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root3.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root4.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
 
-<img src="https://nschloe.github.io/cplot/log.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/exp.png" width="70%">
-<img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
+<img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.log`          |  `numpy.exp`       |  `exp(1/z)`    |
 
-<img src="https://nschloe.github.io/cplot/sin.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/cos.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/tan.png" width="70%">
+<img src="https://nschloe.github.io/cplot/sin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
 
-<img src="https://nschloe.github.io/cplot/sinh.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/cosh.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/tanh.png" width="70%">
+<img src="https://nschloe.github.io/cplot/sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.sinh`          |  `numpy.cosh`       |  `numpy.tanh`    |
 
-<img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/arctan.png" width="70%">
+<img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.arcsin`          |  `numpy.arccos`       |  `numpy.arctan`    |
 
-<img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> |
-<img src="https://nschloe.github.io/cplot/zeta.png" width="70%">
+<img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/zeta.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
 
@@ -158,5 +140,4 @@ pytest
 ```
 
 ### License
-
-cplot is published under the [MIT license](https://en.wikipedia.org/wiki/MIT_License).
+This software is published under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
