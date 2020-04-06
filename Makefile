@@ -1,4 +1,4 @@
-VERSION=$(shell python3 -c "import cplot; print(cplot.__version__)")
+VERSION=$(shell python3 -c "from configparser import ConfigParser; p = ConfigParser(); p.read('setup.cfg'); print(p['metadata']['version'])")
 
 default:
 	@echo "\"make publish\"?"
@@ -14,9 +14,10 @@ upload: setup.py
 
 tag:
 	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
-	@echo "Tagging v$(VERSION)..."
-	git tag v$(VERSION)
-	git push --tags
+	# @echo "Tagging v$(VERSION)..."
+	# git tag v$(VERSION)
+	# git push --tags
+	curl -H "Authorization: token `cat $(HOME)/.github-access-token`" -d '{"tag_name": "v$(VERSION)"}' https://api.github.com/repos/nschloe/cplot/releases
 
 publish: tag upload
 
