@@ -111,7 +111,7 @@ All plots are created with default settings.
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
 
-<img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
+<img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.log`          |  `numpy.exp`       |  `exp(1/z)`    |
 
