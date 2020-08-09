@@ -1,8 +1,7 @@
+import colorio
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy
-
-import colorio
 
 
 def get_srgb1(z, alpha=1, colorspace="CAM16"):
@@ -45,8 +44,9 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         L_A = 64 / numpy.pi / 5
         cam = colorio.CAM16UCS(0.69, 20, L_A)
         srgb = colorio.SrgbLinear()
-        # The max radius is about 21.7, but crank up colors a little bit to make the
-        # images more saturated. This leads to SRGB-cut-off of course.
+        # The max radius for which all colors are representable as SRGB is about 21.7.
+        # Crank up the colors a little bit to make the images more saturated. This leads
+        # to SRGB-cut-off of course.
         # r0 = find_max_srgb_radius(cam, srgb, L=50)
         # r0 = 21.65824845433235
         r0 = 25.0
@@ -66,6 +66,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         )
         # now just translate to srgb
         srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
+        srgb_vals *= 1.1
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
@@ -124,7 +125,6 @@ def plot(*args, **kwargs):
     plt.imshow(
         vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
     )
-    return
 
 
 def show(*args, **kwargs):

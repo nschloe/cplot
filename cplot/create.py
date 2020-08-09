@@ -1,7 +1,6 @@
+import colorio
 import matplotlib.pyplot as plt
 import numpy
-
-import colorio
 
 
 def show_kovesi_test_image(cmap):
@@ -36,13 +35,11 @@ def show_kovesi_test_image(cmap):
     plt.yticks([])
 
     plt.show()
-    return
 
 
 def show_linear(vals):
     plt.imshow(numpy.multiply.outer(numpy.ones(60), vals.T))
     plt.show()
-    return
 
 
 def show_circular(vals, rot=0.0):
@@ -60,20 +57,17 @@ def show_circular(vals, rot=0.0):
 
     plt.imshow(out.T)
     plt.show()
-    return
 
 
-def find_max_srgb_radius(cs, srgb, L=50):
-    # Go into the CAM16-UCS color space and find the circle in the L=50-plane with the
-    # center (50, 0, 0) such that it's as large as possible while still being in the
-    # SRGB gamut.
+def find_max_srgb_radius(cs, srgb, L=50, tol=1.0e-6):
+    # In the given color space find the circle in the L=50-plane with the center (50, 0,
+    # 0) such that it's as large as possible while still being in the SRGB gamut.
     n = 256
     alpha = numpy.linspace(0, 2 * numpy.pi, n, endpoint=False)
 
     # bisection
     r0 = 0.0
     r1 = 100.0
-    tol = 1.0e-6
     while r1 - r0 > tol:
         r = 0.5 * (r1 + r0)
 

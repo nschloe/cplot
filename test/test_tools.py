@@ -17,7 +17,6 @@ def test_create():
     cplot.show_circular(rgb, rot=-numpy.pi * 4 / 12)
     # cplot.show_circular(rgb, rot=-numpy.pi * 18/12)
     cplot.show_kovesi_test_image(cmap)
-    return
 
 
 def zeta(z):
@@ -34,7 +33,6 @@ def test_array():
     z = numpy.random.rand(n) + 1j * numpy.random.rand(n)
     vals = cplot.get_srgb1(z)
     assert vals.shape == (n, 3)
-    return
 
 
 def test_cam16():
@@ -96,7 +94,6 @@ def test_cam16():
     # cplot.save_fig("bessel1.png", lambda z: scipy.special.jv(1, z), -a, +a, -a, +a, 100, 100)
     # cplot.save_fig("bessel2.png", lambda z: scipy.special.jv(2, z), -a, +a, -a, +a, 100, 100)
     # cplot.save_fig("bessel3.png", lambda z: scipy.special.jv(3, z), -a, +a, -a, +a, 100, 100)
-    return
 
 
 def test_compare_colorspaces():
@@ -115,9 +112,8 @@ def test_compare_colorspaces():
     cplot.save_fig("cam16-00.png", f, -3, +3, -3, +3, n, n, 0, "cam16")
     cplot.save_fig("cielab-00.png", f, -3, +3, -3, +3, n, n, 0, "cielab")
     cplot.save_fig("hsl-00.png", f, -3, +3, -3, +3, n, n, 0, "hsl")
-    return
 
 
 if __name__ == "__main__":
-    # test_cam16()
-    test_compare_colorspaces()
+    test_cam16()
+    # test_compare_colorspaces()
