@@ -17,6 +17,7 @@ def test_create():
     cplot.show_circular(rgb, rot=-numpy.pi * 4 / 12)
     # cplot.show_circular(rgb, rot=-numpy.pi * 18/12)
     cplot.show_kovesi_test_image(cmap)
+    cplot.show_kovesi_test_image_circular(cmap)
 
 
 def zeta(z):
@@ -115,5 +116,6 @@ def test_compare_colorspaces():
 
 
 if __name__ == "__main__":
-    test_cam16()
+    # test_cam16()
     # test_compare_colorspaces()
+    test_create()

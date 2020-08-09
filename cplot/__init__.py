@@ -3,8 +3,11 @@ from .create import (
     create_colormap,
     find_max_srgb_radius,
     show_circular,
-    show_kovesi_test_image,
     show_linear,
+)
+from .benchmark import (
+    show_kovesi_test_image_radius,
+    show_kovesi_test_image_angle,
 )
 from .main import get_srgb1, plot, save_fig, save_img, show, tripcolor
 
@@ -12,6 +15,8 @@ __all__ = [
     "__version__",
     #
     "show_kovesi_test_image",
+    "show_kovesi_test_image_radius",
+    "show_kovesi_test_image_angle",
     "show_linear",
     "show_circular",
     "find_max_srgb_radius",
