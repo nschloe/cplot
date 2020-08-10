@@ -1,22 +1,11 @@
 from .__about__ import __version__
-from .create import (
-    create_colormap,
-    find_max_srgb_radius,
-    show_circular,
-    show_linear,
-)
-from .benchmark import (
-    show_kovesi_test_image_radius,
-    show_kovesi_test_image_angle,
-)
-from .main import get_srgb1, plot, save_fig, save_img, show, tripcolor
+from .benchmark import show_test_function
+from .create import create_colormap, find_max_srgb_radius, show_circular, show_linear
 
 __all__ = [
     "__version__",
     #
-    "show_kovesi_test_image",
-    "show_kovesi_test_image_radius",
-    "show_kovesi_test_image_angle",
+    "show_test_function",
     "show_linear",
     "show_circular",
     "find_max_srgb_radius",
