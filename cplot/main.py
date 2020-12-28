@@ -12,10 +12,30 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # This makes sure that the representation of the inverse of a function is exactly as
     # light as the original function is dark. The function g_a(r) = 1 - a^|r| (with some
     # 0 < a < 1), as it is sometimes suggested (e.g., on Wikipedia
-    # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).  The
-    # function 2/pi * arctan(r) is _very_ close to g_(1/2) between 0 and 1 and has that
-    # property, so this is good alternative. Here, we are using the simple r^a / r^a+1
+    # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).
+    #
+    # Here, we are using the simple
+    #
+    #   l(r) = r^a / r^a+1
+    #
     # with a configurable parameter a.
+    #  * For a=1.21268891, this function is very close to the popular alternative
+    #    2/pi * arctan(r) (which also fulfills the above property)
+    #  * For a=1.21428616 to g_{1/2} (between 0 and 1).
+    #  * For a=1.49486991 it is close to x/2 (between 0 and 1).
+    #
+    # Disadvantage of this choice:
+    # l'(r)=0 at r=0 for all a > 1 and so l(r) has an inflection point in (0, 1) for
+    # all a > 1. The arctan version does _not_.
+    #
+    # Another choice:
+    #
+    #           / r / 2          for 0 <= x <= 1,
+    #   f(r) = |
+    #           \ 1 - 1 / (2r)   for x > 1.
+    #
+    # TODO find parametrized function that is free of inflection points for the param=0
+    # (or infty) is this last f(r).
 
     def abs_scaling(r):
         # Fulfills (1) for any alpha >= 0
