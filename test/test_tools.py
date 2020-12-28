@@ -17,7 +17,7 @@ def test_create():
     cplot.show_circular(rgb, rot=-numpy.pi * 4 / 12)
     # cplot.show_circular(rgb, rot=-numpy.pi * 18/12)
     cplot.show_kovesi_test_image(cmap)
-    cplot.show_kovesi_test_image_circular(cmap)
+    # cplot.show_kovesi_test_image_circular(cmap)
 
 
 def zeta(z):

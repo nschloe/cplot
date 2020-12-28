@@ -5,8 +5,7 @@ from .main import show
 
 
 def show_kovesi_test_image(cmap):
-    """Visual color map test after Peter Kovesi <https://arxiv.org/abs/1509.03700>.
-    """
+    """Visual color map test after Peter Kovesi <https://arxiv.org/abs/1509.03700>."""
     n = 300
     x = numpy.arange(n + 1) / n
     y = numpy.arange(n + 1) / n / 3
