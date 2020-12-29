@@ -61,8 +61,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # Unfortunately, there is no perceptually uniform color space yet that uses
     # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
     if colorspace.upper() == "CAM16":
-        L_A = 64 / numpy.pi / 5
-        cam = colorio.CAM16UCS(0.69, 20, L_A)
+        cam = colorio.CAM16UCS(0.69, 20, L_A=64 / numpy.pi / 5)
         srgb = colorio.SrgbLinear()
         # The max radius for which all colors are representable as SRGB is about 21.7.
         # Crank up the colors a little bit to make the images more saturated. This leads
@@ -120,13 +119,19 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         srgb_vals[srgb_vals > 1] = 1.0
         srgb_vals[srgb_vals < 0] = 0.0
     elif colorspace.upper() == "OKLAB":
-        cielab = colorio.OKLAB()
+        oklab = colorio.OKLAB()
         srgb = colorio.SrgbLinear()
         # The max radius is about 29.5, but crank up colors a little bit to make the
         # images more saturated. This leads to SRGB-cut-off of course.
-        # r0 = find_max_srgb_radius(cielab, srgb, L=50)
-        # r0 = 29.488203674554825
-        r0 = 45.0
+        # OKLAB is designed such that the D65 whitepoint, scaled to Y=100, has lightness
+        # 1. Without the scaling in Y, this results in a whitepoint lightness of
+        # 4.64158795.
+        # lab = oklab.from_xyz100(colorio.illuminants.whitepoints_cie1931["D65"])
+        max_lightness = 4.64158795
+        # from .create import find_max_srgb_radius
+        # r0 = find_max_srgb_radius(oklab, srgb, L=max_lightness / 2)
+        # The actual value is 0.3945164382457733, but allow a slight oversaturation.
+        r0 = 0.50
         # Rotate the angles such a "green" color represents positive real values. The
         # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
         # point 1.0.
@@ -136,13 +141,13 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
         lab_pts = numpy.array(
             [
-                100 * absval_scaled,
+                max_lightness * absval_scaled,
                 rd * numpy.cos(angle + offset),
                 rd * numpy.sin(angle + offset),
             ]
         )
         # now just translate to srgb
-        srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cielab.to_xyz100(lab_pts)))
+        srgb_vals = srgb.to_srgb1(srgb.from_xyz100(oklab.to_xyz100(lab_pts)))
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
