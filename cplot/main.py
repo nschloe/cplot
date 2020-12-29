@@ -1,8 +1,7 @@
+import colorio
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy
-
-import colorio
 
 
 def get_srgb1(z, alpha=1, colorspace="CAM16"):
@@ -13,10 +12,30 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # This makes sure that the representation of the inverse of a function is exactly as
     # light as the original function is dark. The function g_a(r) = 1 - a^|r| (with some
     # 0 < a < 1), as it is sometimes suggested (e.g., on Wikipedia
-    # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).  The
-    # function 2/pi * arctan(r) is _very_ close to g_(1/2) between 0 and 1 and has that
-    # property, so this is good alternative. Here, we are using the simple r^a / r^a+1
+    # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).
+    #
+    # Here, we are using the simple
+    #
+    #   l(r) = r^a / r^a+1
+    #
     # with a configurable parameter a.
+    #  * For a=1.21268891, this function is very close to the popular alternative
+    #    2/pi * arctan(r) (which also fulfills the above property)
+    #  * For a=1.21428616 to g_{1/2} (between 0 and 1).
+    #  * For a=1.49486991 it is close to x/2 (between 0 and 1).
+    #
+    # Disadvantage of this choice:
+    # l'(r)=0 at r=0 for all a > 1 and so l(r) has an inflection point in (0, 1) for
+    # all a > 1. The arctan version does _not_.
+    #
+    # Another choice:
+    #
+    #           / r / 2          for 0 <= x <= 1,
+    #   f(r) = |
+    #           \ 1 - 1 / (2r)   for x > 1.
+    #
+    # TODO find parametrized function that is free of inflection points for the param=0
+    # (or infty) is this last f(r).
 
     def abs_scaling(r):
         # Fulfills (1) for any alpha >= 0
@@ -42,17 +61,17 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # Unfortunately, there is no perceptually uniform color space yet that uses
     # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
     if colorspace.upper() == "CAM16":
-        L_A = 64 / numpy.pi / 5
-        cam = colorio.CAM16UCS(0.69, 20, L_A)
+        cam = colorio.CAM16UCS(0.69, 20, L_A=64 / numpy.pi / 5)
         srgb = colorio.SrgbLinear()
-        # The max radius is about 21.7, but crank up colors a little bit to make the
-        # images more saturated. This leads to SRGB-cut-off of course.
+        # The max radius for which all colors are representable as SRGB is about 21.7.
+        # Crank up the colors a little bit to make the images more saturated. This leads
+        # to SRGB-cut-off of course.
         # r0 = find_max_srgb_radius(cam, srgb, L=50)
         # r0 = 21.65824845433235
         r0 = 25.0
-        # Rotate the angles such a "green" color represents positive real values. The
-        # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
-        # point 1.0.
+        # Rotate the angles such that a "green" color represents positive real values.
+        # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
+        # the point 1.0.
         offset = 0.916_708 * numpy.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
@@ -66,6 +85,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         )
         # now just translate to srgb
         srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
+        srgb_vals *= 1.1
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
@@ -78,9 +98,9 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         # r0 = find_max_srgb_radius(cielab, srgb, L=50)
         # r0 = 29.488203674554825
         r0 = 45.0
-        # Rotate the angles such a "green" color represents positive real values. The
-        # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
-        # point 1.0.
+        # Rotate the angles such that a "green" color represents positive real values.
+        # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
+        # the point 1.0.
         offset = 0.893_686_8 * numpy.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
@@ -94,6 +114,40 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         )
         # now just translate to srgb
         srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cielab.to_xyz100(lab_pts)))
+        # Cut off the outliers. This restriction makes the representation less perfect,
+        # but that's what it is with the SRGB color space.
+        srgb_vals[srgb_vals > 1] = 1.0
+        srgb_vals[srgb_vals < 0] = 0.0
+    elif colorspace.upper() == "OKLAB":
+        oklab = colorio.OKLAB()
+        srgb = colorio.SrgbLinear()
+        # The max radius is about 29.5, but crank up colors a little bit to make the
+        # images more saturated. This leads to SRGB-cut-off of course.
+        # OKLAB is designed such that the D65 whitepoint, scaled to Y=100, has lightness
+        # 1. Without the scaling in Y, this results in a whitepoint lightness of
+        # 4.64158795.
+        # lab = oklab.from_xyz100(colorio.illuminants.whitepoints_cie1931["D65"])
+        max_lightness = 4.64158795
+        # from .create import find_max_srgb_radius
+        # r0 = find_max_srgb_radius(oklab, srgb, L=max_lightness / 2)
+        # The actual value is 0.3945164382457733, but allow a slight oversaturation.
+        r0 = 0.50
+        # Rotate the angles such a "green" color represents positive real values. The
+        # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
+        # point 1.0.
+        offset = 0.893_686_8 * numpy.pi
+        # Map (r, angle) to a point in the color space; bicone mapping similar to what
+        # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
+        rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
+        lab_pts = numpy.array(
+            [
+                max_lightness * absval_scaled,
+                rd * numpy.cos(angle + offset),
+                rd * numpy.sin(angle + offset),
+            ]
+        )
+        # now just translate to srgb
+        srgb_vals = srgb.to_srgb1(srgb.from_xyz100(oklab.to_xyz100(lab_pts)))
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
@@ -124,7 +178,6 @@ def plot(*args, **kwargs):
     plt.imshow(
         vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
     )
-    return
 
 
 def show(*args, **kwargs):

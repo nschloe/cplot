@@ -34,7 +34,6 @@ def test_tripcolor():
     cplot.tripcolor(triang, z)
     plt.gca().set_aspect("equal", "datalim")
     plt.show()
-    return
 
 
 if __name__ == "__main__":

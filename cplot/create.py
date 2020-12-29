@@ -1,48 +1,11 @@
+import colorio
 import matplotlib.pyplot as plt
 import numpy
-
-import colorio
-
-
-def show_kovesi_test_image(cmap):
-    """Visual color map test after Peter Kovesi
-    <https://arxiv.org/abs/1509.03700>.
-    """
-    n = 300
-    x = numpy.arange(n + 1) / n
-    y = numpy.arange(n + 1) / n / 3
-    X, Y = numpy.meshgrid(x, y)
-    # From <https://arxiv.org/abs/1509.03700>:
-    # It consists of a sine wave superimposed on a ramp function, this provides a set of
-    # constant magnitude features presented at different offsets. The spatial frequency
-    # of the sine wave is chosen to lie in the range at which the human eye is most
-    # sensitive, and its amplitude is set so that the range from peak to trough
-    # represents a series of features that are 10% of the total data range. The
-    # amplitude of the sine wave is modulated from its full value at the top of the
-    # image to zero at the bottom.
-    z = X + (3 * Y) ** 2 * 0.05 * numpy.sin(100 * numpy.pi * X)
-    # z = X + 0.05 * numpy.sin(100*numpy.pi*X*Y)
-
-    plt.imshow(
-        z,
-        extent=(x.min(), x.max(), y.max(), y.min()),
-        interpolation="nearest",
-        cmap=cmap,
-        origin="lower",
-        aspect="equal",
-    )
-
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.show()
-    return
 
 
 def show_linear(vals):
     plt.imshow(numpy.multiply.outer(numpy.ones(60), vals.T))
     plt.show()
-    return
 
 
 def show_circular(vals, rot=0.0):
@@ -60,20 +23,17 @@ def show_circular(vals, rot=0.0):
 
     plt.imshow(out.T)
     plt.show()
-    return
 
 
-def find_max_srgb_radius(cs, srgb, L=50):
-    # Go into the CAM16-UCS color space and find the circle in the L=50-plane with the
-    # center (50, 0, 0) such that it's as large as possible while still being in the
-    # SRGB gamut.
+def find_max_srgb_radius(cs, srgb, L=50, tol=1.0e-6):
+    # In the given color space find the circle in the L=50-plane with the center (50, 0,
+    # 0) such that it's as large as possible while still being in the SRGB gamut.
     n = 256
     alpha = numpy.linspace(0, 2 * numpy.pi, n, endpoint=False)
 
     # bisection
     r0 = 0.0
     r1 = 100.0
-    tol = 1.0e-6
     while r1 - r0 > tol:
         r = 0.5 * (r1 + r0)
 
