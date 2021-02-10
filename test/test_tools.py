@@ -1,7 +1,6 @@
 import matplotlib
 import mpmath
 import numpy
-import scipy.special
 
 import cplot
 

@@ -50,8 +50,8 @@ val = cplot.get_srgb1(z)
 ```
 All functions have the optional arguments (with their default values)
 ```python
-alpha=1  # >= 0
-colorspace="cam16"  # "cielab", "oklab", "hsl"
+alpha = 1  # >= 0
+colorspace = "cam16"  # "cielab", "oklab", "hsl"
 ```
 
 * `alpha` can be used to adjust the use of colors. A value less than 1 adds more color

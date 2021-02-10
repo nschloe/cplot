@@ -1,7 +1,9 @@
-import cplot
-import numpy as np
 import mpmath
+import numpy as np
 import scipy.special
+
+import cplot
+
 
 def zeta(z):
     vals = [[mpmath.zeta(val) for val in row] for row in z]
@@ -9,6 +11,7 @@ def zeta(z):
         [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
     )
     return out
+
 
 # First function from the SIAM-100-digit challenge
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
