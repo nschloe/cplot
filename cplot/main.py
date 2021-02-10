@@ -61,8 +61,8 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # Unfortunately, there is no perceptually uniform color space yet that uses
     # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
     if colorspace.upper() == "CAM16":
-        cam = colorio.CAM16UCS(0.69, 20, L_A=64 / numpy.pi / 5)
-        srgb = colorio.SrgbLinear()
+        cam = colorio.cs.CAM16UCS(0.69, 20, L_A=64 / numpy.pi / 5)
+        srgb = colorio.cs.SrgbLinear()
         # The max radius for which all colors are representable as SRGB is about 21.7.
         # Crank up the colors a little bit to make the images more saturated. This leads
         # to SRGB-cut-off of course.
@@ -84,15 +84,15 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
             ]
         )
         # now just translate to srgb
-        srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
+        srgb_vals = srgb.to_rgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
         srgb_vals *= 1.1
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
         srgb_vals[srgb_vals < 0] = 0.0
     elif colorspace.upper() == "CIELAB":
-        cielab = colorio.CIELAB()
-        srgb = colorio.SrgbLinear()
+        cielab = colorio.cs.CIELAB()
+        srgb = colorio.cs.SrgbLinear()
         # The max radius is about 29.5, but crank up colors a little bit to make the
         # images more saturated. This leads to SRGB-cut-off of course.
         # r0 = find_max_srgb_radius(cielab, srgb, L=50)
@@ -113,20 +113,20 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
             ]
         )
         # now just translate to srgb
-        srgb_vals = srgb.to_srgb1(srgb.from_xyz100(cielab.to_xyz100(lab_pts)))
+        srgb_vals = srgb.to_rgb1(srgb.from_xyz100(cielab.to_xyz100(lab_pts)))
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
         srgb_vals[srgb_vals < 0] = 0.0
     elif colorspace.upper() == "OKLAB":
-        oklab = colorio.OKLAB()
-        srgb = colorio.SrgbLinear()
+        oklab = colorio.cs.OKLAB()
+        srgb = colorio.cs.SrgbLinear()
         # The max radius is about 29.5, but crank up colors a little bit to make the
         # images more saturated. This leads to SRGB-cut-off of course.
         # OKLAB is designed such that the D65 whitepoint, scaled to Y=100, has lightness
         # 1. Without the scaling in Y, this results in a whitepoint lightness of
         # 4.64158795.
-        # lab = oklab.from_xyz100(colorio.illuminants.whitepoints_cie1931["D65"])
+        # lab = oklab.from_xyz100(colorio.cs.illuminants.whitepoints_cie1931["D65"])
         max_lightness = 4.64158795
         # from .create import find_max_srgb_radius
         # r0 = find_max_srgb_radius(oklab, srgb, L=max_lightness / 2)
@@ -147,7 +147,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
             ]
         )
         # now just translate to srgb
-        srgb_vals = srgb.to_srgb1(srgb.from_xyz100(oklab.to_xyz100(lab_pts)))
+        srgb_vals = srgb.to_rgb1(srgb.from_xyz100(oklab.to_xyz100(lab_pts)))
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.
         srgb_vals[srgb_vals > 1] = 1.0
@@ -156,7 +156,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         assert (
             colorspace.upper() == "HSL"
         ), f"Illegal colorspace {colorspace}. Pick one of CAM16, CIELAB, HSL."
-        hsl = colorio.HSL()
+        hsl = colorio.cs.HSL()
         # rotate by 120 degrees to have green (0, 1, 0) for real positive numbers
         offset = 120
         hsl_vals = numpy.array(
@@ -166,7 +166,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
                 absval_scaled,
             ]
         )
-        srgb_vals = hsl.to_srgb1(hsl_vals)
+        srgb_vals = hsl.to_rgb1(hsl_vals)
         # iron out the -1.82131e-17 round-offs
         srgb_vals[srgb_vals < 0] = 0
 

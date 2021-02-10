@@ -50,8 +50,8 @@ val = cplot.get_srgb1(z)
 ```
 All functions have the optional arguments (with their default values)
 ```python
-alpha=1  # >= 0
-colorspace="cam16"  # "cielab", "oklab", "hsl"
+alpha = 1  # >= 0
+colorspace = "cam16"  # "cielab", "oklab", "hsl"
 ```
 
 * `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
@@ -128,6 +128,10 @@ All plots are created with default settings.
 <img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.arcsin`          |  `numpy.arccos`       |  `numpy.arctan`    |
+
+<img src="https://nschloe.github.io/cplot/sinz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.png" width="70%">
+:-------------------:|:------------------:|:----------------:|
+`sin(z) / z`         |  `cos(z) / z`      |  `tan(z) / z`    |
 
 <img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/zeta.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
