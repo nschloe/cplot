@@ -14,8 +14,8 @@ __all__ = [
     "create_colormap",
     "show",
     "plot",
-    "save_fig",
-    "save_img",
+    "savefig",
+    "imsave",
     "get_srgb1",
     #
     "tripcolor",
