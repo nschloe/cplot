@@ -192,7 +192,7 @@ def savefig(filename, *args, **kwargs):
 
 def imsave(filename, *args, **kwargs):
     vals, _ = _get_srgb_vals(*args, **kwargs)
-    matplotlib.image.imsave(filename, vals)
+    matplotlib.image.imsave(filename, vals, origin="lower")
 
 
 def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):

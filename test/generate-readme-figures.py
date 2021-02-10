@@ -32,9 +32,9 @@ def siam(z):
 
 n = 400
 
-cplot.imsave("z1.png", lambda z: z ** 1, -2, +2, -2, +2, n, n)
-cplot.imsave("z2.png", lambda z: z ** 2, -2, +2, -2, +2, n, n)
-cplot.imsave("z3.png", lambda z: z ** 3, -2, +2, -2, +2, n, n)
+cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, n, n)
+cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, n, n)
+cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, n, n)
 
 cplot.savefig("1z.png", lambda z: 1 / z, -2, +2, -2, +2, n, n)
 cplot.savefig("z-absz.png", lambda z: z / abs(z), -2, +2, -2, +2, n, n)
