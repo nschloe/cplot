@@ -185,12 +185,12 @@ def show(*args, **kwargs):
     plt.show()
 
 
-def save_fig(filename, *args, **kwargs):
+def savefig(filename, *args, **kwargs):
     plot(*args, **kwargs)
     plt.savefig(filename, transparent=True, bbox_inches="tight")
 
 
-def save_img(filename, *args, **kwargs):
+def imsave(filename, *args, **kwargs):
     vals, _ = _get_srgb_vals(*args, **kwargs)
     matplotlib.image.imsave(filename, vals)
 
