@@ -129,6 +129,10 @@ All plots are created with default settings.
 :-------------------:|:------------------:|:-------------------------:|
 `numpy.arcsin`          |  `numpy.arccos`       |  `numpy.arctan`    |
 
+<img src="https://nschloe.github.io/cplot/sinz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.png" width="70%">
+:-------------------:|:------------------:|:----------------:|
+`sin(z) / z`         |  `cos(z) / z`      |  `tan(z) / z`    |
+
 <img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/zeta.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
 `scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
