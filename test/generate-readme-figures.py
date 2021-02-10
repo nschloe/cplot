@@ -1,8 +1,19 @@
+import matplotlib.pyplot as plt
 import mpmath
 import numpy as np
 import scipy.special
 
 import cplot
+
+# gray to improve visibility on github's dark background
+gray = "#969696"
+ax = plt.gca()
+ax.spines["bottom"].set_color(gray)
+ax.spines["top"].set_color(gray)
+ax.spines["right"].set_color(gray)
+ax.spines["left"].set_color(gray)
+ax.tick_params(axis="x", colors=gray)
+ax.tick_params(axis="y", colors=gray)
 
 
 def zeta(z):
@@ -58,3 +69,16 @@ cplot.savefig("digamma.png", scipy.special.digamma, -5, +5, -5, +5, n, n)
 cplot.savefig("zeta.png", zeta, -30, +30, -30, +30, n, n)
 
 cplot.savefig("siam.png", siam, -1, 1, -1, 1, n, n, alpha=0.1)
+
+
+def f(z):
+    return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
+
+
+names = ["cam16", "cielab", "oklab", "hsl"]
+
+n = 201
+for name in names:
+    cplot.savefig(name + "-10.png", f, -3, +3, -3, +3, n, n, colorspace=name)
+    cplot.savefig(name + "-05.png", f, -3, +3, -3, +3, n, n, 0.5, name)
+    cplot.savefig(name + "-00.png", f, -3, +3, -3, +3, n, n, 0, name)
