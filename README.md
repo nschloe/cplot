@@ -35,8 +35,8 @@ import numpy
 
 cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
 
-cplot.save_fig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
-cplot.save_img("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.savefig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.imsave("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
 
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
