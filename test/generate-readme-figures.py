@@ -16,10 +16,23 @@ ax.tick_params(axis="x", colors=gray)
 ax.tick_params(axis="y", colors=gray)
 
 
-def zeta(z):
+def riemann_zeta(z):
     vals = [[mpmath.zeta(val) for val in row] for row in z]
     out = np.array(
         [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
+    )
+    return out
+
+
+def riemann_xi(z):
+    # https://en.wikipedia.org/wiki/Riemann_Xi_function
+    out = (
+        0.5
+        * z
+        * (z - 1)
+        * np.pi ** (-z / 2)
+        * scipy.special.gamma(z / 2)
+        * riemann_zeta(z)
     )
     return out
 
@@ -66,19 +79,19 @@ cplot.savefig("tanz-z.png", lambda z: np.tan(z) / z, -7, +7, -7, +7, n, n)
 
 cplot.savefig("gamma.png", scipy.special.gamma, -5, +5, -5, +5, n, n)
 cplot.savefig("digamma.png", scipy.special.digamma, -5, +5, -5, +5, n, n)
-cplot.savefig("zeta.png", zeta, -30, +30, -30, +30, n, n)
+cplot.savefig("zeta.png", riemann_zeta, -30, +30, -30, +30, n, n)
 
-cplot.savefig("siam.png", siam, -1, 1, -1, 1, n, n, alpha=0.1)
+cplot.savefig("riemann-xi.png", riemann_xi, -30, +30, -30, +30, n, n)
+
+# cplot.savefig("siam.png", siam, -1, 1, -1, 1, n, n, alpha=0.1)
 
 
 def f(z):
     return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
 
 
-names = ["cam16", "cielab", "oklab", "hsl"]
-
 n = 201
-for name in names:
-    cplot.savefig(name + "-10.png", f, -3, +3, -3, +3, n, n, colorspace=name)
-    cplot.savefig(name + "-05.png", f, -3, +3, -3, +3, n, n, 0.5, name)
-    cplot.savefig(name + "-00.png", f, -3, +3, -3, +3, n, n, 0, name)
+for name in ["cam16", "cielab", "oklab", "hsl"]:
+    cplot.savefig(f"{name}-10.png", f, -3, +3, -3, +3, n, n, colorspace=name)
+    cplot.savefig(f"{name}-05.png", f, -3, +3, -3, +3, n, n, 0.5, name)
+    cplot.savefig(f"{name}-00.png", f, -3, +3, -3, +3, n, n, 0, name)

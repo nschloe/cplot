@@ -16,12 +16,12 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     #
     # Here, we are using the simple
     #
-    #   l(r) = r^a / r^a+1
+    #   l(r) = r^a / (r^a + 1)
     #
     # with a configurable parameter a.
     #  * For a=1.21268891, this function is very close to the popular alternative
     #    2/pi * arctan(r) (which also fulfills the above property)
-    #  * For a=1.21428616 to g_{1/2} (between 0 and 1).
+    #  * For a=1.21428616 is is close to g_{1/2} (between 0 and 1).
     #  * For a=1.49486991 it is close to x/2 (between 0 and 1).
     #
     # Disadvantage of this choice:
@@ -44,6 +44,10 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # def abs_scaling(r):
     #     # Fulfills (1).
     #    return 2 / numpy.pi * numpy.arctan(r)
+
+    # def abs_scaling(r):
+    #     # Fulfills (1).
+    #    return numpy.where(r < 1.0, r / 2, 1 - 1 / 2 /r )
 
     angle = numpy.arctan2(z.imag, z.real)
     absval_scaled = abs_scaling(numpy.abs(z))
