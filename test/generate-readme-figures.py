@@ -37,6 +37,22 @@ def riemann_xi(z):
     return out
 
 
+def riemann_siegel_z(z):
+    vals = [[mpmath.siegelz(val) for val in row] for row in z]
+    out = np.array(
+        [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
+    )
+    return out
+
+
+def riemann_siegel_theta(z):
+    vals = [[mpmath.siegeltheta(val) for val in row] for row in z]
+    out = np.array(
+        [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
+    )
+    return out
+
+
 # First function from the SIAM-100-digit challenge
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
 def siam(z):
@@ -81,9 +97,13 @@ cplot.savefig("gamma.png", scipy.special.gamma, -5, +5, -5, +5, n, n)
 cplot.savefig("digamma.png", scipy.special.digamma, -5, +5, -5, +5, n, n)
 cplot.savefig("zeta.png", riemann_zeta, -30, +30, -30, +30, n, n)
 
-cplot.savefig("riemann-xi.png", riemann_xi, -30, +30, -30, +30, n, n)
+cplot.savefig("riemann-xi.png", riemann_xi, -20, +20, -20, +20, n, n)
+cplot.savefig("riemann-siegel-z.png", riemann_siegel_z, -20, +20, -20, +20, n, n)
+cplot.savefig(
+    "riemann-siegel-theta.png", riemann_siegel_theta, -20, +20, -20, +20, n, n
+)
 
-# cplot.savefig("siam.png", siam, -1, 1, -1, 1, n, n, alpha=0.1)
+cplot.savefig("siam.png", siam, -1, 1, -1, 1, n, n, alpha=0.1)
 
 
 def f(z):
