@@ -139,6 +139,10 @@ All plots are created with default settings.
 :-------------------:|:------------------:|:-------------------------:|
 `scipy.special.gamma`          |  `scipy.special.digamma`       |  `mpmath.zeta`    |
 
+<img src="https://nschloe.github.io/cplot/riemann-siegel-theta.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-siegel-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-xi.png" width="70%">
+:-------------------:|:------------------:|:-------------------------:|
+`mpmath.siegeltheta` |  `mpmath.siegelz`  |  Riemann-Xi    |
+
 
 ### Testing
 
