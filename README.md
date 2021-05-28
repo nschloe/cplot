@@ -73,11 +73,11 @@ colorspace = "cam16"  # "cielab", "oklab", "hsl"
   Default is [`"cam16"`](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract);
   very similar is `"cielab"` (not shown here).
 
-Consider the test function
+Consider the test function (math rendered with [Purple
+Pi](https://github.com/nschloe/purple-pi))
 ```math
-f(z) = \frac{(z^2 - 1) * (z - 2 - 1j)^2}{z^2 + 2 + 2j}
+f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 ```
-(math rendered with [Purple Pi](https://github.com/nschloe/purple-pi))
 
 | `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
 | :----------:         |  :---------:         |  :--------:       |
