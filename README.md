@@ -66,14 +66,18 @@ colorspace = "cam16"  # "cielab", "oklab", "hsl"
 
   > Since the HSL color space is not perceptually uniform, one can see streaks of
   > perceived brightness at yellow, cyan, and magenta (even though their absolute values
-  > are the same as red, green, and blue) and a halo around L = 1 / 2 .  Use of the Lab
+  > are the same as red, green, and blue) and a halo around L = 1/2. Use of the Lab
   > color space corrects this, making the images more accurate, but also makes them more
   > drab/pastel.
 
   Default is [`"cam16"`](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract);
   very similar is `"cielab"` (not shown here).
 
-Consider the test function `(z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)`:
+Consider the test function
+```math
+f(z) = \frac{(z^2 - 1) * (z - 2 - 1j)^2}{z^2 + 2 + 2j}
+```
+(math rendered with [Purple Pi](https://github.com/nschloe/purple-pi))
 
 | `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
 | :----------:         |  :---------:         |  :--------:       |
