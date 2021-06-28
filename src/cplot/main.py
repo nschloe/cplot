@@ -1,7 +1,7 @@
 import colorio
 import matplotlib
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 
 
 def get_srgb1(z, alpha=1, colorspace="CAM16"):
@@ -43,18 +43,18 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
 
     # def abs_scaling(r):
     #     # Fulfills (1).
-    #    return 2 / numpy.pi * numpy.arctan(r)
+    #    return 2 / np.pi * np.arctan(r)
 
     # def abs_scaling(r):
     #     # Fulfills (1).
-    #    return numpy.where(r < 1.0, r / 2, 1 - 1 / 2 /r )
+    #    return np.where(r < 1.0, r / 2, 1 - 1 / 2 /r )
 
-    angle = numpy.arctan2(z.imag, z.real)
-    absval_scaled = abs_scaling(numpy.abs(z))
+    angle = np.arctan2(z.imag, z.real)
+    absval_scaled = abs_scaling(np.abs(z))
 
     # We may have NaNs, so don't be too strict here.
-    # assert numpy.all(absval_scaled >= 0)
-    # assert numpy.all(absval_scaled <= 1)
+    # assert np.all(absval_scaled >= 0)
+    # assert np.all(absval_scaled <= 1)
 
     # It'd be lovely if one could claim that the grayscale of the cplot represents
     # exactly the absolute value of the complex number. The grayscale is computed as the
@@ -65,7 +65,7 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     # Unfortunately, there is no perceptually uniform color space yet that uses
     # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
     if colorspace.upper() == "CAM16":
-        cam = colorio.cs.CAM16UCS(0.69, 20, L_A=64 / numpy.pi / 5)
+        cam = colorio.cs.CAM16UCS(0.69, 20, L_A=64 / np.pi / 5)
         srgb = colorio.cs.SrgbLinear()
         # The max radius for which all colors are representable as SRGB is about 21.7.
         # Crank up the colors a little bit to make the images more saturated. This leads
@@ -76,15 +76,15 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
         # the point 1.0.
-        offset = 0.916_708 * numpy.pi
+        offset = 0.916_708 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
-        cam_pts = numpy.array(
+        cam_pts = np.array(
             [
                 100 * absval_scaled,
-                rd * numpy.cos(angle + offset),
-                rd * numpy.sin(angle + offset),
+                rd * np.cos(angle + offset),
+                rd * np.sin(angle + offset),
             ]
         )
         # now just translate to srgb
@@ -105,15 +105,15 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
         # the point 1.0.
-        offset = 0.893_686_8 * numpy.pi
+        offset = 0.893_686_8 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
-        lab_pts = numpy.array(
+        lab_pts = np.array(
             [
                 100 * absval_scaled,
-                rd * numpy.cos(angle + offset),
-                rd * numpy.sin(angle + offset),
+                rd * np.cos(angle + offset),
+                rd * np.sin(angle + offset),
             ]
         )
         # now just translate to srgb
@@ -139,15 +139,15 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         # Rotate the angles such a "green" color represents positive real values. The
         # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
         # point 1.0.
-        offset = 0.893_686_8 * numpy.pi
+        offset = 0.893_686_8 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
-        lab_pts = numpy.array(
+        lab_pts = np.array(
             [
                 max_lightness * absval_scaled,
-                rd * numpy.cos(angle + offset),
-                rd * numpy.sin(angle + offset),
+                rd * np.cos(angle + offset),
+                rd * np.sin(angle + offset),
             ]
         )
         # now just translate to srgb
@@ -163,10 +163,10 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         hsl = colorio.cs.HSL()
         # rotate by 120 degrees to have green (0, 1, 0) for real positive numbers
         offset = 120
-        hsl_vals = numpy.array(
+        hsl_vals = np.array(
             [
-                numpy.mod(angle / (2 * numpy.pi) * 360 + offset, 360),
-                numpy.ones(angle.shape),
+                np.mod(angle / (2 * np.pi) * 360 + offset, 360),
+                np.ones(angle.shape),
                 absval_scaled,
             ]
         )
@@ -174,10 +174,12 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
         # iron out the -1.82131e-17 round-offs
         srgb_vals[srgb_vals < 0] = 0
 
-    return numpy.moveaxis(srgb_vals, 0, -1)
+    return np.moveaxis(srgb_vals, 0, -1)
 
 
 def plot(*args, **kwargs):
+    print(args)
+    print(kwargs)
     vals, extent = _get_srgb_vals(*args, **kwargs)
     plt.imshow(
         vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
@@ -203,11 +205,11 @@ def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16
     assert xmax > xmin
     assert ymax > ymin
     hx = (xmax - xmin) / nx
-    x = numpy.linspace(xmin + hx / 2, xmax - hx / 2, nx)
+    x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
     hy = (ymax - ymin) / ny
-    y = numpy.linspace(ymin + hy / 2, ymax - hy / 2, ny)
+    y = np.linspace(ymin + hy / 2, ymax - hy / 2, ny)
 
-    X = numpy.meshgrid(x, y)
+    X = np.meshgrid(x, y)
 
     z = X[0] + 1j * X[1]
 
@@ -222,6 +224,6 @@ def tripcolor(triang, z, alpha=1):
 
     # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
     n = z.shape[0]
-    z2 = numpy.arange(n)
+    z2 = np.arange(n)
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list("mymap", rgb, N=n)
     plt.tripcolor(triang, z2, shading="gouraud", cmap=cmap)

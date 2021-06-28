@@ -35,12 +35,12 @@ pip install cplot
 and use as
 ```python
 import cplot
-import numpy
+import numpy as np
 
-cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.show(np.tan, -5, +5, -5, +5, 100, 100)
 
-cplot.savefig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
-cplot.imsave("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.savefig("out.png", np.tan, -5, +5, -5, +5, 100, 100)
+cplot.imsave("out.png", np.tan, -5, +5, -5, +5, 100, 100)
 
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
@@ -116,23 +116,23 @@ All plots are created with default settings.
 
 <img src="https://nschloe.github.io/cplot/root2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root3.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root4.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
+`np.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
 
 <img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.log`          |  `numpy.exp`       |  `exp(1/z)`    |
+`np.log`          |  `np.exp`       |  `exp(1/z)`    |
 
 <img src="https://nschloe.github.io/cplot/sin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
+`np.sin`          |  `np.cos`       |  `np.tan`    |
 
 <img src="https://nschloe.github.io/cplot/sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sinh`          |  `numpy.cosh`       |  `numpy.tanh`    |
+`np.sinh`          |  `np.cosh`       |  `np.tanh`    |
 
 <img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.arcsin`          |  `numpy.arccos`       |  `numpy.arctan`    |
+`np.arcsin`          |  `np.arccos`       |  `np.arctan`    |
 
 <img src="https://nschloe.github.io/cplot/sinz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.png" width="70%">
 :-------------------:|:------------------:|:----------------:|
