@@ -1,3 +1,5 @@
+from typing import Callable, Tuple, Union
+
 import colorio
 import matplotlib
 import matplotlib.pyplot as plt
@@ -201,9 +203,27 @@ def imsave(filename, *args, **kwargs):
     matplotlib.image.imsave(filename, vals, origin="lower")
 
 
-def _get_srgb_vals(f, xmin, xmax, ymin, ymax, nx, ny, alpha=1, colorspace="cam16"):
-    assert xmax > xmin
-    assert ymax > ymin
+def _get_srgb_vals(
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+    alpha: float = 1,
+    colorspace: str = "cam16",
+):
+    xmin, xmax = xminmax
+    ymin, ymax = yminmax
+    assert xmin < xmax
+    assert ymin < ymax
+
+    if isinstance(n, tuple):
+        assert len(n) == 2
+        nx, ny = n
+    else:
+        assert isinstance(n, int)
+        nx = n
+        ny = n
+
     hx = (xmax - xmin) / nx
     x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
     hy = (ymax - ymin) / ny
