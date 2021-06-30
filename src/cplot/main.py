@@ -179,13 +179,71 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     return np.moveaxis(srgb_vals, 0, -1)
 
 
-def plot(*args, **kwargs):
-    print(args)
-    print(kwargs)
-    vals, extent = _get_srgb_vals(*args, **kwargs)
+def plot(
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+    alpha: float = 1,
+    colorspace: str = "cam16",
+    contour_abs: bool = False,
+    contour_arg: bool = False,
+):
+    xmin, xmax = xminmax
+    ymin, ymax = yminmax
+    assert xmin < xmax
+    assert ymin < ymax
+
+    if isinstance(n, tuple):
+        assert len(n) == 2
+        nx, ny = n
+    else:
+        assert isinstance(n, int)
+        nx = n
+        ny = n
+
+    Z = _get_z_grid(xminmax, yminmax, (nx, ny))
+    fZ = f(Z)
+
+    # vals, extent = _get_srgb_vals(f, xminmax, yminmax, (nx, ny), *args, **kwargs)
     plt.imshow(
-        vals, extent=extent, interpolation="nearest", origin="lower", aspect="equal"
+        get_srgb1(fZ, alpha=alpha, colorspace=colorspace),
+        extent=(np.min(Z.real), np.max(Z.real), np.min(Z.imag), np.max(Z.imag)),
+        interpolation="nearest",
+        origin="lower",
+        aspect="equal",
     )
+
+    # Lab middle gray (lightness 50%) with low opacity
+    gray = "#a0a0a050"
+    # gray = "#ffffff30"
+    if contour_abs:
+        plt.contour(
+            Z.real,
+            Z.imag,
+            np.abs(fZ),
+            # levels=[0.1, 0.5, 1.0, 2.0, 10, 100],
+            levels=[0.1, 100.0],
+            colors=gray,
+        )
+    if contour_arg:
+        levels = [-0.5 * np.pi, 0.0, 0.5 * np.pi]
+        c = plt.contour(
+            Z.real,
+            Z.imag,
+            np.angle(fZ),
+            levels=levels,
+            colors=gray,
+        )
+        for level, allseg in zip(levels, c.allsegs):
+            for segment in allseg:
+                x, y = segment.T
+                z = x + 1j * y
+                angle = np.angle(f(z))
+                is_false = (np.abs(angle - np.pi) < np.abs(angle - level)) | (
+                    np.abs(angle + np.pi) < np.abs(angle - level)
+                )
+                segment[is_false] = np.nan
 
 
 def show(*args, **kwargs):
@@ -203,26 +261,14 @@ def imsave(filename, *args, **kwargs):
     matplotlib.image.imsave(filename, vals, origin="lower")
 
 
-def _get_srgb_vals(
-    f: Callable,
+def _get_z_grid(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
-    alpha: float = 1,
-    colorspace: str = "cam16",
+    n: Tuple[int, int],
 ):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
-    assert xmin < xmax
-    assert ymin < ymax
-
-    if isinstance(n, tuple):
-        assert len(n) == 2
-        nx, ny = n
-    else:
-        assert isinstance(n, int)
-        nx = n
-        ny = n
+    nx, ny = n
 
     hx = (xmax - xmin) / nx
     x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
@@ -231,15 +277,18 @@ def _get_srgb_vals(
 
     X = np.meshgrid(x, y)
 
-    z = X[0] + 1j * X[1]
-
-    return (
-        get_srgb1(f(z), alpha=alpha, colorspace=colorspace),
-        (x.min(), x.max(), y.min(), y.max()),
-    )
+    Z = X[0] + 1j * X[1]
+    return Z
 
 
-def tripcolor(triang, z, alpha=1):
+# def _get_srgb_vals(fz, alpha: float = 1, colorspace: str = "cam16"):
+#     return (
+#         get_srgb1(fz, alpha=alpha, colorspace=colorspace),
+#         (x.min(), x.max(), y.min(), y.max()),
+#     )
+
+
+def tripcolor(triang, z, alpha: float = 1):
     rgb = get_srgb1(z, alpha=alpha)
 
     # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
