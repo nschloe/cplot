@@ -185,9 +185,7 @@ def plot(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
     alpha: float = 1,
-    colorspace: str = "cam16",
-    contour_abs: bool = False,
-    contour_arg: bool = False,
+    colorspace: str = "cam16"
 ):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
@@ -214,37 +212,6 @@ def plot(
         aspect="equal",
     )
 
-    # Lab middle gray (lightness 50%) with low opacity
-    gray = "#a0a0a050"
-    # gray = "#ffffff30"
-    if contour_abs:
-        plt.contour(
-            Z.real,
-            Z.imag,
-            np.abs(fZ),
-            # levels=[0.1, 0.5, 1.0, 2.0, 10, 100],
-            levels=[0.1, 100.0],
-            colors=gray,
-        )
-    if contour_arg:
-        levels = [-0.5 * np.pi, 0.0, 0.5 * np.pi]
-        c = plt.contour(
-            Z.real,
-            Z.imag,
-            np.angle(fZ),
-            levels=levels,
-            colors=gray,
-        )
-        for level, allseg in zip(levels, c.allsegs):
-            for segment in allseg:
-                x, y = segment.T
-                z = x + 1j * y
-                angle = np.angle(f(z))
-                is_false = (np.abs(angle - np.pi) < np.abs(angle - level)) | (
-                    np.abs(angle + np.pi) < np.abs(angle - level)
-                )
-                segment[is_false] = np.nan
-
 
 def show(*args, **kwargs):
     plot(*args, **kwargs)
@@ -259,6 +226,85 @@ def savefig(filename, *args, **kwargs):
 def imsave(filename, *args, **kwargs):
     vals, _ = _get_srgb_vals(*args, **kwargs)
     matplotlib.image.imsave(filename, vals, origin="lower")
+
+
+def plot_contour_abs(
+        f: Callable,
+        xminmax: Tuple[float, float],
+        yminmax: Tuple[float, float],
+        n: Union[int, Tuple[int, int]],
+    ):
+    xmin, xmax = xminmax
+    ymin, ymax = yminmax
+    assert xmin < xmax
+    assert ymin < ymax
+
+    if isinstance(n, tuple):
+        assert len(n) == 2
+        nx, ny = n
+    else:
+        assert isinstance(n, int)
+        nx = n
+        ny = n
+
+    Z = _get_z_grid(xminmax, yminmax, (nx, ny))
+    fZ = f(Z)
+
+    gray = "#a0a0a050"
+    # gray = "#ffffff30"
+    plt.contour(
+        Z.real,
+        Z.imag,
+        np.abs(fZ),
+        # levels=[0.1, 0.5, 1.0, 2.0, 10, 100],
+        levels=[0.1, 100.0],
+        colors=gray,
+    )
+
+def plot_contour_arg(
+        f: Callable,
+        xminmax: Tuple[float, float],
+        yminmax: Tuple[float, float],
+        n: Union[int, Tuple[int, int]],
+    ):
+    xmin, xmax = xminmax
+    ymin, ymax = yminmax
+    assert xmin < xmax
+    assert ymin < ymax
+
+    if isinstance(n, tuple):
+        assert len(n) == 2
+        nx, ny = n
+    else:
+        assert isinstance(n, int)
+        nx = n
+        ny = n
+
+    Z = _get_z_grid(xminmax, yminmax, (nx, ny))
+    fZ = f(Z)
+
+    gray = "#a0a0a050"
+    levels = [-0.5 * np.pi, 0.0, 0.5 * np.pi]
+    # levels = [-0.5 * np.pi, 0.5 * np.pi]
+    # levels = [np.pi]
+    c = plt.contour(
+        Z.real,
+        Z.imag,
+        np.angle(fZ),
+        levels=levels,
+        colors=gray,
+        linestyles="solid"
+    )
+    for level, allseg in zip(levels, c.allsegs):
+        for segment in allseg:
+            x, y = segment.T
+            z = x + 1j * y
+            angle = np.angle(f(z))
+            is_false = (np.abs(angle - np.pi) < np.abs(angle - level)) | (
+                np.abs(angle + np.pi) < np.abs(angle - level)
+            )
+            segment[is_false] = np.nan
+
 
 
 def _get_z_grid(
