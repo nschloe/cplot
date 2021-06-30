@@ -141,25 +141,76 @@ class Plot:
     def show(self):
         plt.show()
 
-
-def show(*args, **kwargs):
-    plot(*args, **kwargs)
-    plt.show()
+    def savefig(self, filename):
+        plt.savefig(filename, transparent=True, bbox_inches="tight")
 
 
-def savefig(filename, *args, **kwargs):
-    plot(*args, **kwargs)
-    plt.savefig(filename, transparent=True, bbox_inches="tight")
+def show_colors(
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+    abs_scaling="h-1.0",
+    colorspace="cam16",
+):
+    plot = Plot(f, xminmax, yminmax, n)
+    plot.plot_colors(abs_scaling, colorspace)
+    plot.show()
 
 
-def imsave(filename, *args, **kwargs):
-    vals, _ = _get_srgb_vals(*args, **kwargs)
-    matplotlib.image.imsave(filename, vals, origin="lower")
+def show_contours(
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+    abs_scaling="h-1.0",
+    levels=(7, 4),
+    colors="#a0a0a050",
+    linestyles="solid",
+):
+    plot = Plot(f, xminmax, yminmax, n)
+
+    plot.plot_contour_abs(
+        abs_scaling,
+        levels=levels[0],
+        colors=colors,
+        linestyles=linestyles,
+    )
+    plot.plot_contour_arg(
+        levels=levels[1],
+        colors=colors,
+        linestyles=linestyles,
+    )
+    plot.show()
 
 
-def plot_contours(*args, **kwargs):
-    plot_contour_abs(*args, **kwargs)
-    plot_contour_arg(*args, **kwargs)
+def show(
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+    abs_scaling="h-1.0",
+    colorspace="cam16",
+    levels=(7, 4),
+    colors="#a0a0a050",
+    linestyles="solid",
+):
+    plot = Plot(f, xminmax, yminmax, n)
+
+    plot.plot_colors(abs_scaling, colorspace)
+
+    plot.plot_contour_abs(
+        abs_scaling,
+        levels=levels[0],
+        colors=colors,
+        linestyles=linestyles,
+    )
+    plot.plot_contour_arg(
+        levels=levels[1],
+        colors=colors,
+        linestyles=linestyles,
+    )
+    plot.show()
 
 
 def _angle2(z):
