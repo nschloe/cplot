@@ -201,12 +201,11 @@ def plot(
         nx = n
         ny = n
 
-    Z = _get_z_grid(xminmax, yminmax, (nx, ny))
-    fZ = f(Z)
+    Z = _get_z_grid_image(xminmax, yminmax, (nx, ny))
 
     # vals, extent = _get_srgb_vals(f, xminmax, yminmax, (nx, ny), *args, **kwargs)
     plt.imshow(
-        get_srgb1(fZ, alpha=alpha, colorspace=colorspace),
+        get_srgb1(f(Z), alpha=alpha, colorspace=colorspace),
         extent=(np.min(Z.real), np.max(Z.real), np.min(Z.imag), np.max(Z.imag)),
         interpolation="nearest",
         origin="lower",
@@ -253,15 +252,17 @@ def plot_contour_abs(
         nx = n
         ny = n
 
-    Z = _get_z_grid(xminmax, yminmax, (nx, ny))
-    fZ = f(Z)
+    x = np.linspace(xmin, xmax, nx)
+    y = np.linspace(ymin, ymax, ny)
+    X = np.meshgrid(x, y)
+    Z = X[0] + 1j * X[1]
 
     gray = "#a0a0a050"
     # gray = "#ffffff30"
     plt.contour(
         Z.real,
         Z.imag,
-        np.abs(fZ),
+        np.abs(f(Z)),
         # levels=[0.1, 0.5, 1.0, 2.0, 10, 100],
         levels=[0.1, 100.0],
         colors=gray,
@@ -294,15 +295,23 @@ def plot_contour_arg(
         nx = n
         ny = n
 
-    Z = _get_z_grid(xminmax, yminmax, (nx, ny))
+    x = np.linspace(xmin, xmax, nx)
+    y = np.linspace(ymin, ymax, ny)
+    X = np.meshgrid(x, y)
+    Z = X[0] + 1j * X[1]
+
     fZ = f(Z)
 
     if isinstance(levels, int):
-        levels = np.linspace(-np.pi, np.pi, levels, endpoint=False)
+        levels = np.linspace(0.0, 2 * np.pi, levels, endpoint=False)
     else:
-        # assert levels in [-pi, pi], like np.angle
         levels = np.asarray(levels)
-        levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
+
+    # assert levels in [-pi, pi], like np.angle
+    levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
+
+    # Contour levels must be increasing
+    levels = np.sort(levels)
 
     # mpl has problems with plotting the contour at +pi because that's where the branch
     # cut in np.angle happens. Separate out this case and move the branch cut to 0/2*pi
@@ -342,7 +351,7 @@ def plot_contour_arg(
                 segment[is_near_branch_cut] = np.nan
 
 
-def _get_z_grid(
+def _get_z_grid_image(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Tuple[int, int],
