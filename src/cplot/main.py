@@ -272,6 +272,7 @@ def plot_contour_arg(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
+    color="#a0a0a050"
 ):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
@@ -289,22 +290,56 @@ def plot_contour_arg(
     Z = _get_z_grid(xminmax, yminmax, (nx, ny))
     fZ = f(Z)
 
-    gray = "#a0a0a050"
-    levels = [-0.5 * np.pi, 0.0, 0.5 * np.pi]
-    # levels = [-0.5 * np.pi, 0.5 * np.pi]
-    # levels = [np.pi]
-    c = plt.contour(
-        Z.real, Z.imag, np.angle(fZ), levels=levels, colors=gray, linestyles="solid"
-    )
-    for level, allseg in zip(levels, c.allsegs):
-        for segment in allseg:
-            x, y = segment.T
-            z = x + 1j * y
-            angle = np.angle(f(z))
-            is_false = (np.abs(angle - np.pi) < np.abs(angle - level)) | (
-                np.abs(angle + np.pi) < np.abs(angle - level)
-            )
-            segment[is_false] = np.nan
+    levels = np.array([-0.5 * np.pi, 0.0, 0.5 * np.pi, np.pi])
+    # levels = np.array([np.pi])
+
+    # assert levels in [-pi, pi], like np.angle
+    levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
+
+    # mpl has problems with plotting the contour at +pi because that's where the branch
+    # cut in np.angle happens. Separate out this case and move the branch cut to 0/2*pi
+    # there.
+    is_level1 = (levels > -np.pi + 0.1) & (levels < np.pi - 0.1)
+    levels1 = levels[is_level1]
+    levels2 = levels[~is_level1]
+    levels2 = np.mod(levels2, 2 * np.pi)
+
+    # plt.contour draws some lines in excess, which need to be cut off. This is done via
+    # setting some values to NaN, see
+    # <https://github.com/matplotlib/matplotlib/issues/20548>.
+    if len(levels1) > 0:
+        angle = np.angle(fZ)
+        c = plt.contour(
+            Z.real, Z.imag, angle, levels=levels1, colors=color, linestyles="solid"
+        )
+        for level, allseg in zip(levels1, c.allsegs):
+            for segment in allseg:
+                x, y = segment.T
+                z = x + 1j * y
+                angle = np.angle(f(z))
+                # cut off the lines close to the branch cut
+                is_false = (np.abs(angle - np.pi) < np.abs(angle - level)) | (
+                    np.abs(angle + np.pi) < np.abs(angle - level)
+                )
+                segment[is_false] = np.nan
+
+    if len(levels2) > 0:
+        angle = np.angle(fZ)
+        angle = np.mod(angle, 2 * np.pi)
+        c = plt.contour(
+            Z.real, Z.imag, angle, levels=levels2, colors=color, linestyles="solid"
+        )
+        for level, allseg in zip(levels2, c.allsegs):
+            for segment in allseg:
+                x, y = segment.T
+                z = x + 1j * y
+                angle = np.angle(f(z))
+                angle = np.mod(angle, 2 * np.pi)
+                # cut off the lines close to the branch cut
+                is_false = (np.abs(angle - 0.0) < np.abs(angle - level)) | (
+                    np.abs(angle - 2 * np.pi) < np.abs(angle - level)
+                )
+                segment[is_false] = np.nan
 
 
 def _get_z_grid(
