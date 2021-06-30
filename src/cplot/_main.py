@@ -29,6 +29,8 @@ class Plot:
             nx = n
             ny = n
 
+        self.extent = (xmin, xmax, ymin, ymax)
+
         self.f = f
         self.Z = _get_z_grid_for_image(xminmax, yminmax, (nx, ny))
         self.fz = f(self.Z)
@@ -38,15 +40,9 @@ class Plot:
         abs_scaling: str = "h-1.0",
         colorspace: str = "cam16",
     ):
-        extent = (
-            np.min(self.Z.real),
-            np.max(self.Z.real),
-            np.min(self.Z.imag),
-            np.max(self.Z.imag),
-        )
         plt.imshow(
             get_srgb1(self.fz, abs_scaling=abs_scaling, colorspace=colorspace),
-            extent=extent,
+            extent=self.extent,
             interpolation="nearest",
             origin="lower",
             aspect="equal",
@@ -186,10 +182,3 @@ def _get_z_grid_for_image(
 
     X = np.meshgrid(x, y)
     return X[0] + 1j * X[1]
-
-
-# def _get_srgb_vals(fz, alpha: float = 1, colorspace: str = "cam16"):
-#     return (
-#         get_srgb1(fz, alpha=alpha, colorspace=colorspace),
-#         (x.min(), x.max(), y.min(), y.max()),
-#     )
