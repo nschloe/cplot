@@ -185,7 +185,7 @@ def plot(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
     alpha: float = 1,
-    colorspace: str = "cam16"
+    colorspace: str = "cam16",
 ):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
@@ -228,12 +228,17 @@ def imsave(filename, *args, **kwargs):
     matplotlib.image.imsave(filename, vals, origin="lower")
 
 
+def plot_contours(*args, **kwargs):
+    plot_contour_abs(*args, **kwargs)
+    plot_contour_arg(*args, **kwargs)
+
+
 def plot_contour_abs(
-        f: Callable,
-        xminmax: Tuple[float, float],
-        yminmax: Tuple[float, float],
-        n: Union[int, Tuple[int, int]],
-    ):
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
     assert xmin < xmax
@@ -261,12 +266,13 @@ def plot_contour_abs(
         colors=gray,
     )
 
+
 def plot_contour_arg(
-        f: Callable,
-        xminmax: Tuple[float, float],
-        yminmax: Tuple[float, float],
-        n: Union[int, Tuple[int, int]],
-    ):
+    f: Callable,
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Union[int, Tuple[int, int]],
+):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
     assert xmin < xmax
@@ -288,12 +294,7 @@ def plot_contour_arg(
     # levels = [-0.5 * np.pi, 0.5 * np.pi]
     # levels = [np.pi]
     c = plt.contour(
-        Z.real,
-        Z.imag,
-        np.angle(fZ),
-        levels=levels,
-        colors=gray,
-        linestyles="solid"
+        Z.real, Z.imag, np.angle(fZ), levels=levels, colors=gray, linestyles="solid"
     )
     for level, allseg in zip(levels, c.allsegs):
         for segment in allseg:
@@ -304,7 +305,6 @@ def plot_contour_arg(
                 np.abs(angle + np.pi) < np.abs(angle - level)
             )
             segment[is_false] = np.nan
-
 
 
 def _get_z_grid(

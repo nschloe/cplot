@@ -1,7 +1,17 @@
 from .__about__ import __version__
 from .benchmark import show_kovesi_test_image, show_test_function
 from .create import create_colormap, find_max_srgb_radius, show_circular, show_linear
-from .main import get_srgb1, imsave, plot, savefig, show, tripcolor, plot_contour_abs, plot_contour_arg
+from .main import (
+    get_srgb1,
+    imsave,
+    plot,
+    plot_contour_abs,
+    plot_contour_arg,
+    plot_contours,
+    savefig,
+    show,
+    tripcolor,
+)
 
 __all__ = [
     "__version__",
@@ -19,6 +29,7 @@ __all__ = [
     "get_srgb1",
     "plot_contour_abs",
     "plot_contour_arg",
+    "plot_contours",
     #
     "tripcolor",
 ]
