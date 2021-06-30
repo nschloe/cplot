@@ -4,6 +4,7 @@ import colorio
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as ntp
 
 
 def get_srgb1(z, alpha=1, colorspace="CAM16"):
@@ -276,8 +277,9 @@ def plot_contour_arg(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
+    levels: Union[int, ntp.ArrayLike] = 4,
     colors="#a0a0a050",
-    linestyles="solid"
+    linestyles="solid",
 ):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
@@ -295,11 +297,12 @@ def plot_contour_arg(
     Z = _get_z_grid(xminmax, yminmax, (nx, ny))
     fZ = f(Z)
 
-    levels = np.array([-0.5 * np.pi, 0.0, 0.5 * np.pi, np.pi])
-    # levels = np.array([np.pi])
-
-    # assert levels in [-pi, pi], like np.angle
-    levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
+    if isinstance(levels, int):
+        levels = np.linspace(-np.pi, np.pi, levels, endpoint=False)
+    else:
+        # assert levels in [-pi, pi], like np.angle
+        levels = np.asarray(levels)
+        levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
 
     # mpl has problems with plotting the contour at +pi because that's where the branch
     # cut in np.angle happens. Separate out this case and move the branch cut to 0/2*pi
