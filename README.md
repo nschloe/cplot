@@ -18,15 +18,7 @@
 cplot helps plotting complex-valued functions in a visually appealing manner. The
 general idea is to map the absolute value to lightness and the complex argument (the
 "angle") to the chroma of the representing color. This follows the [domain
-coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach, also described by
-[John D. Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
-and Elias Wegert in the book [Visual Complex
-Functions](https://www.springer.com/gp/book/9783034801799) (with some tweaks). Also
-check out the [DC gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
-by Juan Carlos Ponce Campuzano.
-
-Similar projects:
-  * https://github.com/endolith/complex_colormap
+coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach.
 
 Install with
 ```
@@ -40,7 +32,6 @@ import numpy as np
 cplot.show(np.tan, (-5, +5), (-5, +5), 100)
 
 cplot.savefig("out.png", np.tan, (-5, +5), (-5, +5), 100)
-cplot.imsave("out.png", np.tan, (-5, +5), (-5, +5), 100)
 
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
@@ -154,5 +145,16 @@ To run the cplot unit tests, check out this repository and type
 pytest
 ```
 
+### Similar projects and further reading
+
+  * https://github.com/endolith/complex_colormap
+  * [John D.
+    Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
+  * [Elias Wegert, Visual Complex
+    Functions](https://www.springer.com/gp/book/9783034801799)
+  * [Juan Carlos Ponce Campuzano, DC
+    gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
+
 ### License
-This software is published under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
+This software is published under the [GPLv3
+license](https://www.gnu.org/licenses/gpl-3.0.en.html).

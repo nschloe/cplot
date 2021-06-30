@@ -184,7 +184,7 @@ def show_contours(
     plot.show()
 
 
-def show(
+def plot(
     f: Callable,
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
@@ -210,7 +210,15 @@ def show(
         colors=colors,
         linestyles=linestyles,
     )
-    plot.show()
+    return plot
+
+
+def show(*args, **kwargs):
+    plot(*args, **kwargs).show()
+
+
+def savefig(filename, *args, **kwargs):
+    plot(*args, **kwargs).savefig(filename)
 
 
 def _angle2(z):
