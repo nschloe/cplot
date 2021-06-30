@@ -15,10 +15,15 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 
 
-cplot helps plotting complex-valued functions in a visually appealing manner. The
-general idea is to map the absolute value to lightness and the complex argument (the
-"angle") to the chroma of the representing color. This follows the [domain
-coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach.
+cplot helps plotting complex-valued functions in a visually appealing manner.
+
+There are two basic building blocks:
+
+  * Plotting a contour map of the absolute value and/or the complex argument ("the
+    angle")
+  * Mapping the absolute value to lightness and the complex argument (the "angle") to
+    the chroma of the representing color ([domain
+    coloring](https://en.wikipedia.org/wiki/Domain_coloring))
 
 Install with
 ```
