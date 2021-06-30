@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .main import show
+from ._main import show
 
 
 def show_kovesi_test_image(cmap):
@@ -40,44 +40,40 @@ def show_test_function(variant="a", colorspace="cam16", res=201):
     """Visual color map test after Peter Kovesi <https://arxiv.org/abs/1509.03700>,
     adapted for the complex color map.
     """
-    if variant == "a":
 
-        def f(z):
-            r = np.abs(z)
-            alpha = np.angle(z)
-            # for the radius function
-            #
-            #   f(r) = r + w * sin(k * pi * r)
-            #
-            # to be >= 0 everwhere, the first minimum at
-            #
-            #  r0 = arccos(-1 / (pi * k * w))
-            #  r1 = 1 / (pi * k) (pi + (pi - y))
-            #     = (2 pi - y) / (pi * k)
-            #
-            # has to be >= 0, i.e.,
-            #
-            k = 2
-            w = 0.7
-            x0 = np.arccos(-1 / (np.pi * k * w))
-            x1 = 2 * np.pi - x0
-            r1 = x1 / np.pi / k
-            assert r1 + w * np.sin(k * np.pi * r1) >= 0
-            return (r + w * np.sin(k * np.pi * r)) * np.exp(1j * alpha)
+    def fa(z):
+        r = np.abs(z)
+        alpha = np.angle(z)
+        # for the radius function
+        #
+        #   f(r) = r + w * sin(k * pi * r)
+        #
+        # to be >= 0 everwhere, the first minimum at
+        #
+        #  r0 = arccos(-1 / (pi * k * w))
+        #  r1 = 1 / (pi * k) (pi + (pi - y))
+        #     = (2 pi - y) / (pi * k)
+        #
+        # has to be >= 0, i.e.,
+        #
+        k = 2
+        w = 0.7
+        x0 = np.arccos(-1 / (np.pi * k * w))
+        x1 = 2 * np.pi - x0
+        r1 = x1 / np.pi / k
+        assert r1 + w * np.sin(k * np.pi * r1) >= 0
+        return (r + w * np.sin(k * np.pi * r)) * np.exp(1j * alpha)
 
-    elif variant == "b":
+    def fb(z):
+        r = np.abs(z)
+        alpha = np.angle(z)
+        return r * np.exp(1j * (alpha + 0.8 * np.cos(3 * np.pi * alpha)))
 
-        def f(z):
-            r = np.abs(z)
-            alpha = np.angle(z)
-            return r * np.exp(1j * (alpha + 0.8 * np.cos(3 * np.pi * alpha)))
+    def fc(z):
+        return (z.real + 0.5 * np.sin(2 * np.pi * z.real)) + 1j * (
+            z.imag + 0.5 * np.sin(2 * np.pi * z.imag)
+        )
 
-    else:
-        assert variant == "c"
+    f = {"a": fa, "b": fb, "c": fc}[variant]
 
-        def f(z):
-            return (z.real + 0.5 * np.sin(2 * np.pi * z.real)) + 1j * (
-                z.imag + 0.5 * np.sin(2 * np.pi * z.imag)
-            )
-
-    show(f, -5, +5, -5, +5, res, res, colorspace=colorspace)
+    show(f, (-5, +5), (-5, +5), res, colorspace=colorspace)

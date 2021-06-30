@@ -1,25 +1,44 @@
-from typing import Callable, Tuple, Union
-
 import colorio
-import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
-import numpy.typing as ntp
 
 
-def get_srgb1(z, alpha=1, colorspace="CAM16"):
+def get_abs_scaling_h(alpha):
+    # Fulfills (1) for any alpha >= 0
     assert alpha >= 0
+
+    def f(r):
+        return r ** alpha / (r ** alpha + 1)
+
+    def f_inv(y):
+        return (y / (1 - y)) ** (1 / alpha)
+
+    return f, f_inv
+
+
+def get_abs_scaling_arctan():
+    # Fulfills (1), but not parametrized.
+
+    def f(r):
+        return 2 / np.pi * np.arctan(r)
+
+    def f_inv(y):
+        return np.tan(np.pi / 2 * y)
+
+    return f, f_inv
+
+
+def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
     # One desirable property is
     # (1)  f(1/r) = 1 - f(r).
     # This makes sure that the representation of the inverse of a function is exactly as
-    # light as the original function is dark. The function g_a(r) = 1 - a^|r| (with some
+    # light as the original function is dark. The function g_a(r) = 1 - a^r (with some
     # 0 < a < 1), as it is sometimes suggested (e.g., on Wikipedia
     # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).
     #
     # Here, we are using the simple
     #
-    #   l(r) = r^a / (r^a + 1)
+    #   h(r) = r^a / (r^a + 1)
     #
     # with a configurable parameter a.
     #  * For a=1.21268891, this function is very close to the popular alternative
@@ -28,29 +47,41 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     #  * For a=1.49486991 it is close to x/2 (between 0 and 1).
     #
     # Disadvantage of this choice:
-    # l'(r)=0 at r=0 for all a > 1 and so l(r) has an inflection point in (0, 1) for
-    # all a > 1. The arctan version does _not_.
     #
-    # Another choice:
+    #  h'(r) = (a * r^{a-1} * (r^a + 1) - r^a * a * r^{a-1}) / (r^a + 1) ** 2
+    #        = a * r^{a-1} / (r^a + 1) ** 2
+    #
+    # so h'(r)=0 at r=0 for all a > 1. This means that h(r) has an inflection point in
+    # (0, 1) for all a > 1. For 0 < alpha < 1, the derivative at 0 is infty.
+    # The arctan version does _not_ have such properties.
+    #
+    # Another choice that fulfills (1) is
     #
     #           / r / 2          for 0 <= x <= 1,
     #   f(r) = |
-    #           \ 1 - 1 / (2r)   for x > 1.
+    #           \ 1 - 1 / (2r)   for x > 1,
+    #
+    # but its second derivative is discontinuous at 1, and one does actually notice this
+    #
+    #            / 1/2         for 0 <= x <= 1,
+    #   f'(r) = |
+    #            \ 1/2 / r^2   for x > 1,
+    #
+    #             / 0             for 0 <= x <= 1,
+    #   f''(r) = |
+    #             \ -1 / r^3   for x > 1,
+    #
+    #
     #
     # TODO find parametrized function that is free of inflection points for the param=0
     # (or infty) is this last f(r).
 
-    def abs_scaling(r):
-        # Fulfills (1) for any alpha >= 0
-        return r ** alpha / (r ** alpha + 1)
-
-    # def abs_scaling(r):
-    #     # Fulfills (1).
-    #    return 2 / np.pi * np.arctan(r)
-
-    # def abs_scaling(r):
-    #     # Fulfills (1).
-    #    return np.where(r < 1.0, r / 2, 1 - 1 / 2 /r )
+    if abs_scaling == "arctan":
+        abs_scaling, _ = get_abs_scaling_arctan()
+    else:
+        assert abs_scaling.startswith("h-")
+        alpha = float(abs_scaling[2:])
+        abs_scaling, _ = get_abs_scaling_h(alpha)
 
     angle = np.arctan2(z.imag, z.real)
     absval_scaled = abs_scaling(np.abs(z))
@@ -180,206 +211,8 @@ def get_srgb1(z, alpha=1, colorspace="CAM16"):
     return np.moveaxis(srgb_vals, 0, -1)
 
 
-def plot(
-    f: Callable,
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
-    alpha: float = 1,
-    colorspace: str = "cam16",
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
-    assert xmin < xmax
-    assert ymin < ymax
-
-    if isinstance(n, tuple):
-        assert len(n) == 2
-        nx, ny = n
-    else:
-        assert isinstance(n, int)
-        nx = n
-        ny = n
-
-    Z = _get_z_grid_image(xminmax, yminmax, (nx, ny))
-
-    # vals, extent = _get_srgb_vals(f, xminmax, yminmax, (nx, ny), *args, **kwargs)
-    plt.imshow(
-        get_srgb1(f(Z), alpha=alpha, colorspace=colorspace),
-        extent=(np.min(Z.real), np.max(Z.real), np.min(Z.imag), np.max(Z.imag)),
-        interpolation="nearest",
-        origin="lower",
-        aspect="equal",
-    )
-
-
-def show(*args, **kwargs):
-    plot(*args, **kwargs)
-    plt.show()
-
-
-def savefig(filename, *args, **kwargs):
-    plot(*args, **kwargs)
-    plt.savefig(filename, transparent=True, bbox_inches="tight")
-
-
-def imsave(filename, *args, **kwargs):
-    vals, _ = _get_srgb_vals(*args, **kwargs)
-    matplotlib.image.imsave(filename, vals, origin="lower")
-
-
-def plot_contours(*args, **kwargs):
-    plot_contour_abs(*args, **kwargs)
-    plot_contour_arg(*args, **kwargs)
-
-
-def plot_contour_abs(
-    f: Callable,
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
-    assert xmin < xmax
-    assert ymin < ymax
-
-    if isinstance(n, tuple):
-        assert len(n) == 2
-        nx, ny = n
-    else:
-        assert isinstance(n, int)
-        nx = n
-        ny = n
-
-    x = np.linspace(xmin, xmax, nx)
-    y = np.linspace(ymin, ymax, ny)
-    X = np.meshgrid(x, y)
-    Z = X[0] + 1j * X[1]
-
-    gray = "#a0a0a050"
-    # gray = "#ffffff30"
-    plt.contour(
-        Z.real,
-        Z.imag,
-        np.abs(f(Z)),
-        # levels=[0.1, 0.5, 1.0, 2.0, 10, 100],
-        levels=[0.1, 100.0],
-        colors=gray,
-    )
-
-
-def _angle2(z):
-    return np.mod(np.angle(z), 2 * np.pi)
-
-
-def plot_contour_arg(
-    f: Callable,
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
-    levels: Union[int, ntp.ArrayLike] = 4,
-    colors="#a0a0a050",
-    linestyles="solid",
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
-    assert xmin < xmax
-    assert ymin < ymax
-
-    if isinstance(n, tuple):
-        assert len(n) == 2
-        nx, ny = n
-    else:
-        assert isinstance(n, int)
-        nx = n
-        ny = n
-
-    x = np.linspace(xmin, xmax, nx)
-    y = np.linspace(ymin, ymax, ny)
-    X = np.meshgrid(x, y)
-    Z = X[0] + 1j * X[1]
-
-    fZ = f(Z)
-
-    if isinstance(levels, int):
-        levels = np.linspace(0.0, 2 * np.pi, levels, endpoint=False)
-    else:
-        levels = np.asarray(levels)
-
-    # assert levels in [-pi, pi], like np.angle
-    levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
-
-    # Contour levels must be increasing
-    levels = np.sort(levels)
-
-    # mpl has problems with plotting the contour at +pi because that's where the branch
-    # cut in np.angle happens. Separate out this case and move the branch cut to 0/2*pi
-    # there.
-    is_level1 = (levels > -np.pi + 0.1) & (levels < np.pi - 0.1)
-    levels1 = levels[is_level1]
-    levels2 = levels[~is_level1]
-    levels2 = np.mod(levels2, 2 * np.pi)
-
-    # plt.contour draws some lines in excess, which need to be cut off. This is done via
-    # setting some values to NaN, see
-    # <https://github.com/matplotlib/matplotlib/issues/20548>.
-    for levels, angle_fun, branch_cut in [
-        (levels1, np.angle, (-np.pi, np.pi)),
-        (levels2, _angle2, (0.0, 2 * np.pi)),
-    ]:
-        if len(levels) == 0:
-            continue
-
-        c = plt.contour(
-            Z.real,
-            Z.imag,
-            angle_fun(fZ),
-            levels=levels,
-            colors=colors,
-            linestyles=linestyles,
-        )
-        for level, allseg in zip(levels, c.allsegs):
-            for segment in allseg:
-                x, y = segment.T
-                z = x + 1j * y
-                angle = angle_fun(f(z))
-                # cut off segments close to the branch cut
-                is_near_branch_cut = np.logical_or(
-                    *[np.abs(angle - bc) < np.abs(angle - level) for bc in branch_cut]
-                )
-                segment[is_near_branch_cut] = np.nan
-
-
-def _get_z_grid_image(
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Tuple[int, int],
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
-    nx, ny = n
-
-    hx = (xmax - xmin) / nx
-    x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
-    hy = (ymax - ymin) / ny
-    y = np.linspace(ymin + hy / 2, ymax - hy / 2, ny)
-
-    X = np.meshgrid(x, y)
-
-    Z = X[0] + 1j * X[1]
-    return Z
-
-
-# def _get_srgb_vals(fz, alpha: float = 1, colorspace: str = "cam16"):
-#     return (
-#         get_srgb1(fz, alpha=alpha, colorspace=colorspace),
-#         (x.min(), x.max(), y.min(), y.max()),
-#     )
-
-
-def tripcolor(triang, z, alpha: float = 1):
-    rgb = get_srgb1(z, alpha=alpha)
+def tripcolor(triang, z, abs_scaling: str = "h-1"):
+    rgb = get_srgb1(z, abs_scaling=abs_scaling)
 
     # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
     n = z.shape[0]

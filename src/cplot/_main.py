@@ -1,0 +1,195 @@
+from typing import Callable, Tuple, Union
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import numpy.typing as ntp
+
+from ._colors import get_abs_scaling_arctan, get_abs_scaling_h, get_srgb1
+
+
+class Plot:
+    def __init__(
+        self,
+        f: Callable,
+        xminmax: Tuple[float, float],
+        yminmax: Tuple[float, float],
+        n: Union[int, Tuple[int, int]],
+    ):
+        xmin, xmax = xminmax
+        ymin, ymax = yminmax
+        assert xmin < xmax
+        assert ymin < ymax
+
+        if isinstance(n, tuple):
+            assert len(n) == 2
+            nx, ny = n
+        else:
+            assert isinstance(n, int)
+            nx = n
+            ny = n
+
+        self.f = f
+        self.Z = _get_z_grid_for_image(xminmax, yminmax, (nx, ny))
+        self.fz = f(self.Z)
+
+    def plot_colors(
+        self,
+        abs_scaling: str = "h-1.0",
+        colorspace: str = "cam16",
+    ):
+        extent = (
+            np.min(self.Z.real),
+            np.max(self.Z.real),
+            np.min(self.Z.imag),
+            np.max(self.Z.imag),
+        )
+        plt.imshow(
+            get_srgb1(self.fz, abs_scaling=abs_scaling, colorspace=colorspace),
+            extent=extent,
+            interpolation="nearest",
+            origin="lower",
+            aspect="equal",
+        )
+
+    def plot_contour_abs(
+        self,
+        abs_scaling: str = "h-1.0",
+        levels: Union[int, ntp.ArrayLike] = 7,
+        colors="#a0a0a050",
+        linestyles="solid",
+    ):
+        if abs_scaling == "arctan":
+            _, inv = get_abs_scaling_arctan()
+        else:
+            assert abs_scaling.startswith("h-")
+            alpha = float(abs_scaling[2:])
+            _, inv = get_abs_scaling_h(alpha)
+
+        # get the levels
+        if isinstance(levels, int):
+            levels = np.linspace(0.01, 0.99, levels)
+        else:
+            levels = np.asarray(levels)
+
+        levels = inv(levels)
+
+        plt.contour(
+            self.Z.real,
+            self.Z.imag,
+            np.abs(self.fz),
+            levels=levels,
+            colors=colors,
+            linestyles=linestyles,
+        )
+        plt.gca().set_aspect("equal")
+
+    def plot_contour_arg(
+        self,
+        levels: Union[int, ntp.ArrayLike] = 4,
+        colors="#a0a0a050",
+        linestyles="solid",
+    ):
+        if isinstance(levels, int):
+            levels = np.linspace(0.0, 2 * np.pi, levels, endpoint=False)
+        else:
+            levels = np.asarray(levels)
+
+        # assert levels in [-pi, pi], like np.angle
+        levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
+
+        # Contour levels must be increasing
+        levels = np.sort(levels)
+
+        # mpl has problems with plotting the contour at +pi because that's where the
+        # branch cut in np.angle happens. Separate out this case and move the branch cut
+        # to 0/2*pi there.
+        is_level1 = (levels > -np.pi + 0.1) & (levels < np.pi - 0.1)
+        levels1 = levels[is_level1]
+        levels2 = levels[~is_level1]
+        levels2 = np.mod(levels2, 2 * np.pi)
+
+        # plt.contour draws some lines in excess, which need to be cut off. This is done
+        # via setting some values to NaN, see
+        # <https://github.com/matplotlib/matplotlib/issues/20548>.
+        for levels, angle_fun, branch_cut in [
+            (levels1, np.angle, (-np.pi, np.pi)),
+            (levels2, _angle2, (0.0, 2 * np.pi)),
+        ]:
+            if len(levels) == 0:
+                continue
+
+            c = plt.contour(
+                self.Z.real,
+                self.Z.imag,
+                angle_fun(self.fz),
+                levels=levels,
+                colors=colors,
+                linestyles=linestyles,
+            )
+            for level, allseg in zip(levels, c.allsegs):
+                for segment in allseg:
+                    x, y = segment.T
+                    z = x + 1j * y
+                    angle = angle_fun(self.f(z))
+                    # cut off segments close to the branch cut
+                    is_near_branch_cut = np.logical_or(
+                        *[
+                            np.abs(angle - bc) < np.abs(angle - level)
+                            for bc in branch_cut
+                        ]
+                    )
+                    segment[is_near_branch_cut] = np.nan
+        plt.gca().set_aspect("equal")
+
+    def show(self):
+        plt.show()
+
+
+def show(*args, **kwargs):
+    plot(*args, **kwargs)
+    plt.show()
+
+
+def savefig(filename, *args, **kwargs):
+    plot(*args, **kwargs)
+    plt.savefig(filename, transparent=True, bbox_inches="tight")
+
+
+def imsave(filename, *args, **kwargs):
+    vals, _ = _get_srgb_vals(*args, **kwargs)
+    matplotlib.image.imsave(filename, vals, origin="lower")
+
+
+def plot_contours(*args, **kwargs):
+    plot_contour_abs(*args, **kwargs)
+    plot_contour_arg(*args, **kwargs)
+
+
+def _angle2(z):
+    return np.mod(np.angle(z), 2 * np.pi)
+
+
+def _get_z_grid_for_image(
+    xminmax: Tuple[float, float],
+    yminmax: Tuple[float, float],
+    n: Tuple[int, int],
+):
+    xmin, xmax = xminmax
+    ymin, ymax = yminmax
+    nx, ny = n
+
+    hx = (xmax - xmin) / nx
+    x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
+    hy = (ymax - ymin) / ny
+    y = np.linspace(ymin + hy / 2, ymax - hy / 2, ny)
+
+    X = np.meshgrid(x, y)
+    return X[0] + 1j * X[1]
+
+
+# def _get_srgb_vals(fz, alpha: float = 1, colorspace: str = "cam16"):
+#     return (
+#         get_srgb1(fz, alpha=alpha, colorspace=colorspace),
+#         (x.min(), x.max(), y.min(), y.max()),
+#     )
