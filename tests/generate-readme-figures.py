@@ -72,6 +72,10 @@ cplot.savefig("1z.png", lambda z: 1 / z, (-2, +2), (-2, +2), n)
 cplot.savefig("z-absz.png", lambda z: z / abs(z), (-2, +2), (-2, +2), n)
 cplot.savefig("z+1-z-1.png", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5), n)
 
+cplot.savefig("zz.png", lambda z: z ** z, (-3, +3), (-3, +3), n)
+cplot.savefig("1zz.png", lambda z: (1 / z) ** z, (-3, +3), (-3, +3), n)
+cplot.savefig("z1z.png", lambda z: z ** (1 / z), (-3, +3), (-3, +3), n)
+
 cplot.savefig("root2.png", np.sqrt, (-2, +2), (-2, +2), n)
 cplot.savefig("root3.png", lambda x: x ** (1 / 3), (-2, +2), (-2, +2), n)
 cplot.savefig("root4.png", lambda x: x ** 0.25, (-2, +2), (-2, +2), n)
