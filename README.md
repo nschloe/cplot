@@ -14,19 +14,14 @@
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 
+cplot helps plotting complex-valued functions in a visually appealing manner.
 
-cplot helps plotting complex-valued functions in a visually appealing manner. The
-general idea is to map the absolute value to lightness and the complex argument (the
-"angle") to the chroma of the representing color. This follows the [domain
-coloring](https://en.wikipedia.org/wiki/Domain_coloring) approach, also described by
-[John D. Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
-and Elias Wegert in the book [Visual Complex
-Functions](https://www.springer.com/gp/book/9783034801799) (with some tweaks). Also
-check out the [DC gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
-by Juan Carlos Ponce Campuzano.
+There are two basic building blocks:
 
-Similar projects:
-  * https://github.com/endolith/complex_colormap
+  * Contours along constant absolute value and/or the constant argument (phase, angle)
+  * [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
+    mapping the absolute value to lightness and the complex argument to the chroma of
+    the representing color
 
 Install with
 ```
@@ -35,12 +30,11 @@ pip install cplot
 and use as
 ```python
 import cplot
-import numpy
+import numpy as np
 
-cplot.show(numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.show(np.tan, (-5, +5), (-5, +5), 100)
 
-cplot.savefig("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
-cplot.imsave("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
+cplot.savefig("out.png", np.tan, (-5, +5), (-5, +5), 100)
 
 # There is a tripcolor function as well for triangulated 2D domains
 # cplot.tripcolor(triang, z)
@@ -50,15 +44,23 @@ cplot.imsave("out.png", numpy.tan, -5, +5, -5, +5, 100, 100)
 z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
-All functions have the optional arguments (with their default values)
+`cplot.show` takes further additional arguments, e.g.,
 ```python
-alpha = 1  # >= 0
-colorspace = "cam16"  # "cielab", "oklab", "hsl"
+abs_scaling = "h-1.0"  # how to scale the lightness in domain coloring
+colorspace = "cam16"  # ditto
+levels = (7, 4)  # number of abs/arg contours
+colors = "#a0a0a050"  # contour color
+linestyles = "solid"  # contour line style
 ```
 
-* `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
-  which can help isolating the roots and poles (which are still black and white,
-  respectively). `alpha=0` ignores the magnitude of `f(z)` completely.
+* By default, the abs contour levels are `[1/8, 1/4, 1/2, 1, 2, 4, 8]`; the arg contours
+  levels are `[0, pi/2, pi, -pi/2]`. It is possible to pass level lists explicitly. Pass
+  `0` or `None` to disable the levels completely.
+
+* `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
+  `1.0` adds more color which can help isolating the roots and poles (which are still
+  black and white, respectively). `h-0.0` ignores the magnitude of `f(z)` completely.
+  `arctan` is another possible scaling.
 
 * `colorspace` can be set to `hsl` to get the common fully saturated, vibrant
   colors. This is usually a bad idea since it creates artifacts which are not related
@@ -78,7 +80,7 @@ Consider the test function (math rendered with [xdoc](https://github.com/nschloe
 f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 ```
 
-| `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
+| `h-1.0`              |  `h-0.5`       |  `h-0.0`    |
 | :----------:         |  :---------:         |  :--------:       |
 | <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%"> |
 | <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%"> |
@@ -116,23 +118,23 @@ All plots are created with default settings.
 
 <img src="https://nschloe.github.io/cplot/root2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root3.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root4.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
+`np.sqrt`          |  `z**(1/3)`       |  `z**(1/4)`    |
 
 <img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.log`          |  `numpy.exp`       |  `exp(1/z)`    |
+`np.log`          |  `np.exp`       |  `exp(1/z)`    |
 
 <img src="https://nschloe.github.io/cplot/sin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sin`          |  `numpy.cos`       |  `numpy.tan`    |
+`np.sin`          |  `np.cos`       |  `np.tan`    |
 
 <img src="https://nschloe.github.io/cplot/sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.sinh`          |  `numpy.cosh`       |  `numpy.tanh`    |
+`np.sinh`          |  `np.cosh`       |  `np.tanh`    |
 
 <img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.png" width="70%">
 :-------------------:|:------------------:|:-------------------------:|
-`numpy.arcsin`          |  `numpy.arccos`       |  `numpy.arctan`    |
+`np.arcsin`          |  `np.arccos`       |  `np.arctan`    |
 
 <img src="https://nschloe.github.io/cplot/sinz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.png" width="70%">
 :-------------------:|:------------------:|:----------------:|
@@ -154,5 +156,16 @@ To run the cplot unit tests, check out this repository and type
 pytest
 ```
 
+### Similar projects and further reading
+
+  * https://github.com/endolith/complex_colormap
+  * [John D.
+    Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
+  * [Elias Wegert, Visual Complex
+    Functions](https://www.springer.com/gp/book/9783034801799)
+  * [Juan Carlos Ponce Campuzano, DC
+    gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
+
 ### License
-This software is published under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
+This software is published under the [GPLv3
+license](https://www.gnu.org/licenses/gpl-3.0.en.html).

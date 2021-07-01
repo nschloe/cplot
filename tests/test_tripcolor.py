@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
-import numpy
+import numpy as np
 
 import cplot
 
@@ -12,14 +12,14 @@ def test_tripcolor():
     n_angles = 36
     n_radii = 8
     min_radius = 0.25
-    radii = numpy.linspace(min_radius, 0.95, n_radii)
+    radii = np.linspace(min_radius, 0.95, n_radii)
 
-    angles = numpy.linspace(0, 2 * numpy.pi, n_angles, endpoint=False)
-    angles = numpy.repeat(angles[..., numpy.newaxis], n_radii, axis=1)
-    angles[:, 1::2] += numpy.pi / n_angles
+    angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+    angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+    angles[:, 1::2] += np.pi / n_angles
 
-    x = (radii * numpy.cos(angles)).flatten()
-    y = (radii * numpy.sin(angles)).flatten()
+    x = (radii * np.cos(angles)).flatten()
+    y = (radii * np.sin(angles)).flatten()
     z = 2 * (x + 1j * y)
 
     # Create the Triangulation; no triangles so Delaunay triangulation created.
@@ -27,7 +27,7 @@ def test_tripcolor():
 
     # Mask off unwanted triangles.
     triang.set_mask(
-        numpy.hypot(x[triang.triangles].mean(axis=1), y[triang.triangles].mean(axis=1))
+        np.hypot(x[triang.triangles].mean(axis=1), y[triang.triangles].mean(axis=1))
         < min_radius
     )
 

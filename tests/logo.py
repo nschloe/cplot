@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
-import numpy
+import numpy as np
 
 import cplot
 
@@ -11,14 +11,14 @@ def create_logo():
     # First create the x and y coordinates of the points.
     n_angles = 314
     n_radii = 100
-    radii = numpy.linspace(0.0, 1.0, n_radii)
+    radii = np.linspace(0.0, 1.0, n_radii)
 
-    angles = numpy.linspace(0, 2 * numpy.pi, n_angles, endpoint=False)
-    angles = numpy.repeat(angles[..., numpy.newaxis], n_radii, axis=1)
-    angles[:, 1::2] += numpy.pi / n_angles
+    angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+    angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
+    angles[:, 1::2] += np.pi / n_angles
 
-    x = (radii * numpy.cos(angles)).flatten()
-    y = (radii * numpy.sin(angles)).flatten()
+    x = (radii * np.cos(angles)).flatten()
+    y = (radii * np.sin(angles)).flatten()
 
     # Create the Triangulation; no triangles so Delaunay triangulation created.
     triang = tri.Triangulation(x, y)
@@ -30,7 +30,7 @@ def create_logo():
     # X, cells = dmsh.generate(geo, 0.1)
 
     z = x + 1j * y
-    # z /= numpy.abs(z)
+    # z /= np.abs(z)
 
     cplot.tripcolor(triang, z, alpha=0)
     plt.gca().set_aspect("equal", "datalim")
