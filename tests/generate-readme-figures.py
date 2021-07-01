@@ -6,14 +6,15 @@ import scipy.special
 import cplot
 
 # gray to improve visibility on github's dark background
-gray = "#969696"
-ax = plt.gca()
-ax.spines["bottom"].set_color(gray)
-ax.spines["top"].set_color(gray)
-ax.spines["right"].set_color(gray)
-ax.spines["left"].set_color(gray)
-ax.tick_params(axis="x", colors=gray)
-ax.tick_params(axis="y", colors=gray)
+_gray = "#969696"
+style = {
+    "text.color": _gray,
+    "axes.labelcolor": _gray,
+    "axes.edgecolor": _gray,
+    "xtick.color": _gray,
+    "ytick.color": _gray,
+}
+plt.style.use(style)
 
 
 def riemann_zeta(z):
