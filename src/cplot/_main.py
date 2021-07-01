@@ -56,6 +56,9 @@ class Plot:
         colors="#a0a0a050",
         linestyles="solid",
     ):
+        if levels in [None, 0]:
+            return
+
         if isinstance(levels, int):
             levels = [2.0 ** k for k in np.arange(0, levels) - levels // 2]
 
@@ -77,6 +80,9 @@ class Plot:
         colors="#a0a0a050",
         linestyles="solid",
     ):
+        if levels in [None, 0]:
+            return
+
         if isinstance(levels, int):
             levels = np.linspace(0.0, 2 * np.pi, levels, endpoint=False)
         else:
@@ -178,8 +184,8 @@ def plot(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    abs_scaling="h-1.0",
-    colorspace="cam16",
+    abs_scaling: str = "h-1.0",
+    colorspace: str = "cam16",
     levels=(7, 4),
     colors="#a0a0a050",
     linestyles="solid",
@@ -187,6 +193,9 @@ def plot(
     plot = Plot(f, xminmax, yminmax, n)
 
     plot.plot_colors(abs_scaling, colorspace)
+
+    if levels in [None, 0]:
+        levels = (0, 0)
 
     plot.plot_contour_abs(
         levels=levels[0],

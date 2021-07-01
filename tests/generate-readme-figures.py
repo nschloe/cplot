@@ -21,9 +21,9 @@ def riemann_zeta(z):
     z = np.asarray(z)
     z_shape = z.shape
     vals = [mpmath.zeta(val) for val in z.flatten()]
-    return np.array(
-        [float(val.real) + 1j * float(val.imag) for val in vals]
-    ).reshape(z_shape)
+    return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
+        z_shape
+    )
 
 
 def riemann_xi(z):
@@ -42,18 +42,18 @@ def riemann_siegel_z(z):
     z = np.asarray(z)
     z_shape = z.shape
     vals = [mpmath.siegelz(val) for val in z.flatten()]
-    return np.array(
-        [float(val.real) + 1j * float(val.imag) for val in vals]
-    ).reshape(z_shape)
+    return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
+        z_shape
+    )
 
 
 def riemann_siegel_theta(z):
     z = np.asarray(z)
     z_shape = z.shape
     vals = [mpmath.siegeltheta(val) for val in z.flatten()]
-    return np.array(
-        [float(val.real) + 1j * float(val.imag) for val in vals]
-    ).reshape(z_shape)
+    return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
+        z_shape
+    )
 
 
 # First function from the SIAM-100-digit challenge

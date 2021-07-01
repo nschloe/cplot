@@ -47,14 +47,15 @@ val = cplot.get_srgb1(z)
 `cplot.show` takes further additional arguments, e.g.,
 ```python
 abs_scaling = "h-1.0"  # how to scale the lightness in domain coloring
-colorspace = "cam16"   # ditto
-levels = (7, 4)        # number of abs/arg contours
-colors = "#a0a0a050"   # contour color
-linestyles = "solid"   # contour line style
+colorspace = "cam16"  # ditto
+levels = (7, 4)  # number of abs/arg contours
+colors = "#a0a0a050"  # contour color
+linestyles = "solid"  # contour line style
 ```
 
 * By default, the abs contour levels are `[1/8, 1/4, 1/2, 1, 2, 4, 8]`; the arg contours
-  levels are `[0, pi/2, pi, -pi/2]`. It is possible to pass level lists explicitly.
+  levels are `[0, pi/2, pi, -pi/2]`. It is possible to pass level lists explicitly. Pass
+  `0` or `None` to disable the levels completely.
 
 * `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
   `1.0` adds more color which can help isolating the roots and poles (which are still
