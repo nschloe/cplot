@@ -183,7 +183,7 @@ def plot(
     f: Callable,
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
+    n: Union[int, Tuple[int, int]] = 500,
     abs_scaling: str = "h-1.0",
     colorspace: str = "cam16",
     levels=(7, 4),
