@@ -14,16 +14,14 @@
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 
-
 cplot helps plotting complex-valued functions in a visually appealing manner.
 
 There are two basic building blocks:
 
-  * Plotting a contour map of the absolute value and/or the complex argument ("the
-    angle")
-  * Mapping the absolute value to lightness and the complex argument (the "angle") to
-    the chroma of the representing color ([domain
-    coloring](https://en.wikipedia.org/wiki/Domain_coloring))
+  * Contours along constant absolute value and/or the constant argument (phase, angle)
+  * [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
+    mapping the absolute value to lightness and the complex argument to the chroma of
+    the representing color
 
 Install with
 ```
@@ -46,15 +44,22 @@ cplot.savefig("out.png", np.tan, (-5, +5), (-5, +5), 100)
 z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
-All functions have the optional arguments (with their default values)
+`cplot.show` takes further additional arguments, e.g.,
 ```python
-alpha = 1  # >= 0
-colorspace = "cam16"  # "cielab", "oklab", "hsl"
+abs_scaling = "h-1.0"  # how to scale the lightness in domain coloring
+colorspace = "cam16"   # ditto
+levels = (7, 4)        # number of abs/arg contours
+colors = "#a0a0a050"   # contour color
+linestyles = "solid"   # contour line style
 ```
 
-* `alpha` can be used to adjust the use of colors. A value less than 1 adds more color
-  which can help isolating the roots and poles (which are still black and white,
-  respectively). `alpha=0` ignores the magnitude of `f(z)` completely.
+* By default, the abs contour levels are `[1/8, 1/4, 1/2, 1, 2, 4, 8]`; the arg contours
+  levels are `[0, pi/2, pi, -pi/2]`. It is possible to pass level lists explicitly.
+
+* `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
+  `1.0` adds more color which can help isolating the roots and poles (which are still
+  black and white, respectively). `h-0.0` ignores the magnitude of `f(z)` completely.
+  `arctan` is another possible scaling.
 
 * `colorspace` can be set to `hsl` to get the common fully saturated, vibrant
   colors. This is usually a bad idea since it creates artifacts which are not related
@@ -74,7 +79,7 @@ Consider the test function (math rendered with [xdoc](https://github.com/nschloe
 f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 ```
 
-| `alpha = 1`          |  `alpha = 0.5`       |  `alpha = 0.0`    |
+| `h-1.0`              |  `h-0.5`       |  `h-0.0`    |
 | :----------:         |  :---------:         |  :--------:       |
 | <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%"> |
 | <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%"> |
