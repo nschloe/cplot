@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as ntp
 
-from ._colors import get_abs_scaling_arctan, get_abs_scaling_h, get_srgb1
+from ._colors import get_srgb1
 
 
 class Plot:

@@ -11,10 +11,10 @@ def get_abs_scaling_h(alpha):
     def f(r):
         return r ** alpha / (r ** alpha + 1)
 
-    def f_inv(y):
-        return (y / (1 - y)) ** (1 / alpha)
+    # def f_inv(y):
+    #     return (y / (1 - y)) ** (1 / alpha)
 
-    return f, f_inv
+    return f
 
 
 def get_abs_scaling_arctan():
@@ -23,10 +23,10 @@ def get_abs_scaling_arctan():
     def f(r):
         return 2 / np.pi * np.arctan(r)
 
-    def f_inv(y):
-        return np.tan(np.pi / 2 * y)
+    # def f_inv(y):
+    #     return np.tan(np.pi / 2 * y)
 
-    return f, f_inv
+    return f
 
 
 def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
@@ -79,11 +79,11 @@ def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
     # (or infty) is this last f(r).
 
     if abs_scaling == "arctan":
-        abs_scaling, _ = get_abs_scaling_arctan()
+        abs_scaling = get_abs_scaling_arctan()
     else:
         assert abs_scaling.startswith("h-")
         alpha = float(abs_scaling[2:])
-        abs_scaling, _ = get_abs_scaling_h(alpha)
+        abs_scaling = get_abs_scaling_h(alpha)
 
     angle = np.arctan2(z.imag, z.real)
     absval_scaled = abs_scaling(np.abs(z))
