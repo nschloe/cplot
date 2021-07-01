@@ -17,16 +17,17 @@ ax.tick_params(axis="y", colors=gray)
 
 
 def riemann_zeta(z):
-    vals = [[mpmath.zeta(val) for val in row] for row in z]
-    out = np.array(
-        [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
-    )
-    return out
+    z = np.asarray(z)
+    z_shape = z.shape
+    vals = [mpmath.zeta(val) for val in z.flatten()]
+    return np.array(
+        [float(val.real) + 1j * float(val.imag) for val in vals]
+    ).reshape(z_shape)
 
 
 def riemann_xi(z):
     # https://en.wikipedia.org/wiki/Riemann_Xi_function
-    out = (
+    return (
         0.5
         * z
         * (z - 1)
@@ -34,23 +35,24 @@ def riemann_xi(z):
         * scipy.special.gamma(z / 2)
         * riemann_zeta(z)
     )
-    return out
 
 
 def riemann_siegel_z(z):
-    vals = [[mpmath.siegelz(val) for val in row] for row in z]
-    out = np.array(
-        [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
-    )
-    return out
+    z = np.asarray(z)
+    z_shape = z.shape
+    vals = [mpmath.siegelz(val) for val in z.flatten()]
+    return np.array(
+        [float(val.real) + 1j * float(val.imag) for val in vals]
+    ).reshape(z_shape)
 
 
 def riemann_siegel_theta(z):
-    vals = [[mpmath.siegeltheta(val) for val in row] for row in z]
-    out = np.array(
-        [[float(val.real) + 1j * float(val.imag) for val in row] for row in vals]
-    )
-    return out
+    z = np.asarray(z)
+    z_shape = z.shape
+    vals = [mpmath.siegeltheta(val) for val in z.flatten()]
+    return np.array(
+        [float(val.real) + 1j * float(val.imag) for val in vals]
+    ).reshape(z_shape)
 
 
 # First function from the SIAM-100-digit challenge
@@ -103,7 +105,7 @@ cplot.savefig(
     "riemann-siegel-theta.png", riemann_siegel_theta, (-20, +20), (-20, +20), n
 )
 
-cplot.savefig("siam.png", siam, (-1, 1), (-1, 1), n, abs_scaling="h-0.1")
+cplot.savefig("siam.png", siam, (-1, 1), (-1, 1), n, abs_scaling="h-0.5")
 
 
 def f(z):

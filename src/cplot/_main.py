@@ -52,25 +52,14 @@ class Plot:
 
     def plot_contour_abs(
         self,
-        abs_scaling: str = "h-1.0",
         levels: Union[int, ntp.ArrayLike] = 7,
         colors="#a0a0a050",
         linestyles="solid",
     ):
-        if abs_scaling == "arctan":
-            _, inv = get_abs_scaling_arctan()
-        else:
-            assert abs_scaling.startswith("h-")
-            alpha = float(abs_scaling[2:])
-            _, inv = get_abs_scaling_h(alpha)
-
-        # get the levels
         if isinstance(levels, int):
-            levels = np.linspace(0.01, 0.99, levels)
-        else:
-            levels = np.asarray(levels)
+            levels = [2.0 ** k for k in np.arange(0, levels) - levels // 2]
 
-        levels = inv(levels)
+        levels = np.asarray(levels)
 
         plt.contour(
             self.Z.real,
@@ -165,7 +154,6 @@ def show_contours(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    abs_scaling="h-1.0",
     levels=(7, 4),
     colors="#a0a0a050",
     linestyles="solid",
@@ -173,7 +161,6 @@ def show_contours(
     plot = Plot(f, xminmax, yminmax, n)
 
     plot.plot_contour_abs(
-        abs_scaling,
         levels=levels[0],
         colors=colors,
         linestyles=linestyles,
@@ -202,7 +189,6 @@ def plot(
     plot.plot_colors(abs_scaling, colorspace)
 
     plot.plot_contour_abs(
-        abs_scaling,
         levels=levels[0],
         colors=colors,
         linestyles=linestyles,
