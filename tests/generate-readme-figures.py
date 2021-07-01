@@ -61,49 +61,49 @@ def siam(z):
 
 n = 400
 
-cplot.savefig("z1.png", lambda z: z ** 1, -2, +2, -2, +2, n, n)
-cplot.savefig("z2.png", lambda z: z ** 2, -2, +2, -2, +2, n, n)
-cplot.savefig("z3.png", lambda z: z ** 3, -2, +2, -2, +2, n, n)
+cplot.savefig("z1.png", lambda z: z ** 1, (-2, +2), (-2, +2), n)
+cplot.savefig("z2.png", lambda z: z ** 2, (-2, +2), (-2, +2), n)
+cplot.savefig("z3.png", lambda z: z ** 3, (-2, +2), (-2, +2), n)
 
-cplot.savefig("1z.png", lambda z: 1 / z, -2, +2, -2, +2, n, n)
-cplot.savefig("z-absz.png", lambda z: z / abs(z), -2, +2, -2, +2, n, n)
-cplot.savefig("z+1-z-1.png", lambda z: (z + 1) / (z - 1), -5, +5, -5, +5, n, n)
+cplot.savefig("1z.png", lambda z: 1 / z, (-2, +2), (-2, +2), n)
+cplot.savefig("z-absz.png", lambda z: z / abs(z), (-2, +2), (-2, +2), n)
+cplot.savefig("z+1-z-1.png", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5), n)
 
-cplot.savefig("root2.png", np.sqrt, -2, +2, -2, +2, n, n)
-cplot.savefig("root3.png", lambda x: x ** (1 / 3), -2, +2, -2, +2, n, n)
-cplot.savefig("root4.png", lambda x: x ** 0.25, -2, +2, -2, +2, n, n)
+cplot.savefig("root2.png", np.sqrt, (-2, +2), (-2, +2), n)
+cplot.savefig("root3.png", lambda x: x ** (1 / 3), (-2, +2), (-2, +2), n)
+cplot.savefig("root4.png", lambda x: x ** 0.25, (-2, +2), (-2, +2), n)
 
-cplot.savefig("log.png", np.log, -2, +2, -2, +2, n, n)
-cplot.savefig("exp.png", np.exp, -2, +2, -2, +2, n, n)
-cplot.savefig("exp1z.png", lambda z: np.exp(1 / z), -1, +1, -1, +1, n, n)
+cplot.savefig("log.png", np.log, (-2, +2), (-2, +2), n)
+cplot.savefig("exp.png", np.exp, (-2, +2), (-2, +2), n)
+cplot.savefig("exp1z.png", lambda z: np.exp(1 / z), (-1, +1), (-1, +1), n)
 
-cplot.savefig("sin.png", np.sin, -5, +5, -5, +5, n, n)
-cplot.savefig("cos.png", np.cos, -5, +5, -5, +5, n, n)
-cplot.savefig("tan.png", np.tan, -5, +5, -5, +5, n, n)
+cplot.savefig("sin.png", np.sin, (-5, +5), (-5, +5), n)
+cplot.savefig("cos.png", np.cos, (-5, +5), (-5, +5), n)
+cplot.savefig("tan.png", np.tan, (-5, +5), (-5, +5), n)
 
-cplot.savefig("sinh.png", np.sinh, -5, +5, -5, +5, n, n)
-cplot.savefig("cosh.png", np.cosh, -5, +5, -5, +5, n, n)
-cplot.savefig("tanh.png", np.tanh, -5, +5, -5, +5, n, n)
+cplot.savefig("sinh.png", np.sinh, (-5, +5), (-5, +5), n)
+cplot.savefig("cosh.png", np.cosh, (-5, +5), (-5, +5), n)
+cplot.savefig("tanh.png", np.tanh, (-5, +5), (-5, +5), n)
 
-cplot.savefig("arcsin.png", np.arcsin, -2, +2, -2, +2, n, n)
-cplot.savefig("arccos.png", np.arccos, -2, +2, -2, +2, n, n)
-cplot.savefig("arctan.png", np.arctan, -2, +2, -2, +2, n, n)
+cplot.savefig("arcsin.png", np.arcsin, (-2, +2), (-2, +2), n)
+cplot.savefig("arccos.png", np.arccos, (-2, +2), (-2, +2), n)
+cplot.savefig("arctan.png", np.arctan, (-2, +2), (-2, +2), n)
 
-cplot.savefig("sinz-z.png", lambda z: np.sin(z) / z, -7, +7, -7, +7, n, n)
-cplot.savefig("cosz-z.png", lambda z: np.cos(z) / z, -7, +7, -7, +7, n, n)
-cplot.savefig("tanz-z.png", lambda z: np.tan(z) / z, -7, +7, -7, +7, n, n)
+cplot.savefig("sinz-z.png", lambda z: np.sin(z) / z, (-7, +7), (-7, +7), n)
+cplot.savefig("cosz-z.png", lambda z: np.cos(z) / z, (-7, +7), (-7, +7), n)
+cplot.savefig("tanz-z.png", lambda z: np.tan(z) / z, (-7, +7), (-7, +7), n)
 
-cplot.savefig("gamma.png", scipy.special.gamma, -5, +5, -5, +5, n, n)
-cplot.savefig("digamma.png", scipy.special.digamma, -5, +5, -5, +5, n, n)
-cplot.savefig("zeta.png", riemann_zeta, -30, +30, -30, +30, n, n)
+cplot.savefig("gamma.png", scipy.special.gamma, (-5, +5), (-5, +5), n)
+cplot.savefig("digamma.png", scipy.special.digamma, (-5, +5), (-5, +5), n)
+cplot.savefig("zeta.png", riemann_zeta, (-30, +30), (-30, +30), n)
 
-cplot.savefig("riemann-xi.png", riemann_xi, -20, +20, -20, +20, n, n)
-cplot.savefig("riemann-siegel-z.png", riemann_siegel_z, -20, +20, -20, +20, n, n)
+cplot.savefig("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20), n)
+cplot.savefig("riemann-siegel-z.png", riemann_siegel_z, (-20, +20), (-20, +20), n)
 cplot.savefig(
-    "riemann-siegel-theta.png", riemann_siegel_theta, -20, +20, -20, +20, n, n
+    "riemann-siegel-theta.png", riemann_siegel_theta, (-20, +20), (-20, +20), n
 )
 
-cplot.savefig("siam.png", siam, -1, 1, -1, 1, n, n, alpha=0.1)
+cplot.savefig("siam.png", siam, (-1, 1), (-1, 1), n, abs_scaling="h-0.1")
 
 
 def f(z):
@@ -112,6 +112,10 @@ def f(z):
 
 n = 201
 for name in ["cam16", "cielab", "oklab", "hsl"]:
-    cplot.savefig(f"{name}-10.png", f, -3, +3, -3, +3, n, n, colorspace=name)
-    cplot.savefig(f"{name}-05.png", f, -3, +3, -3, +3, n, n, 0.5, name)
-    cplot.savefig(f"{name}-00.png", f, -3, +3, -3, +3, n, n, 0, name)
+    cplot.savefig(f"{name}-10.png", f, (-3, +3), (-3, +3), n, colorspace=name)
+    cplot.savefig(
+        f"{name}-05.png", f, (-3, +3), (-3, +3), n, abs_scaling="h-0.5", colorspace=name
+    )
+    cplot.savefig(
+        f"{name}-00.png", f, (-3, +3), (-3, +3), n, abs_scaling="h-0", colorspace=name
+    )

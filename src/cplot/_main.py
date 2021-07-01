@@ -1,6 +1,5 @@
 from typing import Callable, Tuple, Union
 
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as ntp
@@ -34,6 +33,9 @@ class Plot:
         self.f = f
         self.Z = _get_z_grid_for_image(xminmax, yminmax, (nx, ny))
         self.fz = f(self.Z)
+
+    def __del__(self):
+        plt.close()
 
     def plot_colors(
         self,
