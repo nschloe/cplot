@@ -63,9 +63,11 @@ def siam(z):
 
 
 n = 400
+cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2), (-2, 2), n=n)
+plt.savefig("sinz3z.png", transparent=True, bbox_inches="tight")
+plt.close()
 
 args = [
-    ("sinz3z.png", lambda z: np.sin(z ** 3) / z, (-2, 2), (-2, 2)),
     #
     ("z1.png", lambda z: z ** 1, (-2, +2), (-2, +2)),
     ("z2.png", lambda z: z ** 2, (-2, +2), (-2, +2)),
