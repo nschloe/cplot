@@ -58,6 +58,10 @@ plt = cplot.plot(
 plt.show()
 ```
 
+<p align="center">
+  <img src="https://nschloe.github.io/cplot/sinz3z.png" width="50%">
+</p>
+
 Other useful functions:
 
 <!--pytest-codeblocks:skip-->
