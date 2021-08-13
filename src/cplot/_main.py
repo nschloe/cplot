@@ -56,7 +56,8 @@ class Plotter:
             # abs colorbar
             norm = mpl.colors.Normalize(vmin=0, vmax=1)
             cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
-            cb0.set_label("abs")
+            cb0.set_label("abs", rotation=0, ha="center", va="top")
+            cb0.ax.yaxis.set_label_coords(0.5, -0.03)
             scaled_vals = scale01([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8], abs_scaling)
             cb0.set_ticks([0.0, *scaled_vals, 1.0])
             cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
@@ -70,7 +71,8 @@ class Plotter:
             #
             norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
             cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=newcmp))
-            cb1.set_label("arg")
+            cb1.set_label("arg", rotation=0, ha="center", va="top")
+            cb1.ax.yaxis.set_label_coords(0.5, -0.03)
             cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
             cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
 
