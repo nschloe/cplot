@@ -1,4 +1,4 @@
-from typing import Callable, Literal, Tuple, Union
+from typing import Callable, Literal, Optional, Tuple, Union
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -78,10 +78,13 @@ class Plotter:
 
     def plot_contour_abs(
         self,
-        levels: Union[ntp.ArrayLike, Literal["auto"]] = "auto",
-        colors="#a0a0a050",
-        linestyles="solid",
+        levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
+        linecolors: str = "#a0a0a050",
+        linestyles: str = "solid",
     ):
+        if levels is None:
+            return
+
         vals = np.abs(self.fz)
 
         if levels == "auto":
@@ -97,7 +100,7 @@ class Plotter:
             self.Z.imag,
             vals,
             levels=levels,
-            colors=colors,
+            colors=linecolors,
             linestyles=linestyles,
         )
         # make the contour at 1 dashed
@@ -106,24 +109,21 @@ class Plotter:
             self.Z.imag,
             np.abs(self.fz),
             levels=[1],
-            colors=colors,
+            colors=linecolors,
             linestyles="--",
         )
         plt.gca().set_aspect("equal")
 
     def plot_contour_arg(
         self,
-        levels: Union[int, ntp.ArrayLike] = 4,
-        colors="#a0a0a050",
+        levels: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+        linecolors="#a0a0a050",
         linestyles="solid",
     ):
-        if levels in [None, 0]:
+        if levels is None:
             return
 
-        if isinstance(levels, int):
-            levels = np.linspace(0.0, 2 * np.pi, levels, endpoint=False)
-        else:
-            levels = np.asarray(levels)
+        levels = np.asarray(levels)
 
         # assert levels in [-pi, pi], like np.angle
         levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
@@ -154,7 +154,7 @@ class Plotter:
                 self.Z.imag,
                 angle_fun(self.fz),
                 levels=levels,
-                colors=colors,
+                colors=linecolors,
                 linestyles=linestyles,
             )
             for level, allseg in zip(levels, c.allsegs):
@@ -173,7 +173,7 @@ class Plotter:
         plt.gca().set_aspect("equal")
 
 
-def show_colors(
+def plot_colors(
     f: Callable,
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
@@ -183,31 +183,31 @@ def show_colors(
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace)
-    plt.show()
+    return plt
 
 
-def show_contours(
+def plot_contours(
     f: Callable,
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    levels=(7, 4),
-    colors="#a0a0a050",
+    levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    linecolors="#a0a0a050",
     linestyles="solid",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
 
     plotter.plot_contour_abs(
         levels=levels[0],
-        colors=colors,
+        linecolors=linecolors,
         linestyles=linestyles,
     )
     plotter.plot_contour_arg(
         levels=levels[1],
-        colors=colors,
+        linecolors=linecolors,
         linestyles=linestyles,
     )
-    plotter.show()
+    return plt
 
 
 def plot(
@@ -216,6 +216,7 @@ def plot(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]] = 500,
     abs_scaling: str = "h-1.0",
+    levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
     colors: str = "#a0a0a050",
     linestyles: str = "solid",
@@ -224,19 +225,9 @@ def plot(
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
-    plotter.plot_contour_abs(colors=colors, linestyles=linestyles)
-    plotter.plot_contour_arg(colors=colors, linestyles=linestyles)
+    plotter.plot_contour_abs(levels=levels[0], linecolors=colors, linestyles=linestyles)
+    plotter.plot_contour_arg(levels=levels[1], linecolors=colors, linestyles=linestyles)
     return plt
-
-
-def show(*args, **kwargs):
-    plot(*args, **kwargs)
-    plt.show()
-
-
-def savefig(filename, *args, **kwargs):
-    plot(*args, **kwargs)
-    plt.savefig(filename, transparent=True, bbox_inches="tight")
 
 
 def _angle2(z):
