@@ -1,5 +1,6 @@
 from typing import Callable, Tuple, Union
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as ntp
@@ -7,7 +8,7 @@ import numpy.typing as ntp
 from ._colors import get_srgb1
 
 
-class Plot:
+class Plotter:
     def __init__(
         self,
         f: Callable,
@@ -34,8 +35,8 @@ class Plot:
         self.Z = _get_z_grid_for_image(xminmax, yminmax, (nx, ny))
         self.fz = f(self.Z)
 
-    def __del__(self):
-        plt.close()
+    # def __del__(self):
+    #     plt.close()
 
     def plot_colors(
         self,
@@ -49,6 +50,17 @@ class Plot:
             origin="lower",
             aspect="equal",
         )
+
+    def plot_colorbars(self):
+        norm = mpl.colors.Normalize(vmin=0, vmax=1)
+        cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
+        cb0.set_label("abs")
+
+        norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+        cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.turbo))
+        cb1.set_label("arg")
+        cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
+        cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
 
     def plot_contour_abs(
         self,
@@ -135,12 +147,6 @@ class Plot:
                     segment[is_near_branch_cut] = np.nan
         plt.gca().set_aspect("equal")
 
-    def show(self):
-        plt.show()
-
-    def savefig(self, filename):
-        plt.savefig(filename, transparent=True, bbox_inches="tight")
-
 
 def show_colors(
     f: Callable,
@@ -150,9 +156,9 @@ def show_colors(
     abs_scaling="h-1.0",
     colorspace="cam16",
 ):
-    plot = Plot(f, xminmax, yminmax, n)
-    plot.plot_colors(abs_scaling, colorspace)
-    plot.show()
+    plotter = Plotter(f, xminmax, yminmax, n)
+    plotter.plot_colors(abs_scaling, colorspace)
+    plt.show()
 
 
 def show_contours(
@@ -164,19 +170,19 @@ def show_contours(
     colors="#a0a0a050",
     linestyles="solid",
 ):
-    plot = Plot(f, xminmax, yminmax, n)
+    plotter = Plotter(f, xminmax, yminmax, n)
 
-    plot.plot_contour_abs(
+    plotter.plot_contour_abs(
         levels=levels[0],
         colors=colors,
         linestyles=linestyles,
     )
-    plot.plot_contour_arg(
+    plotter.plot_contour_arg(
         levels=levels[1],
         colors=colors,
         linestyles=linestyles,
     )
-    plot.show()
+    plotter.show()
 
 
 def plot(
@@ -186,36 +192,32 @@ def plot(
     n: Union[int, Tuple[int, int]] = 500,
     abs_scaling: str = "h-1.0",
     colorspace: str = "cam16",
-    levels=(7, 4),
-    colors="#a0a0a050",
-    linestyles="solid",
+    levels: Tuple[int, int] = (7, 4),
+    colors: str = "#a0a0a050",
+    linestyles: str = "solid",
+    colorbars: bool = True,
 ):
-    plot = Plot(f, xminmax, yminmax, n)
-
-    plot.plot_colors(abs_scaling, colorspace)
+    plotter = Plotter(f, xminmax, yminmax, n)
+    plotter.plot_colors(abs_scaling, colorspace)
+    if colorbars:
+        plotter.plot_colorbars()
 
     if levels in [None, 0]:
         levels = (0, 0)
 
-    plot.plot_contour_abs(
-        levels=levels[0],
-        colors=colors,
-        linestyles=linestyles,
-    )
-    plot.plot_contour_arg(
-        levels=levels[1],
-        colors=colors,
-        linestyles=linestyles,
-    )
-    return plot
+    plotter.plot_contour_abs(levels=levels[0], colors=colors, linestyles=linestyles)
+    plotter.plot_contour_arg(levels=levels[1], colors=colors, linestyles=linestyles)
+    return plt
 
 
 def show(*args, **kwargs):
-    plot(*args, **kwargs).show()
+    plot(*args, **kwargs)
+    plt.show()
 
 
 def savefig(filename, *args, **kwargs):
-    plot(*args, **kwargs).savefig(filename)
+    plot(*args, **kwargs)
+    plt.savefig(filename, transparent=True, bbox_inches="tight")
 
 
 def _angle2(z):
