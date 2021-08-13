@@ -1,4 +1,4 @@
-from typing import Callable, Literal, Optional, Tuple, Union
+from typing import Callable, Optional, Tuple, Union
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -78,7 +78,9 @@ class Plotter:
 
     def plot_contour_abs(
         self,
-        levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
+        # Literal needs Python 3.8
+        # levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
+        levels: Optional[Union[ntp.ArrayLike, str]] = "auto",
         linecolors: str = "#a0a0a050",
         linestyles: str = "solid",
         linestyles_abs1: str = "solid",
