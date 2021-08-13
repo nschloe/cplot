@@ -24,7 +24,7 @@ def scale01(vals: npt.ArrayLike, scaling_type: str):
     return vals ** alpha / (vals ** alpha + 1)
 
 
-def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
+def get_srgb1(z: npt.ArrayLike, abs_scaling: str = "h-1", colorspace: str = "CAM16"):
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
     # One desirable property is
     # (1)  f(1/r) = 1 - f(r).

@@ -53,16 +53,23 @@ class Plotter:
         )
 
         if add_colorbars:
+            # abs colorbar
             norm = mpl.colors.Normalize(vmin=0, vmax=1)
             cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
             cb0.set_label("abs")
-
             scaled_vals = scale01([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8], abs_scaling)
             cb0.set_ticks([0.0, *scaled_vals, 1.0])
             cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
 
+            # arg colorbar
+            # create new colormap
+            z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
+            rgb_vals = get_srgb1(z, abs_scaling=abs_scaling, colorspace=colorspace)
+            rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
+            newcmp = mpl.colors.ListedColormap(rgba_vals)
+            #
             norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
-            cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.turbo))
+            cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=newcmp))
             cb1.set_label("arg")
             cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
             cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
