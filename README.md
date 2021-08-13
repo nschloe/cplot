@@ -29,42 +29,51 @@ pip install cplot
 ```
 and use as
 ```python
-import cplot
 import numpy as np
 
-cplot.show(np.tan, (-5, +5), (-5, +5), 100)
+import cplot
 
-cplot.savefig("out.png", np.tan, (-5, +5), (-5, +5), 100)
 
+def f(z):
+    return np.sin(z ** 3) / z
+
+
+plt = cplot.plot(
+    f,
+    (-2.0, +2.0),
+    (-2.0, +2.0),
+    400,
+    # colorbars: bool = True,
+    # abs_scaling="h-1.0",        # how to scale the lightness in domain coloring
+    # colorspace: str = "cam16",  # ditto
+    # abs/args contour lines:
+    # levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    # linecolors: str = "#a0a0a050",
+    # linestyles: str = "solid",
+)
+plt.show()
+```
+
+Other useful functions:
+<!--pytest-codeblocks:skip-->
+```
 # There is a tripcolor function as well for triangulated 2D domains
-# cplot.tripcolor(triang, z)
+cplot.tripcolor(triang, z)
 
 # The function get_srgb1 returns the SRGB1 triple for every complex input value.
 # (Accepts arrays, too.)
 z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
-`cplot.show` takes further additional arguments, e.g.,
-```python
-abs_scaling = "h-1.0"  # how to scale the lightness in domain coloring
-colorspace = "cam16"  # ditto
-levels = (7, 4)  # number of abs/arg contours
-colors = "#a0a0a050"  # contour color
-linestyles = "solid"  # contour line style
-```
-
-* By default, the abs contour levels are `[1/8, 1/4, 1/2, 1, 2, 4, 8]`; the arg contours
-  levels are `[0, pi/2, pi, -pi/2]`. It is possible to pass level lists explicitly. Pass
-  `0` or `None` to disable the levels completely.
 
 * `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
   `1.0` adds more color which can help isolating the roots and poles (which are still
   black and white, respectively). `h-0.0` ignores the magnitude of `f(z)` completely.
   `arctan` is another possible scaling.
 
-* `colorspace` can be set to `hsl` to get the common fully saturated, vibrant
-  colors. This is usually a bad idea since it creates artifacts which are not related
-  with the underlying data. From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
+* `colorspace` can be set to `hsl` to get the common fully saturated, vibrant colors.
+  This is usually a bad idea since it creates artifacts which are not related with the
+  underlying data. From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
 
   > Since the HSL color space is not perceptually uniform, one can see streaks of
   > perceived brightness at yellow, cyan, and magenta (even though their absolute values

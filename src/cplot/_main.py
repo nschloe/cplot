@@ -218,15 +218,19 @@ def plot(
     abs_scaling: str = "h-1.0",
     levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
-    colors: str = "#a0a0a050",
+    linecolors: str = "#a0a0a050",
     linestyles: str = "solid",
     colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
-    plotter.plot_contour_abs(levels=levels[0], linecolors=colors, linestyles=linestyles)
-    plotter.plot_contour_arg(levels=levels[1], linecolors=colors, linestyles=linestyles)
+    plotter.plot_contour_abs(
+        levels=levels[0], linecolors=linecolors, linestyles=linestyles
+    )
+    plotter.plot_contour_arg(
+        levels=levels[1], linecolors=linecolors, linestyles=linestyles
+    )
     return plt
 
 
