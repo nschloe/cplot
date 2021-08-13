@@ -105,17 +105,6 @@ f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 | <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%"> |
 |  <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%">  |
 
-The representation is chosen such that
-
-- values around **0** are **black**,
-- values around **infinity** are **white**,
-- values around **+1** are **green**,
-- values around **-1** are [**deep purple**](https://youtu.be/zUwEIt9ez7M),
-- values around **+i** are **blue**,
-- values around **-i** are **orange**.
-
-(Compare to the z<sup>1</sup> reference plot below.)
-
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
 passes around a black or white point.

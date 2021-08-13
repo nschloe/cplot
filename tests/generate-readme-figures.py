@@ -130,14 +130,18 @@ def f(z):
 
 n = 201
 for name in ["cam16", "cielab", "oklab", "hsl"]:
-    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name)
+    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, colorbars=False)
     plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
     plt.close()
     #
-    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5")
-    plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
+    cplot.plot(
+        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5", colorbars=False
+    )
+    plt.savefig(f"{name}-05.png", transparent=True, bbox_inches="tight")
     plt.close()
     #
-    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0")
-    plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
+    cplot.plot(
+        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0", colorbars=False
+    )
+    plt.savefig(f"{name}-00.png", transparent=True, bbox_inches="tight")
     plt.close()
