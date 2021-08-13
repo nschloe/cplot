@@ -73,7 +73,6 @@ def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
     # TODO find parametrized function that is free of inflection points for the param=0
     # (or infty) is this last f(r).
 
-
     angle = np.arctan2(z.imag, z.real)
     absval_scaled = scale01(np.abs(z), abs_scaling)
 

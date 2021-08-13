@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, Union
+from typing import Callable, Literal, Tuple, Union
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -42,7 +42,7 @@ class Plotter:
         self,
         abs_scaling: str = "h-1.0",
         colorspace: str = "cam16",
-        add_colorbars: bool = True
+        add_colorbars: bool = True,
     ):
         plt.imshow(
             get_srgb1(self.fz, abs_scaling=abs_scaling, colorspace=colorspace),
@@ -57,9 +57,9 @@ class Plotter:
             cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
             cb0.set_label("abs")
 
-            scaled_vals = scale01([0.1, 0.5, 1.0, 2.0, 10.0], abs_scaling)
+            scaled_vals = scale01([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8], abs_scaling)
             cb0.set_ticks([0.0, *scaled_vals, 1.0])
-            cb0.set_ticklabels(["0", "1/10", "1/2", "1", "2", "10", "∞"])
+            cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
 
             norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
             cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.turbo))
@@ -69,25 +69,36 @@ class Plotter:
 
     def plot_contour_abs(
         self,
-        levels: Union[int, ntp.ArrayLike] = 7,
+        levels: Union[ntp.ArrayLike, Literal["auto"]] = "auto",
         colors="#a0a0a050",
         linestyles="solid",
     ):
-        if levels in [None, 0]:
-            return
+        vals = np.abs(self.fz)
 
-        if isinstance(levels, int):
-            levels = [2.0 ** k for k in np.arange(0, levels) - levels // 2]
+        if levels == "auto":
+            base = 2.0
+            k0 = int(np.log(np.min(vals)) / np.log(base))
+            k1 = int(np.log(np.max(vals)) / np.log(base))
+            levels = [base ** k for k in range(k0, k1) if k != 0]
 
         levels = np.asarray(levels)
 
         plt.contour(
             self.Z.real,
             self.Z.imag,
-            np.abs(self.fz),
+            vals,
             levels=levels,
             colors=colors,
             linestyles=linestyles,
+        )
+        # make the contour at 1 dashed
+        plt.contour(
+            self.Z.real,
+            self.Z.imag,
+            np.abs(self.fz),
+            levels=[1],
+            colors=colors,
+            linestyles="--",
         )
         plt.gca().set_aspect("equal")
 
@@ -158,8 +169,8 @@ def show_colors(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    abs_scaling: str="h-1.0",
-    colorspace: str="cam16",
+    abs_scaling: str = "h-1.0",
+    colorspace: str = "cam16",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace)
@@ -197,7 +208,6 @@ def plot(
     n: Union[int, Tuple[int, int]] = 500,
     abs_scaling: str = "h-1.0",
     colorspace: str = "cam16",
-    levels: Tuple[int, int] = (7, 4),
     colors: str = "#a0a0a050",
     linestyles: str = "solid",
     colorbars: bool = True,
@@ -205,11 +215,8 @@ def plot(
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
-    if levels in [None, 0]:
-        levels = (0, 0)
-
-    plotter.plot_contour_abs(levels=levels[0], colors=colors, linestyles=linestyles)
-    plotter.plot_contour_arg(levels=levels[1], colors=colors, linestyles=linestyles)
+    plotter.plot_contour_abs(colors=colors, linestyles=linestyles)
+    plotter.plot_contour_arg(colors=colors, linestyles=linestyles)
     return plt
 
 
