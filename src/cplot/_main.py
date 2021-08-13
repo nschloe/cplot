@@ -79,9 +79,9 @@ class Plotter:
     def plot_contour_abs(
         self,
         levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
-        linecolor: str = "#a0a0a050",
-        linestyle: str = "solid",
-        linestyle_abs1: str = "solid",
+        linecolors: str = "#a0a0a050",
+        linestyles: str = "solid",
+        linestyles_abs1: str = "solid",
     ):
         if levels is None:
             return
@@ -101,8 +101,8 @@ class Plotter:
             self.Z.imag,
             vals,
             levels=levels,
-            colors=linecolor,
-            linestyles=linestyle,
+            colors=linecolors,
+            linestyles=linestyles,
         )
         # give the option to let abs==1 have a different line style
         plt.contour(
@@ -110,16 +110,16 @@ class Plotter:
             self.Z.imag,
             np.abs(self.fz),
             levels=[1],
-            colors=linecolor,
-            linestyles=linestyle_abs1,
+            colors=linecolors,
+            linestyles=linestyles_abs1,
         )
         plt.gca().set_aspect("equal")
 
     def plot_contour_arg(
         self,
         levels: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
-        linecolor="#a0a0a050",
-        linestyle="solid",
+        linecolors="#a0a0a050",
+        linestyles="solid",
     ):
         if levels is None:
             return
@@ -140,7 +140,7 @@ class Plotter:
         levels2 = levels[~is_level1]
         levels2 = np.mod(levels2, 2 * np.pi)
 
-        # plt.contour draws some lines in excess, which need to be cut off. This is done
+        # plt.contour draws some lines in excess which need to be cut off. This is done
         # via setting some values to NaN, see
         # <https://github.com/matplotlib/matplotlib/issues/20548>.
         for levels, angle_fun, branch_cut in [
@@ -155,8 +155,8 @@ class Plotter:
                 self.Z.imag,
                 angle_fun(self.fz),
                 levels=levels,
-                colors=linecolor,
-                linestyle=linestyle,
+                colors=linecolors,
+                linestyles=linestyles,
             )
             for level, allseg in zip(levels, c.allsegs):
                 for segment in allseg:
@@ -193,20 +193,20 @@ def plot_contours(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
     levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
-    linecolor="#a0a0a050",
-    linestyle="solid",
+    linecolors="#a0a0a050",
+    linestyles="solid",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
 
     plotter.plot_contour_abs(
         levels=levels[0],
-        linecolor=linecolor,
-        linestyle=linestyle,
+        linecolors=linecolors,
+        linestyles=linestyles,
     )
     plotter.plot_contour_arg(
         levels=levels[1],
-        linecolor=linecolor,
-        linestyle=linestyle,
+        linecolors=linecolors,
+        linestyles=linestyles,
     )
     return plt
 
@@ -219,9 +219,9 @@ def plot(
     abs_scaling: str = "h-1.0",
     levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
-    linecolor: str = "#a0a0a050",
-    linestyle: str = "solid",
-    linestyle_abs1: str = "solid",
+    linecolors: str = "#a0a0a050",
+    linestyles: str = "solid",
+    linestyles_abs1: str = "solid",
     colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
@@ -229,14 +229,14 @@ def plot(
 
     plotter.plot_contour_abs(
         levels=levels[0],
-        linecolor=linecolor,
-        linestyle=linestyle,
-        linestyle_abs1=linestyle_abs1,
+        linecolors=linecolors,
+        linestyles=linestyles,
+        linestyles_abs1=linestyles_abs1,
     )
     plotter.plot_contour_arg(
         levels=levels[1],
-        linecolor=linecolor,
-        linestyle=linestyle,
+        linecolors=linecolors,
+        linestyles=linestyles,
     )
     return plt
 

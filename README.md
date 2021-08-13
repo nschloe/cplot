@@ -51,8 +51,8 @@ plt = cplot.plot(
     # colorspace: str = "cam16",  # ditto
     # abs/args contour lines:
     # levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
-    # linecolor = "#a0a0a050",
-    # linestyle = "solid",
+    # linecolors = "#a0a0a050",
+    # linestyles = "solid",
     # linestyle_abs1 = "solid"
 )
 plt.show()
