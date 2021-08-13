@@ -1,13 +1,14 @@
-from typing import Callable, Tuple, Union
+from typing import Callable, Optional, Tuple, Union
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as ntp
 
-from ._colors import get_srgb1
+from ._colors import get_srgb1, scale01
 
 
-class Plot:
+class Plotter:
     def __init__(
         self,
         f: Callable,
@@ -34,13 +35,14 @@ class Plot:
         self.Z = _get_z_grid_for_image(xminmax, yminmax, (nx, ny))
         self.fz = f(self.Z)
 
-    def __del__(self):
-        plt.close()
+    # def __del__(self):
+    #     plt.close()
 
     def plot_colors(
         self,
         abs_scaling: str = "h-1.0",
         colorspace: str = "cam16",
+        add_colorbars: bool = True,
     ):
         plt.imshow(
             get_srgb1(self.fz, abs_scaling=abs_scaling, colorspace=colorspace),
@@ -50,43 +52,81 @@ class Plot:
             aspect="equal",
         )
 
+        if add_colorbars:
+            # abs colorbar
+            norm = mpl.colors.Normalize(vmin=0, vmax=1)
+            cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
+            cb0.set_label("abs", rotation=0, ha="center", va="top")
+            cb0.ax.yaxis.set_label_coords(0.5, -0.03)
+            scaled_vals = scale01([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8], abs_scaling)
+            cb0.set_ticks([0.0, *scaled_vals, 1.0])
+            cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
+
+            # arg colorbar
+            # create new colormap
+            z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
+            rgb_vals = get_srgb1(z, abs_scaling=abs_scaling, colorspace=colorspace)
+            rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
+            newcmp = mpl.colors.ListedColormap(rgba_vals)
+            #
+            norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+            cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=newcmp))
+            cb1.set_label("arg", rotation=0, ha="center", va="top")
+            cb1.ax.yaxis.set_label_coords(0.5, -0.03)
+            cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
+            cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
+
     def plot_contour_abs(
         self,
-        levels: Union[int, ntp.ArrayLike] = 7,
-        colors="#a0a0a050",
-        linestyles="solid",
+        # Literal needs Python 3.8
+        # levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
+        levels: Optional[Union[ntp.ArrayLike, str]] = "auto",
+        linecolors: str = "#a0a0a050",
+        linestyles: str = "solid",
+        linestyles_abs1: str = "solid",
     ):
-        if levels in [None, 0]:
+        if levels is None:
             return
 
-        if isinstance(levels, int):
-            levels = [2.0 ** k for k in np.arange(0, levels) - levels // 2]
+        vals = np.abs(self.fz)
+
+        if levels == "auto":
+            base = 2.0
+            k0 = int(np.log(np.min(vals)) / np.log(base))
+            k1 = int(np.log(np.max(vals)) / np.log(base))
+            levels = [base ** k for k in range(k0, k1) if k != 0]
 
         levels = np.asarray(levels)
 
         plt.contour(
             self.Z.real,
             self.Z.imag,
-            np.abs(self.fz),
+            vals,
             levels=levels,
-            colors=colors,
+            colors=linecolors,
             linestyles=linestyles,
+        )
+        # give the option to let abs==1 have a different line style
+        plt.contour(
+            self.Z.real,
+            self.Z.imag,
+            np.abs(self.fz),
+            levels=[1],
+            colors=linecolors,
+            linestyles=linestyles_abs1,
         )
         plt.gca().set_aspect("equal")
 
     def plot_contour_arg(
         self,
-        levels: Union[int, ntp.ArrayLike] = 4,
-        colors="#a0a0a050",
+        levels: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+        linecolors="#a0a0a050",
         linestyles="solid",
     ):
-        if levels in [None, 0]:
+        if levels is None:
             return
 
-        if isinstance(levels, int):
-            levels = np.linspace(0.0, 2 * np.pi, levels, endpoint=False)
-        else:
-            levels = np.asarray(levels)
+        levels = np.asarray(levels)
 
         # assert levels in [-pi, pi], like np.angle
         levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
@@ -102,7 +142,7 @@ class Plot:
         levels2 = levels[~is_level1]
         levels2 = np.mod(levels2, 2 * np.pi)
 
-        # plt.contour draws some lines in excess, which need to be cut off. This is done
+        # plt.contour draws some lines in excess which need to be cut off. This is done
         # via setting some values to NaN, see
         # <https://github.com/matplotlib/matplotlib/issues/20548>.
         for levels, angle_fun, branch_cut in [
@@ -117,7 +157,7 @@ class Plot:
                 self.Z.imag,
                 angle_fun(self.fz),
                 levels=levels,
-                colors=colors,
+                colors=linecolors,
                 linestyles=linestyles,
             )
             for level, allseg in zip(levels, c.allsegs):
@@ -135,48 +175,42 @@ class Plot:
                     segment[is_near_branch_cut] = np.nan
         plt.gca().set_aspect("equal")
 
-    def show(self):
-        plt.show()
 
-    def savefig(self, filename):
-        plt.savefig(filename, transparent=True, bbox_inches="tight")
-
-
-def show_colors(
+def plot_colors(
     f: Callable,
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    abs_scaling="h-1.0",
-    colorspace="cam16",
+    abs_scaling: str = "h-1.0",
+    colorspace: str = "cam16",
 ):
-    plot = Plot(f, xminmax, yminmax, n)
-    plot.plot_colors(abs_scaling, colorspace)
-    plot.show()
+    plotter = Plotter(f, xminmax, yminmax, n)
+    plotter.plot_colors(abs_scaling, colorspace)
+    return plt
 
 
-def show_contours(
+def plot_contours(
     f: Callable,
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    levels=(7, 4),
-    colors="#a0a0a050",
+    levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    linecolors="#a0a0a050",
     linestyles="solid",
 ):
-    plot = Plot(f, xminmax, yminmax, n)
+    plotter = Plotter(f, xminmax, yminmax, n)
 
-    plot.plot_contour_abs(
+    plotter.plot_contour_abs(
         levels=levels[0],
-        colors=colors,
+        linecolors=linecolors,
         linestyles=linestyles,
     )
-    plot.plot_contour_arg(
+    plotter.plot_contour_arg(
         levels=levels[1],
-        colors=colors,
+        linecolors=linecolors,
         linestyles=linestyles,
     )
-    plot.show()
+    return plt
 
 
 def plot(
@@ -185,37 +219,28 @@ def plot(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]] = 500,
     abs_scaling: str = "h-1.0",
+    levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
-    levels=(7, 4),
-    colors="#a0a0a050",
-    linestyles="solid",
+    linecolors: str = "#a0a0a050",
+    linestyles: str = "solid",
+    linestyles_abs1: str = "solid",
+    colorbars: bool = True,
 ):
-    plot = Plot(f, xminmax, yminmax, n)
+    plotter = Plotter(f, xminmax, yminmax, n)
+    plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
-    plot.plot_colors(abs_scaling, colorspace)
-
-    if levels in [None, 0]:
-        levels = (0, 0)
-
-    plot.plot_contour_abs(
+    plotter.plot_contour_abs(
         levels=levels[0],
-        colors=colors,
+        linecolors=linecolors,
         linestyles=linestyles,
+        linestyles_abs1=linestyles_abs1,
     )
-    plot.plot_contour_arg(
+    plotter.plot_contour_arg(
         levels=levels[1],
-        colors=colors,
+        linecolors=linecolors,
         linestyles=linestyles,
     )
-    return plot
-
-
-def show(*args, **kwargs):
-    plot(*args, **kwargs).show()
-
-
-def savefig(filename, *args, **kwargs):
-    plot(*args, **kwargs).savefig(filename)
+    return plt
 
 
 def _angle2(z):

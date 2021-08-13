@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ._main import show_colors
+from ._main import plot_colors
 
 
 def show_kovesi_test_image(cmap):
@@ -76,4 +76,5 @@ def show_test_function(variant="a", colorspace="cam16", res=201):
 
     f = {"a": fa, "b": fb, "c": fc}[variant]
 
-    show_colors(f, (-5, +5), (-5, +5), res, colorspace=colorspace)
+    plot_colors(f, (-5, +5), (-5, +5), res, colorspace=colorspace)
+    plt.show()
