@@ -2,31 +2,26 @@ import colorio
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 
 
-def get_abs_scaling_h(alpha):
+def scale01(vals: npt.ArrayLike, scaling_type: str):
+    vals = np.asarray(vals)
+    assert np.all(vals >= 0)
+
+    if scaling_type == "arctan":
+        # Fulfills (1), but not parametrized.
+        # def f_inv(y):
+        #     return np.tan(np.pi / 2 * y)
+        return 2 / np.pi * np.arctan(vals)
+
     # Fulfills (1) for any alpha >= 0
-    assert alpha >= 0
-
-    def f(r):
-        return r ** alpha / (r ** alpha + 1)
-
     # def f_inv(y):
     #     return (y / (1 - y)) ** (1 / alpha)
-
-    return f
-
-
-def get_abs_scaling_arctan():
-    # Fulfills (1), but not parametrized.
-
-    def f(r):
-        return 2 / np.pi * np.arctan(r)
-
-    # def f_inv(y):
-    #     return np.tan(np.pi / 2 * y)
-
-    return f
+    assert scaling_type.startswith("h-")
+    alpha = float(scaling_type[2:])
+    assert alpha >= 0
+    return vals ** alpha / (vals ** alpha + 1)
 
 
 def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
@@ -78,15 +73,9 @@ def get_srgb1(z, abs_scaling="h-1", colorspace="CAM16"):
     # TODO find parametrized function that is free of inflection points for the param=0
     # (or infty) is this last f(r).
 
-    if abs_scaling == "arctan":
-        abs_scaling = get_abs_scaling_arctan()
-    else:
-        assert abs_scaling.startswith("h-")
-        alpha = float(abs_scaling[2:])
-        abs_scaling = get_abs_scaling_h(alpha)
 
     angle = np.arctan2(z.imag, z.real)
-    absval_scaled = abs_scaling(np.abs(z))
+    absval_scaled = scale01(np.abs(z), abs_scaling)
 
     # We may have NaNs, so don't be too strict here.
     # assert np.all(absval_scaled >= 0)

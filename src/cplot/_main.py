@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as ntp
 
-from ._colors import get_srgb1
+from ._colors import get_srgb1, scale01
 
 
 class Plotter:
@@ -42,6 +42,7 @@ class Plotter:
         self,
         abs_scaling: str = "h-1.0",
         colorspace: str = "cam16",
+        add_colorbars: bool = True
     ):
         plt.imshow(
             get_srgb1(self.fz, abs_scaling=abs_scaling, colorspace=colorspace),
@@ -51,16 +52,20 @@ class Plotter:
             aspect="equal",
         )
 
-    def plot_colorbars(self):
-        norm = mpl.colors.Normalize(vmin=0, vmax=1)
-        cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
-        cb0.set_label("abs")
+        if add_colorbars:
+            norm = mpl.colors.Normalize(vmin=0, vmax=1)
+            cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
+            cb0.set_label("abs")
 
-        norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
-        cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.turbo))
-        cb1.set_label("arg")
-        cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
-        cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
+            scaled_vals = scale01([0.1, 0.5, 1.0, 2.0, 10.0], abs_scaling)
+            cb0.set_ticks([0.0, *scaled_vals, 1.0])
+            cb0.set_ticklabels(["0", "1/10", "1/2", "1", "2", "10", "∞"])
+
+            norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+            cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.turbo))
+            cb1.set_label("arg")
+            cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
+            cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
 
     def plot_contour_abs(
         self,
@@ -153,8 +158,8 @@ def show_colors(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    abs_scaling="h-1.0",
-    colorspace="cam16",
+    abs_scaling: str="h-1.0",
+    colorspace: str="cam16",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace)
@@ -198,9 +203,7 @@ def plot(
     colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
-    plotter.plot_colors(abs_scaling, colorspace)
-    if colorbars:
-        plotter.plot_colorbars()
+    plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
     if levels in [None, 0]:
         levels = (0, 0)
