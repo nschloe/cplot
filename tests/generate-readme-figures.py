@@ -86,7 +86,7 @@ args = [
     ("root4.png", lambda x: x ** 0.25, (-2, +2), (-2, +2)),
     #
     ("log.png", np.log, (-2, +2), (-2, +2)),
-    ("exp.png", np.exp, (-2, +2), (-2, +2)),
+    ("exp.png", np.exp, (-3, +3), (-3, +3)),
     ("exp1z.png", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
     #
     ("sin.png", np.sin, (-5, +5), (-5, +5)),

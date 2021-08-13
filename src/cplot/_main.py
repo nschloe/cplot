@@ -79,8 +79,9 @@ class Plotter:
     def plot_contour_abs(
         self,
         levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
-        linecolors: str = "#a0a0a050",
-        linestyles: str = "solid",
+        linecolor: str = "#a0a0a050",
+        linestyle: str = "solid",
+        linestyle_abs1: str = "solid",
     ):
         if levels is None:
             return
@@ -100,25 +101,25 @@ class Plotter:
             self.Z.imag,
             vals,
             levels=levels,
-            colors=linecolors,
-            linestyles=linestyles,
+            colors=linecolor,
+            linestyles=linestyle,
         )
-        # make the contour at 1 dashed
+        # give the option to let abs==1 have a different line style
         plt.contour(
             self.Z.real,
             self.Z.imag,
             np.abs(self.fz),
             levels=[1],
-            colors=linecolors,
-            linestyles="--",
+            colors=linecolor,
+            linestyles=linestyle_abs1,
         )
         plt.gca().set_aspect("equal")
 
     def plot_contour_arg(
         self,
         levels: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
-        linecolors="#a0a0a050",
-        linestyles="solid",
+        linecolor="#a0a0a050",
+        linestyle="solid",
     ):
         if levels is None:
             return
@@ -154,8 +155,8 @@ class Plotter:
                 self.Z.imag,
                 angle_fun(self.fz),
                 levels=levels,
-                colors=linecolors,
-                linestyles=linestyles,
+                colors=linecolor,
+                linestyle=linestyle,
             )
             for level, allseg in zip(levels, c.allsegs):
                 for segment in allseg:
@@ -192,20 +193,20 @@ def plot_contours(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
     levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
-    linecolors="#a0a0a050",
-    linestyles="solid",
+    linecolor="#a0a0a050",
+    linestyle="solid",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
 
     plotter.plot_contour_abs(
         levels=levels[0],
-        linecolors=linecolors,
-        linestyles=linestyles,
+        linecolor=linecolor,
+        linestyle=linestyle,
     )
     plotter.plot_contour_arg(
         levels=levels[1],
-        linecolors=linecolors,
-        linestyles=linestyles,
+        linecolor=linecolor,
+        linestyle=linestyle,
     )
     return plt
 
@@ -218,18 +219,24 @@ def plot(
     abs_scaling: str = "h-1.0",
     levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
-    linecolors: str = "#a0a0a050",
-    linestyles: str = "solid",
+    linecolor: str = "#a0a0a050",
+    linestyle: str = "solid",
+    linestyle_abs1: str = "solid",
     colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
     plotter.plot_contour_abs(
-        levels=levels[0], linecolors=linecolors, linestyles=linestyles
+        levels=levels[0],
+        linecolor=linecolor,
+        linestyle=linestyle,
+        linestyle_abs1=linestyle_abs1,
     )
     plotter.plot_contour_arg(
-        levels=levels[1], linecolors=linecolors, linestyles=linestyles
+        levels=levels[1],
+        linecolor=linecolor,
+        linestyle=linestyle,
     )
     return plt
 
