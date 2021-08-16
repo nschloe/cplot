@@ -16,13 +16,6 @@
 
 cplot helps plotting complex-valued functions in a visually appealing manner.
 
-There are two basic building blocks:
-
-- Contours along constant absolute value and/or the constant argument (phase, angle)
-- [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
-  mapping the absolute value to lightness and the complex argument to the chroma of
-  the representing color
-
 Install with
 
 ```
@@ -50,7 +43,7 @@ plt = cplot.plot(
     # abs_scaling="h-1.0",        # how to scale the lightness in domain coloring
     # colorspace: str = "cam16",  # ditto
     # abs/args contour lines:
-    # levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    # contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     # linecolors = "#a0a0a050",
     # linestyles = "solid",
     # linestyle_abs1 = "solid"
@@ -62,11 +55,22 @@ plt.show()
   <img src="https://nschloe.github.io/cplot/sinz3z.png" width="50%">
 </p>
 
+The plot consists of three building blocks:
+
+- [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
+  mapping the absolute value to lightness and the complex argument to the chroma of
+  the representing color
+- Contours of constant absolute value (the contour `abs(z) == 1` is dashed, the other
+  contours are at (2, 4, 8, etc. and 1/2, 1/4, 1/8, etc., respectively)
+- Contours along constant argument (angle). For `arg(z) == 0`, the color is green, for
+  `arg(z) == pi/2` it's orange, for `arg(z) = -pi / 2` it's blue, and for `arg(z) = pi`
+  it's pink
+
 Other useful functions:
 
 <!--pytest-codeblocks:skip-->
 
-```
+```python
 # There is a tripcolor function as well for triangulated 2D domains
 cplot.tripcolor(triang, z)
 
@@ -76,6 +80,7 @@ z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
 
+<!--
 - `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
   `1.0` adds more color which can help isolating the roots and poles (which are still
   black and white, respectively). `h-0.0` ignores the magnitude of `f(z)` completely.
@@ -91,9 +96,8 @@ val = cplot.get_srgb1(z)
   > color space corrects this, making the images more accurate, but also makes them more
   > drab/pastel.
 
-  Default is [`"cam16"`](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract);
+  Default is [`"cam16"`](https://doi.org/10.1002/col.22131);
   very similar is `"cielab"` (not shown here).
-
 Consider the test function (math rendered with [xdoc](https://github.com/nschloe/xdoc))
 
 ```math
@@ -108,6 +112,7 @@ f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
 passes around a black or white point.
+-->
 
 #### Gallery
 
@@ -159,10 +164,10 @@ All plots are created with default settings.
 
 ### Testing
 
-To run the cplot unit tests, check out this repository and type
+To run the cplot unit tests, check out this repository and run
 
 ```
-pytest
+tox
 ```
 
 ### Similar projects and further reading
@@ -174,8 +179,3 @@ pytest
   Functions](https://www.springer.com/gp/book/9783034801799)
 - [Juan Carlos Ponce Campuzano, DC
   gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
-
-### License
-
-This software is published under the [GPLv3
-license](https://www.gnu.org/licenses/gpl-3.0.en.html).

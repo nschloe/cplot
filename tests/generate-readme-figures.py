@@ -56,11 +56,37 @@ def riemann_siegel_theta(z):
     )
 
 
+def f(z):
+    return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
+
+
+n = 201
+for name in ["cam16", "cielab", "oklab", "hsl"]:
+    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, colorbars=False)
+    plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
+    plt.close()
+    #
+    cplot.plot(
+        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5", colorbars=False
+    )
+    plt.savefig(f"{name}-05.png", transparent=True, bbox_inches="tight")
+    plt.close()
+    #
+    cplot.plot(
+        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0", colorbars=False
+    )
+    plt.savefig(f"{name}-00.png", transparent=True, bbox_inches="tight")
+    plt.close()
+
+
 # First function from the SIAM-100-digit challenge
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
-def siam(z):
-    return np.cos(np.log(z) / z) / z
-
+n = 401
+cplot.plot(
+    lambda z: np.cos(np.log(z) / z) / z, (-1, 1), (-1, 1), n, abs_scaling="h-0.5"
+)
+plt.savefig("siam.png", transparent=True, bbox_inches="tight")
+plt.close()
 
 n = 400
 cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2), (-2, 2), n=n)
@@ -73,7 +99,7 @@ args = [
     ("z2.png", lambda z: z ** 2, (-2, +2), (-2, +2)),
     ("z3.png", lambda z: z ** 3, (-2, +2), (-2, +2)),
     #
-    ("1z.png", lambda z: 1 / z, (-2, +2), (-2, +2)),
+    ("1z.png", lambda z: 1 / z, (-2.01, +2.01), (-2.01, +2.01)),
     ("z-absz.png", lambda z: z / abs(z), (-2, +2), (-2, +2)),
     ("z+1-z-1.png", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
     #
@@ -116,32 +142,4 @@ args = [
 for a in args:
     cplot.plot(*a[1:], n=n, colorbars=False)
     plt.savefig(a[0], transparent=True, bbox_inches="tight")
-    plt.close()
-
-
-cplot.plot(siam, (-1, 1), (-1, 1), n, abs_scaling="h-0.5")
-plt.savefig("siam.png", transparent=True, bbox_inches="tight")
-plt.close()
-
-
-def f(z):
-    return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
-
-
-n = 201
-for name in ["cam16", "cielab", "oklab", "hsl"]:
-    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, colorbars=False)
-    plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
-    plt.close()
-    #
-    cplot.plot(
-        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5", colorbars=False
-    )
-    plt.savefig(f"{name}-05.png", transparent=True, bbox_inches="tight")
-    plt.close()
-    #
-    cplot.plot(
-        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0", colorbars=False
-    )
-    plt.savefig(f"{name}-00.png", transparent=True, bbox_inches="tight")
     plt.close()
