@@ -116,7 +116,7 @@ class Plotter:
             np.abs(self.fz),
             levels=[1],
             colors=linecolors,
-            linestyles="dashed",
+            linestyles=linestyles_abs1,
             alpha=0.4,
         )
         plt.gca().set_aspect("equal")

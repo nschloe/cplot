@@ -76,6 +76,7 @@ z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
 
+<!--
 - `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
   `1.0` adds more color which can help isolating the roots and poles (which are still
   black and white, respectively). `h-0.0` ignores the magnitude of `f(z)` completely.
@@ -91,9 +92,8 @@ val = cplot.get_srgb1(z)
   > color space corrects this, making the images more accurate, but also makes them more
   > drab/pastel.
 
-  Default is [`"cam16"`](http://onlinelibrary.wiley.com/doi/10.1002/col.22131/abstract);
+  Default is [`"cam16"`](https://doi.org/10.1002/col.22131);
   very similar is `"cielab"` (not shown here).
-
 Consider the test function (math rendered with [xdoc](https://github.com/nschloe/xdoc))
 
 ```math
@@ -108,6 +108,7 @@ f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
 passes around a black or white point.
+-->
 
 #### Gallery
 
