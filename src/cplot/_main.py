@@ -124,9 +124,9 @@ class Plotter:
     def plot_contour_arg(
         self,
         contours: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+        colorspace: str = "CAM16",
         linecolors="#a0a0a050",
         linestyles="solid",
-        colorspace: str = "CAM16",
     ):
         if contours is None:
             return
@@ -205,20 +205,22 @@ def plot_contours(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
     contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    colorspace: str = "cam16",
     linecolors="#a0a0a050",
     linestyles="solid",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
 
     plotter.plot_contour_abs(
-        levels=contours[0],
+        contours=contours[0],
         linecolors=linecolors,
         linestyles=linestyles,
     )
     plotter.plot_contour_arg(
-        levels=contours[1],
+        contours=contours[1],
         linecolors=linecolors,
         linestyles=linestyles,
+        colorspace=colorspace,
     )
     return plt
 
@@ -233,22 +235,23 @@ def plot(
     colorspace: str = "cam16",
     linecolors: str = "#a0a0a050",
     linestyles: str = "solid",
-    linestyles_abs1: str = "solid",
+    linestyles_abs1: str = "dashed",
     colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
     plotter.plot_contour_abs(
-        levels=contours[0],
+        contours=contours[0],
         linecolors=linecolors,
         linestyles=linestyles,
         linestyles_abs1=linestyles_abs1,
     )
     plotter.plot_contour_arg(
-        levels=contours[1],
+        contours=contours[1],
         linecolors=linecolors,
         linestyles=linestyles,
+        colorspace=colorspace,
     )
     return plt
 
