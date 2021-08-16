@@ -81,9 +81,9 @@ class Plotter:
         # Literal needs Python 3.8
         # levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
         levels: Optional[Union[ntp.ArrayLike, str]] = "auto",
-        linecolors: str = "#a0a0a050",
+        linecolors: str = "#a0a0a0",
         linestyles: str = "solid",
-        linestyles_abs1: str = "solid",
+        linestyles_abs1: str = "dashed",
     ):
         if levels is None:
             return
@@ -92,9 +92,11 @@ class Plotter:
 
         if levels == "auto":
             base = 2.0
-            k0 = int(np.log(np.min(vals)) / np.log(base))
-            k1 = int(np.log(np.max(vals)) / np.log(base))
-            levels = [base ** k for k in range(k0, k1) if k != 0]
+            min_exp = np.log(np.min(vals)) / np.log(base)
+            min_exp = int(max(min_exp, -100))
+            max_exp = np.log(np.max(vals)) / np.log(base)
+            max_exp = int(min(max_exp, 100))
+            levels = [base ** k for k in range(min_exp, max_exp + 1) if k != 0]
 
         levels = np.asarray(levels)
 
@@ -105,6 +107,7 @@ class Plotter:
             levels=levels,
             colors=linecolors,
             linestyles=linestyles,
+            alpha=0.4,
         )
         # give the option to let abs==1 have a different line style
         plt.contour(
@@ -113,7 +116,8 @@ class Plotter:
             np.abs(self.fz),
             levels=[1],
             colors=linecolors,
-            linestyles=linestyles_abs1,
+            linestyles="dashed",
+            alpha=0.4,
         )
         plt.gca().set_aspect("equal")
 
@@ -122,6 +126,7 @@ class Plotter:
         levels: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
         linecolors="#a0a0a050",
         linestyles="solid",
+        colorspace: str = "CAM16",
     ):
         if levels is None:
             return
@@ -152,6 +157,10 @@ class Plotter:
             if len(levels) == 0:
                 continue
 
+            linecolors = get_srgb1(
+                np.exp(levels * 1j), abs_scaling="h-1.0", colorspace=colorspace
+            )
+
             c = plt.contour(
                 self.Z.real,
                 self.Z.imag,
@@ -159,6 +168,7 @@ class Plotter:
                 levels=levels,
                 colors=linecolors,
                 linestyles=linestyles,
+                alpha=0.4,
             )
             for level, allseg in zip(levels, c.allsegs):
                 for segment in allseg:
