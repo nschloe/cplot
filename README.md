@@ -16,13 +16,6 @@
 
 cplot helps plotting complex-valued functions in a visually appealing manner.
 
-There are two basic building blocks:
-
-- Contours along constant absolute value and/or the constant argument (phase, angle)
-- [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
-  mapping the absolute value to lightness and the complex argument to the chroma of
-  the representing color
-
 Install with
 
 ```
@@ -61,6 +54,17 @@ plt.show()
 <p align="center">
   <img src="https://nschloe.github.io/cplot/sinz3z.png" width="50%">
 </p>
+
+The plot consists of three building blocks:
+
+- [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
+  mapping the absolute value to lightness and the complex argument to the chroma of
+  the representing color
+- Contours of constant absolute value (the contour `abs(z) == 1` is dashed, the other
+  contours are at (2, 4, 8, etc. and 1/2, 1/4, 1/8, etc., respectively)
+- Contours along constant argument (angle). For `arg(z) == 0`, the color is green, for
+  `arg(z) == pi/2` it's orange, for `arg(z) = -pi / 2` it's blue, and for `arg(z) = pi`
+  it's pink
 
 Other useful functions:
 
