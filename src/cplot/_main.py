@@ -79,32 +79,32 @@ class Plotter:
     def plot_contour_abs(
         self,
         # Literal needs Python 3.8
-        # levels: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
-        levels: Optional[Union[ntp.ArrayLike, str]] = "auto",
+        # contours: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
+        contours: Optional[Union[ntp.ArrayLike, str]] = "auto",
         linecolors: str = "#a0a0a0",
         linestyles: str = "solid",
         linestyles_abs1: str = "dashed",
     ):
-        if levels is None:
+        if contours is None:
             return
 
         vals = np.abs(self.fz)
 
-        if levels == "auto":
+        if contours == "auto":
             base = 2.0
             min_exp = np.log(np.min(vals)) / np.log(base)
             min_exp = int(max(min_exp, -100))
             max_exp = np.log(np.max(vals)) / np.log(base)
             max_exp = int(min(max_exp, 100))
-            levels = [base ** k for k in range(min_exp, max_exp + 1) if k != 0]
+            contours = [base ** k for k in range(min_exp, max_exp + 1) if k != 0]
 
-        levels = np.asarray(levels)
+        contours = np.asarray(contours)
 
         plt.contour(
             self.Z.real,
             self.Z.imag,
             vals,
-            levels=levels,
+            levels=contours,
             colors=linecolors,
             linestyles=linestyles,
             alpha=0.4,
@@ -123,54 +123,54 @@ class Plotter:
 
     def plot_contour_arg(
         self,
-        levels: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+        contours: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
         linecolors="#a0a0a050",
         linestyles="solid",
         colorspace: str = "CAM16",
     ):
-        if levels is None:
+        if contours is None:
             return
 
-        levels = np.asarray(levels)
+        contours = np.asarray(contours)
 
-        # assert levels in [-pi, pi], like np.angle
-        levels = np.mod(levels + np.pi, 2 * np.pi) - np.pi
+        # assert contours in [-pi, pi], like np.angle
+        contours = np.mod(contours + np.pi, 2 * np.pi) - np.pi
 
-        # Contour levels must be increasing
-        levels = np.sort(levels)
+        # Contour contours must be increasing
+        contours = np.sort(contours)
 
         # mpl has problems with plotting the contour at +pi because that's where the
         # branch cut in np.angle happens. Separate out this case and move the branch cut
         # to 0/2*pi there.
-        is_level1 = (levels > -np.pi + 0.1) & (levels < np.pi - 0.1)
-        levels1 = levels[is_level1]
-        levels2 = levels[~is_level1]
-        levels2 = np.mod(levels2, 2 * np.pi)
+        is_level1 = (contours > -np.pi + 0.1) & (contours < np.pi - 0.1)
+        contours1 = contours[is_level1]
+        contours2 = contours[~is_level1]
+        contours2 = np.mod(contours2, 2 * np.pi)
 
         # plt.contour draws some lines in excess which need to be cut off. This is done
         # via setting some values to NaN, see
         # <https://github.com/matplotlib/matplotlib/issues/20548>.
-        for levels, angle_fun, branch_cut in [
-            (levels1, np.angle, (-np.pi, np.pi)),
-            (levels2, _angle2, (0.0, 2 * np.pi)),
+        for contours, angle_fun, branch_cut in [
+            (contours1, np.angle, (-np.pi, np.pi)),
+            (contours2, _angle2, (0.0, 2 * np.pi)),
         ]:
-            if len(levels) == 0:
+            if len(contours) == 0:
                 continue
 
             linecolors = get_srgb1(
-                np.exp(levels * 1j), abs_scaling="h-1.0", colorspace=colorspace
+                np.exp(contours * 1j), abs_scaling="h-1.0", colorspace=colorspace
             )
 
             c = plt.contour(
                 self.Z.real,
                 self.Z.imag,
                 angle_fun(self.fz),
-                levels=levels,
+                levels=contours,
                 colors=linecolors,
                 linestyles=linestyles,
                 alpha=0.4,
             )
-            for level, allseg in zip(levels, c.allsegs):
+            for level, allseg in zip(contours, c.allsegs):
                 for segment in allseg:
                     x, y = segment.T
                     z = x + 1j * y
@@ -204,19 +204,19 @@ def plot_contours(
     xminmax: Tuple[float, float],
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]],
-    levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     linecolors="#a0a0a050",
     linestyles="solid",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
 
     plotter.plot_contour_abs(
-        levels=levels[0],
+        levels=contours[0],
         linecolors=linecolors,
         linestyles=linestyles,
     )
     plotter.plot_contour_arg(
-        levels=levels[1],
+        levels=contours[1],
         linecolors=linecolors,
         linestyles=linestyles,
     )
@@ -229,7 +229,7 @@ def plot(
     yminmax: Tuple[float, float],
     n: Union[int, Tuple[int, int]] = 500,
     abs_scaling: str = "h-1.0",
-    levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
     linecolors: str = "#a0a0a050",
     linestyles: str = "solid",
@@ -240,13 +240,13 @@ def plot(
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
 
     plotter.plot_contour_abs(
-        levels=levels[0],
+        levels=contours[0],
         linecolors=linecolors,
         linestyles=linestyles,
         linestyles_abs1=linestyles_abs1,
     )
     plotter.plot_contour_arg(
-        levels=levels[1],
+        levels=contours[1],
         linecolors=linecolors,
         linestyles=linestyles,
     )

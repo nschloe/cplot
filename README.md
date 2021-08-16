@@ -50,7 +50,7 @@ plt = cplot.plot(
     # abs_scaling="h-1.0",        # how to scale the lightness in domain coloring
     # colorspace: str = "cam16",  # ditto
     # abs/args contour lines:
-    # levels=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    # contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     # linecolors = "#a0a0a050",
     # linestyles = "solid",
     # linestyle_abs1 = "solid"
@@ -66,7 +66,7 @@ Other useful functions:
 
 <!--pytest-codeblocks:skip-->
 
-```
+```python
 # There is a tripcolor function as well for triangulated 2D domains
 cplot.tripcolor(triang, z)
 
@@ -160,10 +160,10 @@ All plots are created with default settings.
 
 ### Testing
 
-To run the cplot unit tests, check out this repository and type
+To run the cplot unit tests, check out this repository and run
 
 ```
-pytest
+tox
 ```
 
 ### Similar projects and further reading
@@ -175,8 +175,3 @@ pytest
   Functions](https://www.springer.com/gp/book/9783034801799)
 - [Juan Carlos Ponce Campuzano, DC
   gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
-
-### License
-
-This software is published under the [GPLv3
-license](https://www.gnu.org/licenses/gpl-3.0.en.html).
