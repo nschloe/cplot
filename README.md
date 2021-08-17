@@ -52,7 +52,7 @@ plt.show()
 ```
 
 <p align="center">
-  <img src="https://nschloe.github.io/cplot/sinz3z.png" width="50%">
+  <img src="https://nschloe.github.io/cplot/sinz3z.svg" width="50%">
 </p>
 
 The plot consists of three building blocks:
@@ -106,8 +106,8 @@ f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
 
 |                               `h-1.0`                                |                               `h-0.5`                                |                               `h-0.0`                                |
 | :------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------: |
-| <img src="https://nschloe.github.io/cplot/cam16-10.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.png" width="70%"> |
-|  <img src="https://nschloe.github.io/cplot/hsl-10.png" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-05.png" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-00.png" width="70%">  |
+| <img src="https://nschloe.github.io/cplot/cam16-10.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.svg" width="70%"> |
+|  <img src="https://nschloe.github.io/cplot/hsl-10.svg" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-05.svg" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-00.svg" width="70%">  |
 
 With this, it is easy to see where a function has very small and very large values, and
 the multiplicty of zeros and poles is instantly identified by counting the color wheel
@@ -118,47 +118,47 @@ passes around a black or white point.
 
 All plots are created with default settings.
 
-| <img src="https://nschloe.github.io/cplot/z1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z3.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/z1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z3.svg" width="70%"> |
 | :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
 |                             `z**1`                             |                             `z**2`                             |                             `z**3`                             |
 
-| <img src="https://nschloe.github.io/cplot/1z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z+1-z-1.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z+1-z-1.svg" width="70%"> |
 | :------------------------------------------------------------: | :----------------------------------------------------------------: | :-----------------------------------------------------------------: |
 |                             `1/z`                              |                            `z / abs(z)`                            |                           `(z+1) / (z-1)`                           |
 
-| <img src="https://nschloe.github.io/cplot/zz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1zz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z1z.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/zz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/1zz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z1z.svg" width="70%"> |
 | :------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
 |                            `z ** z`                            |                          `(1/z) ** z`                           |                          `z ** (1/z)`                           |
 
-| <img src="https://nschloe.github.io/cplot/root2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root3.png" width="70%"> | <img src="https://nschloe.github.io/cplot/root4.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/root2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/root3.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/root4.svg" width="70%"> |
 | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: |
 |                             `np.sqrt`                             |                            `z**(1/3)`                             |                            `z**(1/4)`                             |
 
-| <img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/log.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.svg" width="70%"> |
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :---------------------------------------------------------------: |
 |                            `np.log`                             |                            `np.exp`                             |                            `exp(1/z)`                             |
 
-| <img src="https://nschloe.github.io/cplot/sin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/sin.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.svg" width="70%"> |
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
 |                            `np.sin`                             |                            `np.cos`                             |                            `np.tan`                             |
 
-| <img src="https://nschloe.github.io/cplot/sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/sinh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.svg" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
 |                            `np.sinh`                             |                            `np.cosh`                             |                            `np.tanh`                             |
 
-| <img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/arcsin.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.svg" width="70%"> |
 | :----------------------------------------------------------------: | :----------------------------------------------------------------: | :----------------------------------------------------------------: |
 |                            `np.arcsin`                             |                            `np.arccos`                             |                            `np.arctan`                             |
 
-| <img src="https://nschloe.github.io/cplot/sinz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/sinz-z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.svg" width="70%"> |
 | :----------------------------------------------------------------: | :----------------------------------------------------------------: | :----------------------------------------------------------------: |
 |                            `sin(z) / z`                            |                            `cos(z) / z`                            |                            `tan(z) / z`                            |
 
-| <img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/zeta.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/gamma.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/digamma.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/zeta.svg" width="70%"> |
 | :---------------------------------------------------------------: | :-----------------------------------------------------------------: | :--------------------------------------------------------------: |
 |                       `scipy.special.gamma`                       |                       `scipy.special.digamma`                       |                          `mpmath.zeta`                           |
 
-| <img src="https://nschloe.github.io/cplot/riemann-siegel-theta.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-siegel-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-xi.png" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/riemann-siegel-theta.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-siegel-z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-xi.svg" width="70%"> |
 | :------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------: |
 |                               `mpmath.siegeltheta`                               |                               `mpmath.siegelz`                               |                               Riemann-Xi                               |
 
