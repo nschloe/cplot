@@ -90,7 +90,7 @@ plt.close()
 
 n = 400
 cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2), (-2, 2), n=n)
-plt.savefig("sinz3z.png", transparent=True, bbox_inches="tight")
+plt.savefig("sinz3z.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 args = [

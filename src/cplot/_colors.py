@@ -98,8 +98,8 @@ def get_srgb1(z: npt.ArrayLike, abs_scaling: str = "h-1.0", colorspace: str = "c
         # r0 = 21.65824845433235
         r0 = 25.0
         # Rotate the angles such that a "green" color represents positive real values.
-        # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
-        # the point 1.0.
+        # The rotation offset is chosen such that the ratio g/(r+b) (in rgb) is the
+        # largest for the point 1.0.
         offset = 0.916_708 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
