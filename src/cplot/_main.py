@@ -116,7 +116,7 @@ class Plotter:
             self.Z.imag,
             np.abs(self.fz),
             levels=[1.0],
-            colors="0.6",
+            colors="0.55",
             # colors="#a0a0a0",
             linestyles=linestyles_abs1,
             # alpha=0.4,
