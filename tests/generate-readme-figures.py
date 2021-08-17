@@ -63,19 +63,19 @@ def f(z):
 n = 201
 for name in ["cam16", "cielab", "oklab", "hsl"]:
     cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, colorbars=False)
-    plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{name}-10.svg", transparent=True, bbox_inches="tight")
     plt.close()
     #
     cplot.plot(
         f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5", colorbars=False
     )
-    plt.savefig(f"{name}-05.png", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{name}-05.svg", transparent=True, bbox_inches="tight")
     plt.close()
     #
     cplot.plot(
         f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0", colorbars=False
     )
-    plt.savefig(f"{name}-00.png", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
     plt.close()
 
 
@@ -85,59 +85,59 @@ n = 401
 cplot.plot(
     lambda z: np.cos(np.log(z) / z) / z, (-1, 1), (-1, 1), n, abs_scaling="h-0.5"
 )
-plt.savefig("siam.png", transparent=True, bbox_inches="tight")
+plt.savefig("siam.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 n = 400
 cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2), (-2, 2), n=n)
-plt.savefig("sinz3z.png", transparent=True, bbox_inches="tight")
+plt.savefig("sinz3z.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 args = [
     #
-    ("z1.png", lambda z: z ** 1, (-2, +2), (-2, +2)),
-    ("z2.png", lambda z: z ** 2, (-2, +2), (-2, +2)),
-    ("z3.png", lambda z: z ** 3, (-2, +2), (-2, +2)),
+    ("z1.svg", lambda z: z ** 1, (-2, +2), (-2, +2)),
+    ("z2.svg", lambda z: z ** 2, (-2, +2), (-2, +2)),
+    ("z3.svg", lambda z: z ** 3, (-2, +2), (-2, +2)),
     #
-    ("1z.png", lambda z: 1 / z, (-2.01, +2.01), (-2.01, +2.01)),
-    ("z-absz.png", lambda z: z / abs(z), (-2, +2), (-2, +2)),
-    ("z+1-z-1.png", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
+    ("1z.svg", lambda z: 1 / z, (-2.01, +2.01), (-2.01, +2.01)),
+    ("z-absz.svg", lambda z: z / abs(z), (-2, +2), (-2, +2)),
+    ("z+1-z-1.svg", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
     #
-    ("zz.png", lambda z: z ** z, (-3, +3), (-3, +3)),
-    ("1zz.png", lambda z: (1 / z) ** z, (-3, +3), (-3, +3)),
-    ("z1z.png", lambda z: z ** (1 / z), (-3, +3), (-3, +3)),
+    ("zz.svg", lambda z: z ** z, (-3, +3), (-3, +3)),
+    ("1zz.svg", lambda z: (1 / z) ** z, (-3, +3), (-3, +3)),
+    ("z1z.svg", lambda z: z ** (1 / z), (-3, +3), (-3, +3)),
     #
-    ("root2.png", np.sqrt, (-2, +2), (-2, +2)),
-    ("root3.png", lambda x: x ** (1 / 3), (-2, +2), (-2, +2)),
-    ("root4.png", lambda x: x ** 0.25, (-2, +2), (-2, +2)),
+    ("root2.svg", np.sqrt, (-2, +2), (-2, +2)),
+    ("root3.svg", lambda x: x ** (1 / 3), (-2, +2), (-2, +2)),
+    ("root4.svg", lambda x: x ** 0.25, (-2, +2), (-2, +2)),
     #
-    ("log.png", np.log, (-2, +2), (-2, +2)),
-    ("exp.png", np.exp, (-3, +3), (-3, +3)),
-    ("exp1z.png", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
+    ("log.svg", np.log, (-2, +2), (-2, +2)),
+    ("exp.svg", np.exp, (-3, +3), (-3, +3)),
+    ("exp1z.svg", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
     #
-    ("sin.png", np.sin, (-5, +5), (-5, +5)),
-    ("cos.png", np.cos, (-5, +5), (-5, +5)),
-    ("tan.png", np.tan, (-5, +5), (-5, +5)),
+    ("sin.svg", np.sin, (-5, +5), (-5, +5)),
+    ("cos.svg", np.cos, (-5, +5), (-5, +5)),
+    ("tan.svg", np.tan, (-5, +5), (-5, +5)),
     #
-    ("sinh.png", np.sinh, (-5, +5), (-5, +5)),
-    ("cosh.png", np.cosh, (-5, +5), (-5, +5)),
-    ("tanh.png", np.tanh, (-5, +5), (-5, +5)),
+    ("sinh.svg", np.sinh, (-5, +5), (-5, +5)),
+    ("cosh.svg", np.cosh, (-5, +5), (-5, +5)),
+    ("tanh.svg", np.tanh, (-5, +5), (-5, +5)),
     #
-    ("arcsin.png", np.arcsin, (-2, +2), (-2, +2)),
-    ("arccos.png", np.arccos, (-2, +2), (-2, +2)),
-    ("arctan.png", np.arctan, (-2, +2), (-2, +2)),
+    ("arcsin.svg", np.arcsin, (-2, +2), (-2, +2)),
+    ("arccos.svg", np.arccos, (-2, +2), (-2, +2)),
+    ("arctan.svg", np.arctan, (-2, +2), (-2, +2)),
     #
-    ("sinz-z.png", lambda z: np.sin(z) / z, (-7, +7), (-7, +7)),
-    ("cosz-z.png", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
-    ("tanz-z.png", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
+    ("sinz-z.svg", lambda z: np.sin(z) / z, (-7, +7), (-7, +7)),
+    ("cosz-z.svg", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
+    ("tanz-z.svg", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
     #
-    ("gamma.png", scipy.special.gamma, (-5, +5), (-5, +5)),
-    ("digamma.png", scipy.special.digamma, (-5, +5), (-5, +5)),
-    ("zeta.png", riemann_zeta, (-30, +30), (-30, +30)),
+    ("gamma.svg", scipy.special.gamma, (-5, +5), (-5, +5)),
+    ("digamma.svg", scipy.special.digamma, (-5, +5), (-5, +5)),
+    ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
     #
-    ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
-    ("riemann-siegel-z.png", riemann_siegel_z, (-20, +20), (-20, +20)),
-    ("riemann-siegel-theta.png", riemann_siegel_theta, (-20, +20), (-20, +20)),
+    ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
+    ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
+    ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
 ]
 for a in args:
     cplot.plot(*a[1:], n=n, colorbars=False)

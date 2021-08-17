@@ -10,4 +10,5 @@ build/
 *.egg-info/
 .pytest_cache/
 *.png
+*.svg
 .tox/

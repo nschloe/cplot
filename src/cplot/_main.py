@@ -81,6 +81,7 @@ class Plotter:
         # Literal needs Python 3.8
         # contours: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
         contours: Optional[Union[ntp.ArrayLike, str]] = "auto",
+        abs_scaling: str = "h-1.0",
         linecolors: str = "#a0a0a0",
         linestyles: str = "solid",
         linestyles_abs1: str = "dashed",
@@ -107,17 +108,18 @@ class Plotter:
             levels=contours,
             colors=linecolors,
             linestyles=linestyles,
-            alpha=0.4,
+            # alpha=0.4,
         )
         # give the option to let abs==1 have a different line style
         plt.contour(
             self.Z.real,
             self.Z.imag,
             np.abs(self.fz),
-            levels=[1],
-            colors=linecolors,
+            levels=[1.0],
+            colors="0.55",
+            # colors="#a0a0a0",
             linestyles=linestyles_abs1,
-            alpha=0.4,
+            # alpha=0.4,
         )
         plt.gca().set_aspect("equal")
 
