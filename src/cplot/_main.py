@@ -1,4 +1,6 @@
-from typing import Callable, Optional, Tuple, Union
+from __future__ import annotations
+
+from typing import Callable
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -12,9 +14,9 @@ class Plotter:
     def __init__(
         self,
         f: Callable,
-        xminmax: Tuple[float, float],
-        yminmax: Tuple[float, float],
-        n: Union[int, Tuple[int, int]],
+        xminmax: tuple[float, float],
+        yminmax: tuple[float, float],
+        n: int | tuple[int, int],
     ):
         xmin, xmax = xminmax
         ymin, ymax = yminmax
@@ -78,10 +80,8 @@ class Plotter:
 
     def plot_contour_abs(
         self,
-        # Literal needs Python 3.8
-        # contours: Optional[Union[ntp.ArrayLike, Literal["auto"]]] = "auto",
-        contours: Optional[Union[ntp.ArrayLike, str]] = "auto",
-        abs_scaling: str = "h-1.0",
+        # Literal["auto"] needs Python 3.8
+        contours: ntp.ArrayLike | str | None = "auto",
         linecolors: str = "#a0a0a0",
         linestyles: str = "solid",
         linestyles_abs1: str = "dashed",
@@ -125,7 +125,7 @@ class Plotter:
 
     def plot_contour_arg(
         self,
-        contours: Optional[ntp.ArrayLike] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+        contours: ntp.ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
         colorspace: str = "CAM16",
         linecolors="#a0a0a050",
         linestyles="solid",
@@ -190,9 +190,9 @@ class Plotter:
 
 def plot_colors(
     f: Callable,
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
+    xminmax: tuple[float, float],
+    yminmax: tuple[float, float],
+    n: int | tuple[int, int],
     abs_scaling: str = "h-1.0",
     colorspace: str = "cam16",
 ):
@@ -203,9 +203,9 @@ def plot_colors(
 
 def plot_contours(
     f: Callable,
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]],
+    xminmax: tuple[float, float],
+    yminmax: tuple[float, float],
+    n: int | tuple[int, int],
     contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
     linecolors="#a0a0a050",
@@ -229,9 +229,9 @@ def plot_contours(
 
 def plot(
     f: Callable,
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Union[int, Tuple[int, int]] = 500,
+    xminmax: tuple[float, float],
+    yminmax: tuple[float, float],
+    n: int | tuple[int, int] = 500,
     abs_scaling: str = "h-1.0",
     contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
@@ -263,9 +263,9 @@ def _angle2(z):
 
 
 def _get_z_grid_for_image(
-    xminmax: Tuple[float, float],
-    yminmax: Tuple[float, float],
-    n: Tuple[int, int],
+    xminmax: tuple[float, float],
+    yminmax: tuple[float, float],
+    n: tuple[int, int],
 ):
     xmin, xmax = xminmax
     ymin, ymax = yminmax
