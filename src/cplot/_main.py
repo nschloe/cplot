@@ -25,24 +25,20 @@ class Plotter:
 
         if isinstance(n, tuple):
             assert len(n) == 2
-            nx, ny = n
+            nxy = n
         else:
             assert isinstance(n, int)
-            nx = n
-            ny = n
+            nxy = (n, n)
 
         self.extent = (xmin, xmax, ymin, ymax)
 
         self.f = f
-        self.Z = _get_z_grid_for_image(xminmax, yminmax, (nx, ny))
+        self.Z = _get_z_grid_for_image(xminmax, yminmax, nxy)
         self.fz = f(self.Z)
-
-    # def __del__(self):
-    #     plt.close()
 
     def plot_colors(
         self,
-        abs_scaling: Callable[[float], float] = lambda x: x / (x + 1),
+        abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
         colorspace: str = "cam16",
         add_colorbars: bool = True,
     ):
@@ -173,7 +169,7 @@ class Plotter:
         # <https://github.com/matplotlib/matplotlib/issues/20548>.
         for contours, angle_fun, branch_cut in [
             (contours1, np.angle, (-np.pi, np.pi)),
-            (contours2, _angle2, (0.0, 2 * np.pi)),
+            (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi), (0.0, 2 * np.pi)),
         ]:
             if len(contours) == 0:
                 continue
@@ -231,7 +227,6 @@ def plot_contours(
     colorspace: str = "cam16",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
-
     plotter.plot_contour_abs(contours=contours[0])
     plotter.plot_contour_arg(contours=contours[1], colorspace=colorspace)
     return plt
@@ -249,14 +244,9 @@ def plot(
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
-
     plotter.plot_contour_abs(contours=contours[0])
     plotter.plot_contour_arg(contours=contours[1])
     return plt
-
-
-def _angle2(z):
-    return np.mod(np.angle(z), 2 * np.pi)
 
 
 def _get_z_grid_for_image(
