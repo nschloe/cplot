@@ -42,7 +42,7 @@ class Plotter:
 
     def plot_colors(
         self,
-        abs_scaling: str = "h-1.0",
+        abs_scaling: str | Callable[[float], float] = "h-1.0",
         colorspace: str = "cam16",
         add_colorbars: bool = True,
     ):
@@ -236,11 +236,11 @@ def plot_contours(
 
 
 def plot(
-    f: Callable,
+    f: Callable[[complex], complex],
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int] = 500,
-    abs_scaling: str = "h-1.0",
+    abs_scaling: str | Callable[[float], float] = "h-1.0",
     contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
     colorbars: bool = True,

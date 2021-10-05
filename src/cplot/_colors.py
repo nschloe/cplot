@@ -1,6 +1,8 @@
+from __future__ import annotations
+
+from typing import Callable
+
 import colorio
-import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 
@@ -24,7 +26,11 @@ def scale01(vals: npt.ArrayLike, scaling_type: str):
     return vals ** alpha / (vals ** alpha + 1)
 
 
-def get_srgb1(z: npt.ArrayLike, abs_scaling: str = "h-1.0", colorspace: str = "cam16"):
+def get_srgb1(
+    z: npt.ArrayLike,
+    abs_scaling: str | Callable[[float], float] = "h-1.0",
+    colorspace: str = "cam16",
+):
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
     # One desirable property is
     # (1)  f(1/r) = 1 - f(r).
@@ -74,7 +80,10 @@ def get_srgb1(z: npt.ArrayLike, abs_scaling: str = "h-1.0", colorspace: str = "c
     # (or infty) is this last f(r).
 
     angle = np.arctan2(z.imag, z.real)
-    absval_scaled = scale01(np.abs(z), abs_scaling)
+    if callable(abs_scaling):
+        absval_scaled = abs_scaling(np.abs(z))
+    else:
+        absval_scaled = scale01(np.abs(z), abs_scaling)
 
     # We may have NaNs, so don't be too strict here.
     # assert np.all(absval_scaled >= 0)
@@ -199,13 +208,3 @@ def get_srgb1(z: npt.ArrayLike, abs_scaling: str = "h-1.0", colorspace: str = "c
         srgb_vals[srgb_vals < 0] = 0
 
     return np.moveaxis(srgb_vals, 0, -1)
-
-
-def tripcolor(triang, z, abs_scaling: str = "h-1"):
-    rgb = get_srgb1(z, abs_scaling=abs_scaling)
-
-    # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
-    n = z.shape[0]
-    z2 = np.arange(n)
-    cmap = matplotlib.colors.LinearSegmentedColormap.from_list("mymap", rgb, N=n)
-    plt.tripcolor(triang, z2, shading="gouraud", cmap=cmap)
