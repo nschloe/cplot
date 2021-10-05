@@ -127,7 +127,7 @@ class Plotter:
         plt.contour(
             self.Z.real,
             self.Z.imag,
-            np.abs(self.fz),
+            vals,
             levels=[1.0],
             colors="0.8",
             # colors="#a0a0a0",
@@ -138,7 +138,7 @@ class Plotter:
         plt.contour(
             self.Z.real,
             self.Z.imag,
-            np.abs(self.fz),
+            vals,
             levels=[1.0],
             colors="0.3",
             # colors="#a0a0a0",
