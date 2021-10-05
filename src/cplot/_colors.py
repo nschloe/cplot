@@ -7,46 +7,32 @@ import numpy as np
 import numpy.typing as npt
 
 
-def scale01(vals: npt.ArrayLike, scaling_type: str):
-    vals = np.asarray(vals)
-    assert np.all(vals >= 0)
-
-    if scaling_type == "arctan":
-        # Fulfills (1), but not parametrized.
-        # def f_inv(y):
-        #     return np.tan(np.pi / 2 * y)
-        return 2 / np.pi * np.arctan(vals)
-
-    # Fulfills (1) for any alpha >= 0
-    # def f_inv(y):
-    #     return (y / (1 - y)) ** (1 / alpha)
-    assert scaling_type.startswith("h-")
-    alpha = float(scaling_type[2:])
-    assert alpha >= 0
-    return vals ** alpha / (vals ** alpha + 1)
-
-
 def get_srgb1(
     z: npt.ArrayLike,
-    abs_scaling: str | Callable[[float], float] = "h-1.0",
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     colorspace: str = "cam16",
 ):
     # A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.
     # One desirable property is
+    #
     # (1)  f(1/r) = 1 - f(r).
+    #
     # This makes sure that the representation of the inverse of a function is exactly as
     # light as the original function is dark. The function g_a(r) = 1 - a^r (with some
     # 0 < a < 1), as it is sometimes suggested (e.g., on Wikipedia
     # <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).
     #
-    # Here, we are using the simple
+    # A common alternative is
     #
     #   h(r) = r^a / (r^a + 1)
     #
     # with a configurable parameter a.
+    #
     #  * For a=1.21268891, this function is very close to the popular alternative
     #    2/pi * arctan(r) (which also fulfills the above property)
+    #
     #  * For a=1.21428616 is is close to g_{1/2} (between 0 and 1).
+    #
     #  * For a=1.49486991 it is close to x/2 (between 0 and 1).
     #
     # Disadvantage of this choice:
@@ -56,7 +42,8 @@ def get_srgb1(
     #
     # so h'(r)=0 at r=0 for all a > 1. This means that h(r) has an inflection point in
     # (0, 1) for all a > 1. For 0 < alpha < 1, the derivative at 0 is infty.
-    # The arctan version does _not_ have such properties.
+    #
+    # Only for a=1, the derivative is 1/2. For arctan, it's 1 / pi.
     #
     # Another choice that fulfills (1) is
     #
@@ -70,40 +57,32 @@ def get_srgb1(
     #   f'(r) = |
     #            \ 1/2 / r^2   for x > 1,
     #
-    #             / 0             for 0 <= x <= 1,
+    #             / 0          for 0 <= x <= 1,
     #   f''(r) = |
     #             \ -1 / r^3   for x > 1,
-    #
-    #
     #
     # TODO find parametrized function that is free of inflection points for the param=0
     # (or infty) is this last f(r).
 
+    z = np.asarray(z)
+
     angle = np.arctan2(z.imag, z.real)
-    if callable(abs_scaling):
-        absval_scaled = abs_scaling(np.abs(z))
-    else:
-        absval_scaled = scale01(np.abs(z), abs_scaling)
+    absval_scaled = abs_scaling(np.abs(z))
 
     # We may have NaNs, so don't be too strict here.
     # assert np.all(absval_scaled >= 0)
     # assert np.all(absval_scaled <= 1)
 
-    # It'd be lovely if one could claim that the grayscale of the cplot represents
-    # exactly the absolute value of the complex number. The grayscale is computed as the
-    # Y component of the XYZ-representation of the color, for linear SRGB values as
-    #
-    #     0.2126 * r + 0.7152 * g + 0.722 * b.
-    #
-    # Unfortunately, there is no perceptually uniform color space yet that uses
-    # Y-luminance. CIELAB, CIECAM02, and CAM16 have their own values.
     if colorspace.upper() == "CAM16":
         cam = colorio.cs.CAM16UCS(0.69, 20, L_A=64 / np.pi / 5)
         srgb = colorio.cs.SrgbLinear()
         # The max radius for which all colors are representable as SRGB is about 21.7.
         # Crank up the colors a little bit to make the images more saturated. This leads
         # to SRGB-cut-off of course.
+        # from .create import find_max_srgb_radius
         # r0 = find_max_srgb_radius(cam, srgb, L=50)
+        # print(r0)
+        # exit(1)
         # r0 = 21.65824845433235
         r0 = 25.0
         # Rotate the angles such that a "green" color represents positive real values.

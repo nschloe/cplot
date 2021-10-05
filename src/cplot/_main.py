@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as ntp
 
-from ._colors import get_srgb1, scale01
+from ._colors import get_srgb1
 
 
 class Plotter:
@@ -42,7 +42,7 @@ class Plotter:
 
     def plot_colors(
         self,
-        abs_scaling: str | Callable[[float], float] = "h-1.0",
+        abs_scaling: Callable[[float], float] = lambda x: x / (x + 1),
         colorspace: str = "cam16",
         add_colorbars: bool = True,
     ):
@@ -60,7 +60,7 @@ class Plotter:
             cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
             cb0.set_label("abs", rotation=0, ha="center", va="top")
             cb0.ax.yaxis.set_label_coords(0.5, -0.03)
-            scaled_vals = scale01([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8], abs_scaling)
+            scaled_vals = abs_scaling(np.array([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8]))
             cb0.set_ticks([0.0, *scaled_vals, 1.0])
             cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
 
@@ -179,7 +179,9 @@ class Plotter:
                 continue
 
             linecolors = get_srgb1(
-                np.exp(contours * 1j), abs_scaling="h-1.0", colorspace=colorspace
+                np.exp(contours * 1j),
+                abs_scaling=lambda x: x / (x + 1),
+                colorspace=colorspace,
             )
 
             c = plt.contour(
@@ -212,7 +214,7 @@ def plot_colors(
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int],
-    abs_scaling: str = "h-1.0",
+    abs_scaling: Callable[[float], float] = lambda x: x / (x + 1),
     colorspace: str = "cam16",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
@@ -240,7 +242,7 @@ def plot(
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int] = 500,
-    abs_scaling: str | Callable[[float], float] = "h-1.0",
+    abs_scaling: Callable[[float], float] = lambda x: x / (x + 1),
     contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
     colorspace: str = "cam16",
     colorbars: bool = True,

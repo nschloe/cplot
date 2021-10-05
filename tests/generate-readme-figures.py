@@ -67,13 +67,25 @@ for name in ["cam16", "cielab", "oklab", "hsl"]:
     plt.close()
     #
     cplot.plot(
-        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5", colorbars=False
+        f,
+        (-3, +3),
+        (-3, +3),
+        n,
+        colorspace=name,
+        abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
+        colorbars=False,
     )
     plt.savefig(f"{name}-05.svg", transparent=True, bbox_inches="tight")
     plt.close()
     #
     cplot.plot(
-        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0", colorbars=False
+        f,
+        (-3, +3),
+        (-3, +3),
+        n,
+        colorspace=name,
+        abs_scaling=lambda x: np.full_like(x, 0.5),
+        colorbars=False,
     )
     plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
     plt.close()
@@ -83,7 +95,11 @@ for name in ["cam16", "cielab", "oklab", "hsl"]:
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
 n = 401
 cplot.plot(
-    lambda z: np.cos(np.log(z) / z) / z, (-1, 1), (-1, 1), n, abs_scaling="h-0.5"
+    lambda z: np.cos(np.log(z) / z) / z,
+    (-1, 1),
+    (-1, 1),
+    n,
+    abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
 )
 plt.savefig("siam.svg", transparent=True, bbox_inches="tight")
 plt.close()
