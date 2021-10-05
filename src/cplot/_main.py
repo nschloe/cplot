@@ -114,47 +114,22 @@ class Plotter:
 
         contours = np.asarray(contours)
 
-        plt.contour(
-            self.Z.real,
-            self.Z.imag,
-            vals,
-            levels=contours_neg,
-            colors="0.8",
-            linestyles="solid",
-            alpha=0.2,
-        )
-        # give the option to let abs==1 have a different line style
-        plt.contour(
-            self.Z.real,
-            self.Z.imag,
-            vals,
-            levels=[1.0],
-            colors="0.8",
-            # colors="#a0a0a0",
-            # linestyles=linestyles_abs1,
-            linestyles=[(0, (5, 5))],
-            alpha=0.3,
-        )
-        plt.contour(
-            self.Z.real,
-            self.Z.imag,
-            vals,
-            levels=[1.0],
-            colors="0.3",
-            # colors="#a0a0a0",
-            # linestyles=linestyles_abs1,
-            linestyles=[(5, (5, 5))],
-            alpha=0.3,
-        )
-        plt.contour(
-            self.Z.real,
-            self.Z.imag,
-            vals,
-            levels=contours_pos,
-            colors="0.3",
-            linestyles="solid",
-            alpha=0.2,
-        )
+        def contour(levels, colors, linestyles, alpha):
+            plt.contour(
+                self.Z.real,
+                self.Z.imag,
+                vals,
+                levels=levels,
+                colors=colors,
+                linestyles=linestyles,
+                alpha=alpha,
+            )
+
+        contour(contours_neg, "0.8", "solid", 0.2)
+        contour([1.0], "0.8", [(0, (5, 5))], 0.3)
+        contour([1.0], "0.3", [(5, (5, 5))], 0.3)
+        contour(contours_pos, "0.3", "solid", 0.2)
+
         plt.gca().set_aspect("equal")
 
     def plot_contour_arg(
