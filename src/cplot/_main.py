@@ -10,6 +10,24 @@ import numpy.typing as ntp
 from ._colors import get_srgb1
 
 
+def _get_z_grid_for_image(
+    xminmax: tuple[float, float],
+    yminmax: tuple[float, float],
+    n: tuple[int, int],
+):
+    xmin, xmax = xminmax
+    ymin, ymax = yminmax
+    nx, ny = n
+
+    hx = (xmax - xmin) / nx
+    x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
+    hy = (ymax - ymin) / ny
+    y = np.linspace(ymin + hy / 2, ymax - hy / 2, ny)
+
+    X = np.meshgrid(x, y)
+    return X[0] + 1j * X[1]
+
+
 class Plotter:
     def __init__(
         self,
@@ -30,9 +48,8 @@ class Plotter:
             assert isinstance(n, int)
             nxy = (n, n)
 
-        self.extent = (xmin, xmax, ymin, ymax)
-
         self.f = f
+        self.extent = (xmin, xmax, ymin, ymax)
         self.Z = _get_z_grid_for_image(xminmax, yminmax, nxy)
         self.fz = f(self.Z)
 
@@ -210,11 +227,12 @@ def plot_colors(
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int],
-    abs_scaling: Callable[[float], float] = lambda x: x / (x + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     colorspace: str = "cam16",
+    add_colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
-    plotter.plot_colors(abs_scaling, colorspace)
+    plotter.plot_colors(abs_scaling, colorspace, add_colorbars=add_colorbars)
     return plt
 
 
@@ -223,12 +241,13 @@ def plot_contours(
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int],
-    contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    abs_contours: str | list[float] = "auto",
+    arg_contours: str | tuple[float, ...] = (-np.pi / 2, 0, np.pi / 2, np.pi),
     colorspace: str = "cam16",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
-    plotter.plot_contour_abs(contours=contours[0])
-    plotter.plot_contour_arg(contours=contours[1], colorspace=colorspace)
+    plotter.plot_contour_abs(contours=abs_contours)
+    plotter.plot_contour_arg(contours=arg_contours, colorspace=colorspace)
     return plt
 
 
@@ -237,31 +256,14 @@ def plot(
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int] = 500,
-    abs_scaling: Callable[[float], float] = lambda x: x / (x + 1),
-    contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    abs_contours: str | list[float] = "auto",
+    arg_contours: str | tuple[float, ...] = (-np.pi / 2, 0, np.pi / 2, np.pi),
     colorspace: str = "cam16",
-    colorbars: bool = True,
+    add_colorbars: bool = True,
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
-    plotter.plot_colors(abs_scaling, colorspace, add_colorbars=colorbars)
-    plotter.plot_contour_abs(contours=contours[0])
-    plotter.plot_contour_arg(contours=contours[1])
+    plotter.plot_colors(abs_scaling, colorspace, add_colorbars=add_colorbars)
+    plotter.plot_contour_abs(contours=abs_contours)
+    plotter.plot_contour_arg(contours=arg_contours)
     return plt
-
-
-def _get_z_grid_for_image(
-    xminmax: tuple[float, float],
-    yminmax: tuple[float, float],
-    n: tuple[int, int],
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
-    nx, ny = n
-
-    hx = (xmax - xmin) / nx
-    x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
-    hy = (ymax - ymin) / ny
-    y = np.linspace(ymin + hy / 2, ymax - hy / 2, ny)
-
-    X = np.meshgrid(x, y)
-    return X[0] + 1j * X[1]
