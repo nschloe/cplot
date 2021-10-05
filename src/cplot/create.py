@@ -48,8 +48,8 @@ def find_max_srgb_radius(cs, srgb, L=50, tol=1.0e-6):
 
 
 def create_colormap(L=50):
-    cam = colorio.cs.CAM16UCS(0.69, 20, 64 / np.pi / 5)
-    # cam = colorio.cs.CAM02('UCS', 0.69, 20, L_A)
+    cam = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
+    # cam = colorio.cs.CAM02('UCS', 0.69, 20, 15)
     # cam = colorio.cs.CIELAB()
     srgb = colorio.cs.SrgbLinear()
 

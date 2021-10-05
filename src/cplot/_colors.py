@@ -74,16 +74,18 @@ def get_srgb1(
     # assert np.all(absval_scaled <= 1)
 
     if colorspace.upper() == "CAM16":
-        cam = colorio.cs.CAM16UCS(0.69, 20, L_A=64 / np.pi / 5)
+        # Choose the viewing conditions as "viewing self-luminous display under office
+        # illumination".
+        cam = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
         srgb = colorio.cs.SrgbLinear()
-        # The max radius for which all colors are representable as SRGB is about 21.7.
+        # The max radius for which all colors are representable as SRGB is about 23.5.
         # Crank up the colors a little bit to make the images more saturated. This leads
         # to SRGB-cut-off of course.
         # from .create import find_max_srgb_radius
         # r0 = find_max_srgb_radius(cam, srgb, L=50)
-        # print(r0)
+        # print(f"{r0 = }")
         # exit(1)
-        # r0 = 21.65824845433235
+        # r0 = 23.545314371585846
         r0 = 25.0
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation offset is chosen such that the ratio g/(r+b) (in rgb) is the
