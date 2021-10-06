@@ -66,6 +66,7 @@ def test_tricontour():
 
     cplot.tripcolor(triang, fz)
     cplot.tri_abs_contour(triang, fz)
+    cplot.tri_arg_contour(triang, fz)
 
     plt.gca().set_aspect("equal", "datalim")
     plt.show()

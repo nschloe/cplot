@@ -102,7 +102,8 @@ def get_srgb1(
             ]
         )
         # now just translate to srgb
-        srgb_vals = srgb.to_rgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts)))
+        dds = srgb.from_xyz100(cam.to_xyz100(cam_pts))
+        srgb_vals = srgb.to_rgb1(dds)
         srgb_vals *= 1.1
         # Cut off the outliers. This restriction makes the representation less perfect,
         # but that's what it is with the SRGB color space.

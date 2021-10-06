@@ -50,3 +50,31 @@ def tri_abs_contour(triang, fz: ArrayLike):
     contours([1.0], colors="0.3", linestyles=[(0, (5, 5))], alpha=0.3)
     contours(levels=contours_pos, colors="0.3", linestyles="solid", alpha=0.2)
     return plt
+
+
+def tri_arg_contour(triang, fz: ArrayLike):
+    vals = np.abs(fz)
+
+    base = 2.0
+    min_exp = np.log(np.min(vals)) / np.log(base)
+    min_exp = int(max(min_exp, -100))
+    max_exp = np.log(np.max(vals)) / np.log(base)
+    max_exp = int(min(max_exp, 100))
+    contours_neg = [base ** k for k in range(min_exp, 0)]
+    contours_pos = [base ** k for k in range(1, max_exp + 1)]
+
+    def contours(levels, colors, linestyles, alpha):
+        plt.tricontour(
+            triang,
+            vals,
+            levels=levels,
+            colors=colors,
+            linestyles=linestyles,
+            alpha=alpha,
+        )
+
+    contours(levels=contours_neg, colors="0.8", linestyles="solid", alpha=0.2)
+    contours([1.0], colors="0.3", linestyles=[(5, (5, 5))], alpha=0.3)
+    contours([1.0], colors="0.3", linestyles=[(0, (5, 5))], alpha=0.3)
+    contours(levels=contours_pos, colors="0.3", linestyles="solid", alpha=0.2)
+    return plt
