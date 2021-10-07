@@ -134,7 +134,6 @@ args = [
     ("exp-z2.svg", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
     ("11z2.svg", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
     ("erf.svg", scipy.special.erf, (-3, +3), (-3, +3)),
-    ("erfi.svg", scipy.special.erfi, (-3, +3), (-3, +3)),
     #
     ("sin.svg", np.sin, (-5, +5), (-5, +5)),
     ("cos.svg", np.cos, (-5, +5), (-5, +5)),
