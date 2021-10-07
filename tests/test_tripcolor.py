@@ -40,8 +40,8 @@ def test_tricontour():
     # Adapted from
     # <https://matplotlib.org/gallery/images_contours_and_fields/tripcolor_demo.html#sphx-glr-gallery-images-contours-and-fields-tripcolor-demo-py>
     # First create the x and y coordinates of the points.
-    n_angles = 36
-    n_radii = 8
+    n_angles = 288
+    n_radii = 64
     min_radius = 0.25
     radii = np.linspace(min_radius, 0.95, n_radii)
 
@@ -65,10 +65,11 @@ def test_tricontour():
     fz = np.sin(7 * z) / (7 * z)
 
     cplot.tripcolor(triang, fz)
-    cplot.tri_abs_contour(triang, fz)
-    cplot.tri_arg_contour(triang, fz)
+    cplot.tricontour_abs(triang, fz)
+    # cplot.tricontour_arg(triang, fz)
 
     plt.gca().set_aspect("equal", "datalim")
+    plt.savefig("out.png", bbox_inches="tight")
     plt.show()
 
 

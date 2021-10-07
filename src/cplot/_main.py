@@ -5,7 +5,7 @@ from typing import Callable
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.typing as ntp
+from numpy.typing import ArrayLike
 
 from ._colors import get_srgb1
 
@@ -94,11 +94,8 @@ class Plotter:
     def plot_contour_abs(
         self,
         # Literal["auto"] needs Python 3.8
-        contours: ntp.ArrayLike | str | None = "auto",
+        contours: ArrayLike | str = "auto",
     ):
-        if contours is None:
-            return
-
         vals = np.abs(self.fz)
 
         contours = "auto"
@@ -134,12 +131,9 @@ class Plotter:
 
     def plot_contour_arg(
         self,
-        contours: ntp.ArrayLike | None = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
+        contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
         colorspace: str = "CAM16",
     ):
-        if contours is None:
-            return
-
         contours = np.asarray(contours)
 
         # assert contours in [-pi, pi], like np.angle
@@ -156,9 +150,6 @@ class Plotter:
         contours2 = contours[~is_level1]
         contours2 = np.mod(contours2, 2 * np.pi)
 
-        # plt.contour draws some lines in excess which need to be cut off. This is done
-        # via setting some values to NaN, see
-        # <https://github.com/matplotlib/matplotlib/issues/20548>.
         for contours, angle_fun, branch_cut in [
             (contours1, np.angle, (-np.pi, np.pi)),
             (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi), (0.0, 2 * np.pi)),
@@ -181,6 +172,9 @@ class Plotter:
                 linestyles="solid",
                 alpha=0.4,
             )
+            # plt.contour draws some lines in excess which need to be cut off. This is
+            # done via setting some values to NaN, see
+            # <https://github.com/matplotlib/matplotlib/issues/20548>.
             for level, allseg in zip(contours, c.allsegs):
                 for segment in allseg:
                     x, y = segment.T
@@ -216,8 +210,8 @@ def plot_contours(
     xminmax: tuple[float, float],
     yminmax: tuple[float, float],
     n: int | tuple[int, int],
-    abs_contours: str | list[float] = "auto",
-    arg_contours: str | tuple[float, ...] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    abs_contours: str | ArrayLike = "auto",
+    arg_contours: ArrayLike = (-np.pi / 2, 0, np.pi / 2, np.pi),
     colorspace: str = "cam16",
 ):
     plotter = Plotter(f, xminmax, yminmax, n)
@@ -232,8 +226,8 @@ def plot(
     yminmax: tuple[float, float],
     n: int | tuple[int, int] = 500,
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
-    abs_contours: str | list[float] = "auto",
-    arg_contours: str | tuple[float, ...] = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    abs_contours: str | ArrayLike = "auto",
+    arg_contours: ArrayLike = (-np.pi / 2, 0, np.pi / 2, np.pi),
     colorspace: str = "cam16",
     add_colorbars: bool = True,
 ):
