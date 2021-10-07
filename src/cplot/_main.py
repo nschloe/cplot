@@ -86,20 +86,7 @@ def plot_contour_abs(
 ):
     vals = np.abs(fz)
 
-    contours = "auto"
-
-    if contours == "auto":
-        base = 2.0
-        min_exp = np.log(np.min(vals)) / np.log(base)
-        min_exp = int(max(min_exp, -100))
-        max_exp = np.log(np.max(vals)) / np.log(base)
-        max_exp = int(min(max_exp, 100))
-        contours_neg = [base ** k for k in range(min_exp, 0)]
-        contours_pos = [base ** k for k in range(1, max_exp + 1)]
-
-    contours = np.asarray(contours)
-
-    def contour(levels, colors, linestyles, alpha):
+    def _plot_contour(levels, colors, linestyles, alpha):
         plt.contour(
             Z.real,
             Z.imag,
@@ -110,10 +97,22 @@ def plot_contour_abs(
             alpha=alpha,
         )
 
-    contour(contours_neg, "0.8", "solid", 0.2)
-    contour([1.0], "0.8", [(0, (5, 5))], 0.3)
-    contour([1.0], "0.3", [(5, (5, 5))], 0.3)
-    contour(contours_pos, "0.3", "solid", 0.2)
+    if contours == "auto":
+        base = 2.0
+        min_exp = np.log(np.min(vals)) / np.log(base)
+        min_exp = int(max(min_exp, -100))
+        max_exp = np.log(np.max(vals)) / np.log(base)
+        max_exp = int(min(max_exp, 100))
+        contours_neg = [base ** k for k in range(min_exp, 0)]
+        contours_pos = [base ** k for k in range(1, max_exp + 1)]
+
+        _plot_contour(contours_neg, "0.8", "solid", 0.2)
+        _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.3)
+        _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.3)
+        _plot_contour(contours_pos, "0.3", "solid", 0.2)
+    else:
+        contours = np.asarray(contours)
+        _plot_contour(contours, "0.8", "solid", 0.2)
 
     plt.gca().set_aspect("equal")
 
@@ -177,35 +176,6 @@ def plot_contour_arg(
                 )
                 segment[is_near_branch_cut] = np.nan
     plt.gca().set_aspect("equal")
-
-
-# def plot_colors(
-#     f: Callable,
-#     xminmax: tuple[float, float],
-#     yminmax: tuple[float, float],
-#     n: int | tuple[int, int],
-#     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
-#     colorspace: str = "cam16",
-#     add_colorbars: bool = True,
-# ):
-#     plotter = Plotter(f, xminmax, yminmax, n)
-#     plotter.plot_colors(abs_scaling, colorspace, add_colorbars=add_colorbars)
-#     return plt
-#
-#
-# def plot_contours(
-#     f: Callable,
-#     xminmax: tuple[float, float],
-#     yminmax: tuple[float, float],
-#     n: int | tuple[int, int],
-#     contours_abs: str | ArrayLike = "auto",
-#     contours_arg: ArrayLike = (-np.pi / 2, 0, np.pi / 2, np.pi),
-#     colorspace: str = "cam16",
-# ):
-#     plotter = Plotter(f, xminmax, yminmax, n)
-#     plotter.plot_contour_abs(contours=contours_abs)
-#     plotter.plot_contour_arg(contours=contours_arg, colorspace=colorspace)
-#     return plt
 
 
 def plot(
