@@ -38,7 +38,7 @@ def find_max_srgb_radius(cs, srgb, L=50, tol=1.0e-6):
         r = 0.5 * (r1 + r0)
 
         pts = np.array([np.full(n, L), r * np.cos(alpha), r * np.sin(alpha)])
-        vals = srgb.from_xyz100(cs.to_xyz100(pts))
+        vals = srgb.from_xyz100(cs.to_xyz100(pts), mode="ignore")
 
         if np.any(vals < 0) or np.any(vals > 1):
             r1 = r
@@ -59,7 +59,7 @@ def create_colormap(L=50):
     alpha = np.linspace(0, 2 * np.pi, n, endpoint=False)
 
     pts = np.array([np.full(n, L), r0 * np.cos(alpha), r0 * np.sin(alpha)])
-    vals = srgb.from_xyz100(cam.to_xyz100(pts))
+    vals = srgb.from_xyz100(cam.to_xyz100(pts), mode="clip")
 
     # show the colors
     return srgb.to_rgb1(vals)
