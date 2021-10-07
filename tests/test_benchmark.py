@@ -2,8 +2,8 @@ import cplot
 
 
 def test_create():
-    colorspace = "cielab"
-    # colorspace = "cam16"
+    # colorspace = "cielab"
+    colorspace = "cam16"
     # colorspace = "hsl"
     cplot.show_test_function("a", colorspace)
     cplot.show_test_function("b", colorspace)

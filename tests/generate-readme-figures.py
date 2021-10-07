@@ -62,18 +62,30 @@ def f(z):
 
 n = 201
 for name in ["cam16", "cielab", "oklab", "hsl"]:
-    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, colorbars=False)
+    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, add_colorbars=False)
     plt.savefig(f"{name}-10.svg", transparent=True, bbox_inches="tight")
     plt.close()
     #
     cplot.plot(
-        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0.5", colorbars=False
+        f,
+        (-3, +3),
+        (-3, +3),
+        n,
+        colorspace=name,
+        abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
+        add_colorbars=False,
     )
     plt.savefig(f"{name}-05.svg", transparent=True, bbox_inches="tight")
     plt.close()
     #
     cplot.plot(
-        f, (-3, +3), (-3, +3), n, colorspace=name, abs_scaling="h-0", colorbars=False
+        f,
+        (-3, +3),
+        (-3, +3),
+        n,
+        colorspace=name,
+        abs_scaling=lambda x: np.full_like(x, 0.5),
+        add_colorbars=False,
     )
     plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
     plt.close()
@@ -83,7 +95,11 @@ for name in ["cam16", "cielab", "oklab", "hsl"]:
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
 n = 401
 cplot.plot(
-    lambda z: np.cos(np.log(z) / z) / z, (-1, 1), (-1, 1), n, abs_scaling="h-0.5"
+    lambda z: np.cos(np.log(z) / z) / z,
+    (-1, 1),
+    (-1, 1),
+    n,
+    abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
 )
 plt.savefig("siam.svg", transparent=True, bbox_inches="tight")
 plt.close()
@@ -115,6 +131,10 @@ args = [
     ("exp.svg", np.exp, (-3, +3), (-3, +3)),
     ("exp1z.svg", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
     #
+    ("exp-z2.svg", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
+    ("11z2.svg", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
+    ("erf.svg", scipy.special.erf, (-3, +3), (-3, +3)),
+    #
     ("sin.svg", np.sin, (-5, +5), (-5, +5)),
     ("cos.svg", np.cos, (-5, +5), (-5, +5)),
     ("tan.svg", np.tan, (-5, +5), (-5, +5)),
@@ -134,12 +154,15 @@ args = [
     ("gamma.svg", scipy.special.gamma, (-5, +5), (-5, +5)),
     ("digamma.svg", scipy.special.digamma, (-5, +5), (-5, +5)),
     ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
+    # ("airy.svg", scipy.special.airy, (-5, +5), (-5, +5)),  # TODO not working?!
+    #
+    ("lambertw.svg", scipy.special.lambertw, (-5, +5), (-5, +5)),
     #
     ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
     ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
 ]
 for a in args:
-    cplot.plot(*a[1:], n=n, colorbars=False)
+    cplot.plot(*a[1:], n=n, add_colorbars=False)
     plt.savefig(a[0], transparent=True, bbox_inches="tight")
     plt.close()
