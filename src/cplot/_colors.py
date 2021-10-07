@@ -90,7 +90,7 @@ def get_srgb1(
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation offset is chosen such that the ratio g/(r+b) (in rgb) is the
         # largest for the point 1.0.
-        offset = 0.916_708 * np.pi
+        offset = 0.916708 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
@@ -114,7 +114,7 @@ def get_srgb1(
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
         # the point 1.0.
-        offset = 0.893_686_8 * np.pi
+        offset = 0.8936868 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
@@ -146,7 +146,7 @@ def get_srgb1(
         # Rotate the angles such a "green" color represents positive real values. The
         # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
         # point 1.0.
-        offset = 0.893_686_8 * np.pi
+        offset = 0.8936868 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
