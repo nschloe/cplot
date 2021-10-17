@@ -62,15 +62,14 @@ def f(z):
 
 n = 201
 for name in ["cam16", "cielab", "oklab", "hsl"]:
-    cplot.plot(f, (-3, +3), (-3, +3), n, colorspace=name, add_colorbars=False)
+    cplot.plot(f, (-3, +3, n), (-3, +3, n), colorspace=name, add_colorbars=False)
     plt.savefig(f"{name}-10.svg", transparent=True, bbox_inches="tight")
     plt.close()
     #
     cplot.plot(
         f,
-        (-3, +3),
-        (-3, +3),
-        n,
+        (-3, +3, n),
+        (-3, +3, n),
         colorspace=name,
         abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
         add_colorbars=False,
@@ -80,9 +79,8 @@ for name in ["cam16", "cielab", "oklab", "hsl"]:
     #
     cplot.plot(
         f,
-        (-3, +3),
-        (-3, +3),
-        n,
+        (-3, +3, n),
+        (-3, +3, n),
         colorspace=name,
         abs_scaling=lambda x: np.full_like(x, 0.5),
         add_colorbars=False,
@@ -96,16 +94,15 @@ for name in ["cam16", "cielab", "oklab", "hsl"]:
 n = 401
 cplot.plot(
     lambda z: np.cos(np.log(z) / z) / z,
-    (-1, 1),
-    (-1, 1),
-    n,
+    (-1, 1, n),
+    (-1, 1, n),
     abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
 )
 plt.savefig("siam.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 n = 400
-cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2), (-2, 2), n=n)
+cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig("sinz3z.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
@@ -162,7 +159,7 @@ args = [
     ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
     ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
 ]
-for a in args:
-    cplot.plot(*a[1:], n=n, add_colorbars=False)
-    plt.savefig(a[0], transparent=True, bbox_inches="tight")
+for filename, fun, x, y in args:
+    cplot.plot(fun, (x[0], x[1], n), (y[0], y[1], n), add_colorbars=False)
+    plt.savefig(filename, transparent=True, bbox_inches="tight")
     plt.close()

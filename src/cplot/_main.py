@@ -11,23 +11,12 @@ from ._colors import get_srgb1
 
 
 def _get_z_grid_for_image(
-    xminmax: tuple[float, float],
-    yminmax: tuple[float, float],
-    n: int | tuple[int, int],
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
+    xspec: tuple[float, float, int], yspec: tuple[float, float, int]
+) -> np.ndarray:
+    xmin, xmax, nx = xspec
+    ymin, ymax, ny = yspec
     assert xmin < xmax
     assert ymin < ymax
-
-    if isinstance(n, tuple):
-        assert len(n) == 2
-        nxy = n
-    else:
-        assert isinstance(n, int)
-        nxy = (n, n)
-
-    nx, ny = nxy
 
     hx = (xmax - xmin) / nx
     x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
@@ -177,8 +166,8 @@ def plot_contour_arg(
             continue
 
         # Draw the arg contour lines a little lighter. This way, arg contours which
-        # dissolve into areas of nearly equal arg remain recognizable. (E.g., sine,
-        # cosine, zeta, erf,...)
+        # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
+        # zeta, erf,...)
         lightness_adjustment = 1.5
 
         linecolors = get_srgb1(
@@ -215,9 +204,8 @@ def plot_contour_arg(
 
 def plot(
     f: Callable[[np.ndarray], np.ndarray],
-    xminmax: tuple[float, float],
-    yminmax: tuple[float, float],
-    n: int | tuple[int, int] = 500,
+    x_range: tuple[float, float, int],
+    y_range: tuple[float, float, int],
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
@@ -226,9 +214,9 @@ def plot(
     add_colorbars: bool = True,
     saturation_adjustment: float = 1.28,
 ):
-    Z = _get_z_grid_for_image(xminmax, yminmax, n)
+    Z = _get_z_grid_for_image(x_range, y_range)
     fz = f(Z)
-    extent = (*xminmax, *yminmax)
+    extent = (x_range[0], x_range[1], y_range[0], y_range[1])
     plot_colors(
         fz,
         extent,
