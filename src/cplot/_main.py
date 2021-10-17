@@ -168,11 +168,18 @@ def plot_contour_arg(
         (contours1, np.angle, (-np.pi, np.pi)),
         (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi), (0.0, 2 * np.pi)),
     ]:
+        contours = np.asarray(contours)
+
         if len(contours) == 0:
             continue
 
+        # Draw the arg contour lines a little lighter. This way, arg contours which
+        # dissolve into areas of nearly equal arg remain recognizable. (E.g., sine,
+        # cosine, zeta, erf,...)
+        lightness_adjustment = 1.5
+
         linecolors = get_srgb1(
-            np.exp(contours * 1j),
+            lightness_adjustment * np.exp(contours * 1j),
             abs_scaling=lambda x: x / (x + 1),
             colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
