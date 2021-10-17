@@ -44,9 +44,15 @@ def plot_colors(
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     colorspace: str = "cam16",
     add_colorbars: bool = True,
+    saturation_adjustment: float = 1.28,
 ):
     plt.imshow(
-        get_srgb1(fz, abs_scaling=abs_scaling, colorspace=colorspace),
+        get_srgb1(
+            fz,
+            abs_scaling=abs_scaling,
+            colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
+        ),
         extent=extent,
         interpolation="nearest",
         origin="lower",
@@ -57,7 +63,12 @@ def plot_colors(
         # arg colorbar
         # create new colormap
         z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
-        rgb_vals = get_srgb1(z, abs_scaling=abs_scaling, colorspace=colorspace)
+        rgb_vals = get_srgb1(
+            z,
+            abs_scaling=abs_scaling,
+            colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
+        )
         rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
         newcmp = mpl.colors.ListedColormap(rgba_vals)
         #
@@ -135,6 +146,7 @@ def plot_contour_arg(
     f: Callable[[np.ndarray], np.ndarray],
     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
+    saturation_adjustment: float = 1.28,
 ):
     contours = np.asarray(contours)
 
@@ -163,6 +175,7 @@ def plot_contour_arg(
             np.exp(contours * 1j),
             abs_scaling=lambda x: x / (x + 1),
             colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
         )
 
         c = plt.contour(
@@ -201,15 +214,25 @@ def plot(
     dash_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool = True,
+    saturation_adjustment: float = 1.28,
 ):
     Z = _get_z_grid_for_image(xminmax, yminmax, n)
     fz = f(Z)
     extent = (*xminmax, *yminmax)
-    plot_colors(fz, extent, abs_scaling, colorspace, add_colorbars=add_colorbars)
+    plot_colors(
+        fz,
+        extent,
+        abs_scaling,
+        colorspace,
+        add_colorbars=add_colorbars,
+        saturation_adjustment=saturation_adjustment,
+    )
     if contours_abs is not None:
         plot_contour_abs(
             Z, fz, contours=contours_abs, dash_contour_1=dash_abs_contour_1
         )
     if contours_arg is not None:
-        plot_contour_arg(Z, fz, f, contours=contours_arg)
+        plot_contour_arg(
+            Z, fz, f, contours=contours_arg, saturation_adjustment=saturation_adjustment
+        )
     return plt
