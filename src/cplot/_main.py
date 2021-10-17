@@ -83,6 +83,7 @@ def plot_contour_abs(
     fz,
     # Literal["auto"] needs Python 3.8
     contours: ArrayLike | str = "auto",
+    dash_contour_1: bool = True,
 ):
     vals = np.abs(fz)
 
@@ -107,8 +108,12 @@ def plot_contour_abs(
         contours_pos = [base ** k for k in range(1, max_exp + 1)]
 
         _plot_contour(contours_neg, "0.8", "solid", 0.2)
-        _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.3)
-        _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.3)
+        if dash_contour_1:
+            _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
+            _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
+        else:
+            _plot_contour([1.0], "0.8", "solid", 0.2)
+
         _plot_contour(contours_pos, "0.3", "solid", 0.2)
     else:
         contours = np.asarray(contours)
@@ -186,6 +191,7 @@ def plot(
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    dash_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool = True,
 ):
@@ -194,7 +200,9 @@ def plot(
     extent = (*xminmax, *yminmax)
     plot_colors(fz, extent, abs_scaling, colorspace, add_colorbars=add_colorbars)
     if contours_abs is not None:
-        plot_contour_abs(Z, fz, contours=contours_abs)
+        plot_contour_abs(
+            Z, fz, contours=contours_abs, dash_contour_1=dash_abs_contour_1
+        )
     if contours_arg is not None:
         plot_contour_arg(Z, fz, f, contours=contours_arg)
     return plt
