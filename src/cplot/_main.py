@@ -73,7 +73,11 @@ def plot_colors(
         newcmp = mpl.colors.ListedColormap(rgba_vals)
         #
         norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
-        cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=newcmp))
+        cb1 = plt.colorbar(
+            mpl.cm.ScalarMappable(norm=norm, cmap=newcmp),
+            fraction=0.046,
+            pad=0.08,
+        )
         cb1.set_label("arg", rotation=0, ha="center", va="top")
         cb1.ax.yaxis.set_label_coords(0.5, -0.03)
         cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
@@ -84,8 +88,7 @@ def plot_colors(
         cb0 = plt.colorbar(
             mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray),
             # This works okay-ish trying to match the height of the colorbar with that
-            # of the axes. It's only needed in one colorbar, too.
-            # <https://stackoverflow.com/a/26720422/353337>
+            # of the axes. <https://stackoverflow.com/a/26720422/353337>
             fraction=0.046,
             pad=0.04,
         )
