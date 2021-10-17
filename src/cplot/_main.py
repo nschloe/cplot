@@ -11,23 +11,12 @@ from ._colors import get_srgb1
 
 
 def _get_z_grid_for_image(
-    xminmax: tuple[float, float],
-    yminmax: tuple[float, float],
-    n: int | tuple[int, int],
-):
-    xmin, xmax = xminmax
-    ymin, ymax = yminmax
+    xspec: tuple[float, float, int], yspec: tuple[float, float, int]
+) -> np.ndarray:
+    xmin, xmax, nx = xspec
+    ymin, ymax, ny = yspec
     assert xmin < xmax
     assert ymin < ymax
-
-    if isinstance(n, tuple):
-        assert len(n) == 2
-        nxy = n
-    else:
-        assert isinstance(n, int)
-        nxy = (n, n)
-
-    nx, ny = nxy
 
     hx = (xmax - xmin) / nx
     x = np.linspace(xmin + hx / 2, xmax - hx / 2, nx)
@@ -44,9 +33,15 @@ def plot_colors(
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     colorspace: str = "cam16",
     add_colorbars: bool = True,
+    saturation_adjustment: float = 1.28,
 ):
     plt.imshow(
-        get_srgb1(fz, abs_scaling=abs_scaling, colorspace=colorspace),
+        get_srgb1(
+            fz,
+            abs_scaling=abs_scaling,
+            colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
+        ),
         extent=extent,
         interpolation="nearest",
         origin="lower",
@@ -54,28 +49,43 @@ def plot_colors(
     )
 
     if add_colorbars:
+        # arg colorbar
+        # create new colormap
+        z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
+        rgb_vals = get_srgb1(
+            z,
+            abs_scaling=abs_scaling,
+            colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
+        )
+        rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
+        newcmp = mpl.colors.ListedColormap(rgba_vals)
+        #
+        norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+        cb1 = plt.colorbar(
+            mpl.cm.ScalarMappable(norm=norm, cmap=newcmp),
+            fraction=0.046,
+            pad=0.08,
+        )
+        cb1.set_label("arg", rotation=0, ha="center", va="top")
+        cb1.ax.yaxis.set_label_coords(0.5, -0.03)
+        cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
+        cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
+
         # abs colorbar
         norm = mpl.colors.Normalize(vmin=0, vmax=1)
-        cb0 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray))
+        cb0 = plt.colorbar(
+            mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray),
+            # This works okay-ish trying to match the height of the colorbar with that
+            # of the axes. <https://stackoverflow.com/a/26720422/353337>
+            fraction=0.046,
+            pad=0.04,
+        )
         cb0.set_label("abs", rotation=0, ha="center", va="top")
         cb0.ax.yaxis.set_label_coords(0.5, -0.03)
         scaled_vals = abs_scaling(np.array([1 / 8, 1 / 4, 1 / 2, 1, 2, 4, 8]))
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
         cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
-
-        # arg colorbar
-        # create new colormap
-        z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
-        rgb_vals = get_srgb1(z, abs_scaling=abs_scaling, colorspace=colorspace)
-        rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
-        newcmp = mpl.colors.ListedColormap(rgba_vals)
-        #
-        norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
-        cb1 = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=newcmp))
-        cb1.set_label("arg", rotation=0, ha="center", va="top")
-        cb1.ax.yaxis.set_label_coords(0.5, -0.03)
-        cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
-        cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
 
 
 def plot_contour_abs(
@@ -83,6 +93,7 @@ def plot_contour_abs(
     fz,
     # Literal["auto"] needs Python 3.8
     contours: ArrayLike | str = "auto",
+    dash_contour_1: bool = True,
 ):
     vals = np.abs(fz)
 
@@ -107,8 +118,12 @@ def plot_contour_abs(
         contours_pos = [base ** k for k in range(1, max_exp + 1)]
 
         _plot_contour(contours_neg, "0.8", "solid", 0.2)
-        _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.3)
-        _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.3)
+        if dash_contour_1:
+            _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
+            _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
+        else:
+            _plot_contour([1.0], "0.8", "solid", 0.2)
+
         _plot_contour(contours_pos, "0.3", "solid", 0.2)
     else:
         contours = np.asarray(contours)
@@ -123,6 +138,7 @@ def plot_contour_arg(
     f: Callable[[np.ndarray], np.ndarray],
     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
+    saturation_adjustment: float = 1.28,
 ):
     contours = np.asarray(contours)
 
@@ -144,13 +160,21 @@ def plot_contour_arg(
         (contours1, np.angle, (-np.pi, np.pi)),
         (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi), (0.0, 2 * np.pi)),
     ]:
+        contours = np.asarray(contours)
+
         if len(contours) == 0:
             continue
 
+        # Draw the arg contour lines a little lighter. This way, arg contours which
+        # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
+        # zeta, erf,...)
+        lightness_adjustment = 1.5
+
         linecolors = get_srgb1(
-            np.exp(contours * 1j),
+            lightness_adjustment * np.exp(contours * 1j),
             abs_scaling=lambda x: x / (x + 1),
             colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
         )
 
         c = plt.contour(
@@ -180,21 +204,33 @@ def plot_contour_arg(
 
 def plot(
     f: Callable[[np.ndarray], np.ndarray],
-    xminmax: tuple[float, float],
-    yminmax: tuple[float, float],
-    n: int | tuple[int, int] = 500,
+    x_range: tuple[float, float, int],
+    y_range: tuple[float, float, int],
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    dash_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool = True,
+    saturation_adjustment: float = 1.28,
 ):
-    Z = _get_z_grid_for_image(xminmax, yminmax, n)
+    Z = _get_z_grid_for_image(x_range, y_range)
     fz = f(Z)
-    extent = (*xminmax, *yminmax)
-    plot_colors(fz, extent, abs_scaling, colorspace, add_colorbars=add_colorbars)
+    extent = (x_range[0], x_range[1], y_range[0], y_range[1])
+    plot_colors(
+        fz,
+        extent,
+        abs_scaling,
+        colorspace,
+        add_colorbars=add_colorbars,
+        saturation_adjustment=saturation_adjustment,
+    )
     if contours_abs is not None:
-        plot_contour_abs(Z, fz, contours=contours_abs)
+        plot_contour_abs(
+            Z, fz, contours=contours_abs, dash_contour_1=dash_abs_contour_1
+        )
     if contours_arg is not None:
-        plot_contour_arg(Z, fz, f, contours=contours_arg)
+        plot_contour_arg(
+            Z, fz, f, contours=contours_arg, saturation_adjustment=saturation_adjustment
+        )
     return plt

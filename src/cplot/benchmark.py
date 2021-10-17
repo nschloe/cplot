@@ -78,9 +78,8 @@ def show_test_function(variant="a", colorspace="cam16", res=201):
 
     plot(
         f,
-        (-5, +5),
-        (-5, +5),
-        res,
+        (-5, +5, res),
+        (-5, +5, res),
         contours_abs=None,
         contours_arg=None,
         colorspace=colorspace,

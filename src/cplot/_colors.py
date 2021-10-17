@@ -63,7 +63,8 @@ def get_srgb1(
     z: ArrayLike,
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     colorspace: str = "cam16",
-):
+    saturation_adjustment: float = 1.28,
+) -> np.ndarray:
     z = np.asarray(z)
 
     angle = np.arctan2(z.imag, z.real)
@@ -85,8 +86,9 @@ def get_srgb1(
         # r0 = find_max_srgb_radius(cam, srgb, L=50)
         # print(f"{r0 = }")
         # exit(1)
-        # r0 = 23.545314371585846
-        r0 = 30.0
+        r0 = 23.545314371585846
+        r0 *= saturation_adjustment
+
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation offset is chosen such that the ratio g/(r+b) (in rgb) is the
         # largest for the point 1.0.
@@ -109,8 +111,9 @@ def get_srgb1(
         # The max radius is about 29.5, but crank up colors a little bit to make the
         # images more saturated. This leads to SRGB-cut-off of course.
         # r0 = find_max_srgb_radius(cielab, srgb, L=50)
-        # r0 = 29.488203674554825
-        r0 = 45.0
+        r0 = 29.488203674554825
+        r0 *= saturation_adjustment
+
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for
         # the point 1.0.

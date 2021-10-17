@@ -36,17 +36,15 @@ def f(z):
 
 plt = cplot.plot(
     f,
-    (-2.0, +2.0),
-    (-2.0, +2.0),
-    400,
-    # colorbars: bool = True,
-    # abs_scaling="h-1.0",        # how to scale the lightness in domain coloring
-    # colorspace: str = "cam16",  # ditto
-    # abs/args contour lines:
-    # contours=("auto", (-np.pi / 2, 0, np.pi / 2, np.pi)),
-    # linecolors = "#a0a0a050",
-    # linestyles = "solid",
-    # linestyle_abs1 = "solid"
+    (-2.0, +2.0, 400),
+    (-2.0, +2.0, 400),
+    # abs_scaling=lambda x: x / (x + 1),  # how to scale the lightness in domain coloring
+    # contours_abs="auto",
+    # contours_arg=(-np.pi / 2, 0, np.pi / 2, np.pi),
+    # dash_abs_contour_1: bool = True,
+    # colorspace: str = "cam16",
+    # add_colorbars: bool = True,
+    # saturation_adjustment: float = 1.28,
 )
 plt.show()
 ```
