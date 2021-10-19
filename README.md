@@ -44,6 +44,7 @@ plt = cplot.plot(
     # highlight_abs_contour_1: bool = True,
     # colorspace: str = "cam16",
     # add_colorbars: bool = True,
+    # add_axes_labels: bool = True,
     # saturation_adjustment: float = 1.28,
 )
 plt.show()
@@ -58,8 +59,8 @@ The plot consists of three building blocks:
 - [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
   mapping the absolute value to lightness and the complex argument to the chroma of
   the representing color
-- Contours of constant absolute value (the contour `abs(z) == 1` is highlighted, the other
-  contours are at (2, 4, 8, etc. and 1/2, 1/4, 1/8, etc., respectively)
+- Contours of constant absolute value (the contour `abs(z) == 1` is highlighted, the
+  other contours are at (2, 4, 8, etc. and 1/2, 1/4, 1/8, etc., respectively)
 - Contours along constant argument (angle). For `arg(z) == 0`, the color is green, for
   `arg(z) == pi/2` it's orange, for `arg(z) = -pi / 2` it's blue, and for `arg(z) = pi`
   it's pink
