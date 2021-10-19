@@ -176,8 +176,14 @@ tox
 
 - [Tristan Needham, _Visual Complex
   Analysis_, 1997](https://umv.science.upjs.sk/hutnik/NeedhamVCA.pdf)
+- [François Labelle, _A Gallery of Complex
+  Functions_, 2002](http://wismuth.com/complex/gallery.html)
 - [Douglas Arnold and Jonathan Rogness, _Möbius transformations
   revealed_, 2008](https://youtu.be/0z1fIsUNhO4)
+- [Konstantin Poelke and Konrad Polthier, _Lifted Domain Coloring_,
+  2009](https://doi.org/10.1111/j.1467-8659.2009.01479.x)
+- [Elias Wegert and Gunter Semmler, _Phase Plots of Complex Functions:
+a Journey in Illustration_, 2011](https://www.ams.org/notices/201106/rtx110600768p.pdf)
 - [Elias Wegert, _Visual Complex
   Functions_, 2012](https://www.springer.com/gp/book/9783034801799)
 - [John D.  Cook, _Visualizing complex

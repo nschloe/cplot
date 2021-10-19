@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import mpmath
 import numpy as np
 import scipy.special
+import scipyx as spx
 
 import cplot
 
@@ -112,9 +113,13 @@ args = [
     ("z2.svg", lambda z: z ** 2, (-2, +2), (-2, +2)),
     ("z3.svg", lambda z: z ** 3, (-2, +2), (-2, +2)),
     #
-    ("1z.svg", lambda z: 1 / z, (-2.01, +2.01), (-2.01, +2.01)),
-    ("z-absz.svg", lambda z: z / abs(z), (-2, +2), (-2, +2)),
+    ("1z.svg", lambda z: 1 / z, (-2.0, +2.0), (-2.0, +2.0)),
+    ("z-absz.svg", lambda z: z / np.abs(z), (-2, +2), (-2, +2)),
     ("z+1-z-1.svg", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
+    # roots of unity
+    ("z6+1.svg", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z6-1.svg", lambda z: z ** 6 - 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z-6+1.svg", lambda z: z ** (-6) + 1, (-1.5, 1.5), (-1.5, 1.5)),
     #
     ("zz.svg", lambda z: z ** z, (-3, +3), (-3, +3)),
     ("1zz.svg", lambda z: (1 / z) ** z, (-3, +3), (-3, +3)),
@@ -126,7 +131,11 @@ args = [
     #
     ("log.svg", np.log, (-2, +2), (-2, +2)),
     ("exp.svg", np.exp, (-3, +3), (-3, +3)),
+    ("exp2.svg", np.exp2, (-3, +3), (-3, +3)),
+    # essential singularities
     ("exp1z.svg", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
+    ("zsin1z.svg", lambda z: z * np.sin(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
+    ("1cosz.svg", lambda z: 1 / np.cos(z), (-0.6, +0.6), (-0.6, +0.6)),
     #
     ("exp-z2.svg", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
     ("11z2.svg", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
@@ -153,20 +162,31 @@ args = [
     ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
     # ("airy.svg", scipy.special.airy, (-5, +5), (-5, +5)),  # TODO not working?!
     #
-    ("lambertw.svg", scipy.special.lambertw, (-5, +5), (-5, +5)),
-    #
     ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
     ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
     #
+    # jacobian elliptic functions
+    ("ellipj-sn-06.svg", lambda z: spx.ellipj(z, 0.6)[0], (-6, +6), (-6, +6)),
+    ("ellipj-cn-06.svg", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
+    ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
+    #
+    ("lambertw.svg", scipy.special.lambertw, (-5, +5), (-5, +5)),
     # https://www.dynamicmath.xyz
     (
-        "",
+        "some-polynomial.svg",
         lambda z: 0.926 * (z + 7.3857e-2 * z ** 5 + 4.5458e-3 * z ** 9),
         (-3, 3),
         (-3, 3),
     ),
-    ("z61.svg", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
+    # non-analytic
+    (
+        "non-analytic.svg",
+        lambda z: np.imag(np.exp(-1j * np.pi / 4) * z ** n)
+        + 1j * np.imag(np.exp(1j * np.pi / 4) * (z - 1) ** 4),
+        (-2.0, +3.0),
+        (-2.0, +3.0),
+    ),
 ]
 for filename, fun, x, y in args:
     cplot.plot(fun, (x[0], x[1], n), (y[0], y[1], n), add_colorbars=False)
