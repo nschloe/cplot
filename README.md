@@ -174,10 +174,14 @@ tox
 
 ### Similar projects and further reading
 
-- https://github.com/endolith/complex_colormap
-- [John D.
-  Cook](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
-- [Elias Wegert, Visual Complex
-  Functions](https://www.springer.com/gp/book/9783034801799)
-- [Juan Carlos Ponce Campuzano, DC
-  gallery](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
+- [Tristan Needham, _Visual Complex
+  Analysis_, 1997](https://umv.science.upjs.sk/hutnik/NeedhamVCA.pdf)
+- [Douglas Arnold and Jonathan Rogness, _Möbius transformations
+  revealed_, 2008](https://youtu.be/0z1fIsUNhO4)
+- [Elias Wegert, _Visual Complex
+  Functions_, 2012](https://www.springer.com/gp/book/9783034801799)
+- [John D.  Cook, _Visualizing complex
+  functions_, 2017](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
+- [endolith, _complex-colormap_, 2017](https://github.com/endolith/complex_colormap)
+- [Juan Carlos Ponce Campuzano, _DC
+  gallery_, 2018](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)

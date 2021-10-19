@@ -158,6 +158,15 @@ args = [
     ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
     ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
+    #
+    # https://www.dynamicmath.xyz
+    (
+        "",
+        lambda z: 0.926 * (z + 7.3857e-2 * z ** 5 + 4.5458e-3 * z ** 9),
+        (-3, 3),
+        (-3, 3),
+    ),
+    ("z61.svg", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
 ]
 for filename, fun, x, y in args:
     cplot.plot(fun, (x[0], x[1], n), (y[0], y[1], n), add_colorbars=False)

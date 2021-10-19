@@ -209,7 +209,7 @@ def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
     y_range: tuple[float, float, int],
-    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x ** 2 / (x ** 2+ 1),
+    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x ** 2 / (x ** 2 + 1),
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
