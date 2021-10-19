@@ -93,7 +93,7 @@ def plot_contour_abs(
     fz,
     # Literal["auto"] needs Python 3.8
     contours: ArrayLike | str = "auto",
-    dash_contour_1: bool = True,
+    highlight_contour_1: bool = True,
 ):
     vals = np.abs(fz)
 
@@ -118,9 +118,12 @@ def plot_contour_abs(
         contours_pos = [base ** k for k in range(1, max_exp + 1)]
 
         _plot_contour(contours_neg, "0.8", "solid", 0.2)
-        if dash_contour_1:
-            _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
-            _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
+        if highlight_contour_1:
+            # subtle highlight
+            _plot_contour([1.0], "0.6", "solid", 0.7)
+            # "dash":
+            # _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
+            # _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
         else:
             _plot_contour([1.0], "0.8", "solid", 0.2)
 
@@ -206,12 +209,14 @@ def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
     y_range: tuple[float, float, int],
+    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x ** 2 / (x ** 2 + 1),
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
-    dash_abs_contour_1: bool = True,
+    highlight_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool = True,
+    add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
@@ -227,10 +232,13 @@ def plot(
     )
     if contours_abs is not None:
         plot_contour_abs(
-            Z, fz, contours=contours_abs, dash_contour_1=dash_abs_contour_1
+            Z, fz, contours=contours_abs, highlight_contour_1=highlight_abs_contour_1
         )
     if contours_arg is not None:
         plot_contour_arg(
             Z, fz, f, contours=contours_arg, saturation_adjustment=saturation_adjustment
         )
+    if add_axes_labels:
+        plt.xlabel("Re(z)")
+        plt.ylabel("Im(z)", rotation=0)
     return plt

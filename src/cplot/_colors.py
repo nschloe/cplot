@@ -30,6 +30,10 @@ from numpy.typing import ArrayLike
 #
 #  * For a=1.49486991 it is close to x/2 (between 0 and 1).
 #
+#  * For a=2 it is the stereographic projection onto the Riemann sphere.
+#    For other a, it's the projection onto something else than a sphere. For a=1, for
+#    example, the projection onto the line f(t) = t-1.
+#
 # Disadvantage of this choice:
 #
 #  h'(r) = (a * r^{a-1} * (r^a + 1) - r^a * a * r^{a-1}) / (r^a + 1) ** 2
