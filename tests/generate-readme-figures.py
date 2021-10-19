@@ -135,7 +135,7 @@ args = [
     # essential singularities
     ("exp1z.svg", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
     ("zsin1z.svg", lambda z: z * np.sin(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
-    ("1cosz.svg", lambda z: 1 / np.cos(z), (-0.6, +0.6), (-0.6, +0.6)),
+    ("cos1z.svg", lambda z: np.cos(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
     #
     ("exp-z2.svg", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
     ("11z2.svg", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
@@ -189,6 +189,12 @@ args = [
     ),
 ]
 for filename, fun, x, y in args:
-    cplot.plot(fun, (x[0], x[1], n), (y[0], y[1], n), add_colorbars=False)
+    cplot.plot(
+        fun,
+        (x[0], x[1], n),
+        (y[0], y[1], n),
+        add_colorbars=False,
+        add_axes_labels=False,
+    )
     plt.savefig(filename, transparent=True, bbox_inches="tight")
     plt.close()

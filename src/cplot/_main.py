@@ -216,6 +216,7 @@ def plot(
     highlight_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool = True,
+    add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
@@ -237,4 +238,7 @@ def plot(
         plot_contour_arg(
             Z, fz, f, contours=contours_arg, saturation_adjustment=saturation_adjustment
         )
+    if add_axes_labels:
+        plt.xlabel("Re(z)")
+        plt.ylabel("Im(z)", rotation=0)
     return plt
