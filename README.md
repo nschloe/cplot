@@ -124,6 +124,10 @@ All plots are created with default settings.
 | :------------------------------------------------------------: | :----------------------------------------------------------------: | :-----------------------------------------------------------------: |
 |                             `1/z`                              |                            `z / abs(z)`                            |                           `(z+1) / (z-1)`                           |
 
+| <img src="https://nschloe.github.io/cplot/z6+1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z6-1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-6+1.svg" width="70%"> |
+| :--------------------------------------------------------------: | :--------------------------------------------------------------: | :---------------------------------------------------------------: |
+|                           `z ** 6 + 1`                           |                           `z ** 6 - 1`                           |                          `z ** (-6) + 1`                          |
+
 | <img src="https://nschloe.github.io/cplot/zz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/1zz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z1z.svg" width="70%"> |
 | :------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
 |                            `z ** z`                            |                          `(1/z) ** z`                           |                          `z ** (1/z)`                           |
@@ -132,9 +136,13 @@ All plots are created with default settings.
 | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: |
 |                             `np.sqrt`                             |                            `z**(1/3)`                             |                            `z**(1/4)`                             |
 
-| <img src="https://nschloe.github.io/cplot/log.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp1z.svg" width="70%"> |
-| :-------------------------------------------------------------: | :-------------------------------------------------------------: | :---------------------------------------------------------------: |
-|                            `np.log`                             |                            `np.exp`                             |                            `exp(1/z)`                             |
+| <img src="https://nschloe.github.io/cplot/log.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp2.svg" width="70%"> |
+| :-------------------------------------------------------------: | :-------------------------------------------------------------: | :--------------------------------------------------------------: |
+|                            `np.log`                             |                            `np.exp`                             |                            `np.exp2`                             |
+
+| <img src="https://nschloe.github.io/cplot/exp1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/zsin1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cos1z.svg" width="70%"> |
+| :---------------------------------------------------------------: | :----------------------------------------------------------------: | :---------------------------------------------------------------: |
+|                          `np.exp(1 / z)`                          |                        `z * np.sin(1 / z)`                         |                          `np.cos(1/ z)`                           |
 
 | <img src="https://nschloe.github.io/cplot/exp-z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/11z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/erf.svg" width="70%"> |
 | :----------------------------------------------------------------: | :--------------------------------------------------------------: | :-------------------------------------------------------------: |
@@ -164,6 +172,10 @@ All plots are created with default settings.
 | :------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------: |
 |                               `mpmath.siegeltheta`                               |                               `mpmath.siegelz`                               |                               Riemann-Xi                               |
 
+| <img src="https://nschloe.github.io/cplot/ellipj-sn-06.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/ellipj-cn-06.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/ellipj-dn-06.svg" width="70%"> |
+| :----------------------------------------------------------------------: | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
+|                    Jacobi elliptic function `sn(0.6)`                    |                                `cn(0.6)`                                 |                                `dn(0.6)`                                 |
+
 ### Testing
 
 To run the cplot unit tests, check out this repository and run
@@ -183,10 +195,10 @@ tox
 - [Konstantin Poelke and Konrad Polthier, _Lifted Domain Coloring_,
   2009](https://doi.org/10.1111/j.1467-8659.2009.01479.x)
 - [Elias Wegert and Gunter Semmler, _Phase Plots of Complex Functions:
-a Journey in Illustration_, 2011](https://www.ams.org/notices/201106/rtx110600768p.pdf)
+  a Journey in Illustration_, 2011](https://www.ams.org/notices/201106/rtx110600768p.pdf)
 - [Elias Wegert, _Visual Complex
   Functions_, 2012](https://www.springer.com/gp/book/9783034801799)
-- [John D.  Cook, _Visualizing complex
+- [John D. Cook, _Visualizing complex
   functions_, 2017](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
 - [endolith, _complex-colormap_, 2017](https://github.com/endolith/complex_colormap)
 - [Juan Carlos Ponce Campuzano, _DC
