@@ -160,7 +160,6 @@ args = [
     ("gamma.svg", scipy.special.gamma, (-5, +5), (-5, +5)),
     ("digamma.svg", scipy.special.digamma, (-5, +5), (-5, +5)),
     ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
-    # ("airy.svg", scipy.special.airy, (-5, +5), (-5, +5)),  # TODO not working?!
     #
     ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
@@ -170,6 +169,29 @@ args = [
     ("ellipj-sn-06.svg", lambda z: spx.ellipj(z, 0.6)[0], (-6, +6), (-6, +6)),
     ("ellipj-cn-06.svg", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
     ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
+    #
+    # airy functions
+    ("airy-ai.svg", lambda z: scipy.special.airy(z)[0], (-6, +6), (-6, +6)),
+    ("airy-bi.svg", lambda z: scipy.special.airy(z)[2], (-6, +6), (-6, +6)),
+    #
+    (
+        "tanh-sinh.svg",
+        lambda z: np.tanh(np.pi / 2 * np.sinh(z)),
+        (-2.5, +2.5),
+        (-2.5, +2.5),
+    ),
+    (
+        "sinh-sinh.svg",
+        lambda z: np.sinh(np.pi / 2 * np.sinh(z)),
+        (-2.5, +2.5),
+        (-2.5, +2.5),
+    ),
+    (
+        "exp-sinh.svg",
+        lambda z: np.exp(np.pi / 2 * np.sinh(z)),
+        (-2.5, +2.5),
+        (-2.5, +2.5),
+    ),
     #
     ("lambertw.svg", scipy.special.lambertw, (-5, +5), (-5, +5)),
     # https://www.dynamicmath.xyz

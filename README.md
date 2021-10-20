@@ -143,7 +143,7 @@ All plots are created with default settings.
 
 | <img src="https://nschloe.github.io/cplot/exp1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/zsin1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cos1z.svg" width="70%"> |
 | :---------------------------------------------------------------: | :----------------------------------------------------------------: | :---------------------------------------------------------------: |
-|                          `np.exp(1 / z)`                          |                        `z * np.sin(1 / z)`                         |                          `np.cos(1/ z)`                           |
+|                          `np.exp(1 / z)`                          |                        `z * np.sin(1 / z)`                         |                          `np.cos(1 / z)`                          |
 
 | <img src="https://nschloe.github.io/cplot/exp-z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/11z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/erf.svg" width="70%"> |
 | :----------------------------------------------------------------: | :--------------------------------------------------------------: | :-------------------------------------------------------------: |
@@ -197,10 +197,14 @@ tox
   2009](https://doi.org/10.1111/j.1467-8659.2009.01479.x)
 - [Elias Wegert and Gunter Semmler, _Phase Plots of Complex Functions:
   a Journey in Illustration_, 2011](https://www.ams.org/notices/201106/rtx110600768p.pdf)
+- [Elias Wegert,
+  _Calendars "Complex Beauties_, 2011-](https://tu-freiberg.de/en/fakult1/ana/institute/institute-of-applied-analysis/organisation/complex-beauties)
 - [Elias Wegert, _Visual Complex
   Functions_, 2012](https://www.springer.com/gp/book/9783034801799)
 - [John D. Cook, _Visualizing complex
   functions_, 2017](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
 - [endolith, _complex-colormap_, 2017](https://github.com/endolith/complex_colormap)
+- [Anthony Hernandez, _dcolor_, 2017](https://github.com/hernanat/dcolor)
 - [Juan Carlos Ponce Campuzano, _DC
   gallery_, 2018](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
+- [3Blue1Brown, _Winding numbers and domain coloring_, 2018](https://youtu.be/b7FxPsqfkOY)
