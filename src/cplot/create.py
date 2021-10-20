@@ -51,18 +51,16 @@ def find_max_srgb_radius(cs, L=50, tol=1.0e-6):
 
 
 def create_colormap(L=50):
-    cam = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
-    # cam = colorio.cs.CAM02('UCS', 0.69, 20, 15)
-    # cam = colorio.cs.CIELAB()
-    srgb = colorio.cs.SrgbLinear()
+    cs = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
+    # cs = colorio.cs.CAM02('UCS', 0.69, 20, 15)
+    # cs = colorio.cs.CIELAB()
 
-    r0 = find_max_srgb_radius(cam, srgb, L=L)
+    r0 = find_max_srgb_radius(cs, L=L)
 
     n = 256
     alpha = np.linspace(0, 2 * np.pi, n, endpoint=False)
 
-    pts = np.array([np.full(n, L), r0 * np.cos(alpha), r0 * np.sin(alpha)])
-    vals = srgb.from_xyz100(cam.to_xyz100(pts), mode="clip")
-
-    # show the colors
-    return srgb.to_rgb1(vals)
+    coords = ColorCoordinates(
+        [np.full(n, L), r0 * np.cos(alpha), r0 * np.sin(alpha)], cs
+    )
+    return coords.get_rgb1("clip")
