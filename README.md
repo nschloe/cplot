@@ -187,7 +187,7 @@ All plots are created with default settings.
 
 | <img src="https://nschloe.github.io/cplot/tanh-sinh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinh-sinh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp-sinh.svg" width="70%"> |
 | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :------------------------------------------------------------------: |
-|                       `tanh(pi / 2 \* sinh(z))                        |                       sinh(pi / 2 \* sinh(z))`                        |                       `exp(pi / 2 * sinh(z))`                        |
+|                       `tanh(pi / 2 * sinh(z))`                        |                       `sinh(pi / 2 * sinh(z))`                        |                       `exp(pi / 2 * sinh(z))`                        |
 
 ### Testing
 
