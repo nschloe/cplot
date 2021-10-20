@@ -89,8 +89,6 @@ for name in ["cam16", "cielab", "oklab", "hsl"]:
     plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
     plt.close()
 
-exit(1)
-
 
 # First function from the SIAM-100-digit challenge
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
