@@ -84,13 +84,9 @@ def get_srgb1(
         # illumination".
         cam = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
 
-        # The max radius for which all colors are representable as SRGB is about 23.5.
-        # Crank up the colors a little bit to make the images more saturated. This leads
-        # to SRGB-clipping of course.
         # from .create import find_max_srgb_radius
-        # r0 = find_max_srgb_radius(cam, srgb, L=50)
-        # print(f"{r0 = }")
-        # exit(1)
+        # r0 = find_max_srgb_radius(cam, L=50)
+        # print(r0)
         r0 = 23.545314371585846
         r0 *= saturation_adjustment
 
@@ -109,11 +105,15 @@ def get_srgb1(
             ],
             cam,
         )
+        srgb_vals = coords.get_rgb1("clip")
 
     elif colorspace.upper() == "CIELAB":
-        # The max radius is about 29.5, but crank up colors a little bit to make the
-        # images more saturated. This leads to SRGB-cut-off of course.
-        # r0 = find_max_srgb_radius(cielab, srgb, L=50)
+        cielab = colorio.cs.CIELAB()
+
+        # from .create import find_max_srgb_radius
+        # r0 = find_max_srgb_radius(cielab, L=50)
+        # print(r0)
+        # exit(1)
         r0 = 29.488203674554825
         r0 *= saturation_adjustment
 
@@ -130,8 +130,9 @@ def get_srgb1(
                 rd * np.cos(angle + offset),
                 rd * np.sin(angle + offset),
             ],
-            colorio.cs.CIELAB(),
+            cielab,
         )
+        srgb_vals = coords.get_rgb1("clip")
 
     elif colorspace.upper() == "OKLAB":
         oklab = colorio.cs.OKLAB()
@@ -157,6 +158,7 @@ def get_srgb1(
             ],
             oklab,
         )
+        srgb_vals = coords.get_rgb1("clip")
 
     else:
         assert (
@@ -165,16 +167,13 @@ def get_srgb1(
         hsl = colorio.cs.HSL()
         # rotate by 120 degrees to have green (0, 1, 0) for real positive numbers
         offset = 120
-        coords = ColorCoordinates(
+        coords = np.array(
             [
                 np.mod(angle / (2 * np.pi) * 360 + offset, 360),
                 np.ones(angle.shape),
                 absval_scaled,
-            ],
-            hsl,
+            ]
         )
-
-    # now just translate to srgb
-    srgb_vals = coords.get_rgb1("clip")
+        srgb_vals = hsl.to_rgb1(coords)
 
     return np.moveaxis(srgb_vals, 0, -1)
