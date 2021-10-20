@@ -4,6 +4,7 @@ from typing import Callable
 
 import colorio
 import numpy as np
+from colorio.cs import ColorCoordinates
 from numpy.typing import ArrayLike
 
 
@@ -82,7 +83,7 @@ def get_srgb1(
         # Choose the viewing conditions as "viewing self-luminous display under office
         # illumination".
         cam = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
-        srgb = colorio.cs.SrgbLinear()
+
         # The max radius for which all colors are representable as SRGB is about 23.5.
         # Crank up the colors a little bit to make the images more saturated. This leads
         # to SRGB-clipping of course.
@@ -100,18 +101,16 @@ def get_srgb1(
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
-        cam_pts = np.array(
+        coords = ColorCoordinates(
             [
                 100 * absval_scaled,
                 rd * np.cos(angle + offset),
                 rd * np.sin(angle + offset),
-            ]
+            ],
+            cam,
         )
-        # now just translate to srgb
-        srgb_vals = srgb.to_rgb1(srgb.from_xyz100(cam.to_xyz100(cam_pts), mode="clip"))
+
     elif colorspace.upper() == "CIELAB":
-        cielab = colorio.cs.CIELAB()
-        srgb = colorio.cs.SrgbLinear()
         # The max radius is about 29.5, but crank up colors a little bit to make the
         # images more saturated. This leads to SRGB-cut-off of course.
         # r0 = find_max_srgb_radius(cielab, srgb, L=50)
@@ -125,31 +124,22 @@ def get_srgb1(
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
-        lab_pts = np.array(
+        coords = ColorCoordinates(
             [
                 100 * absval_scaled,
                 rd * np.cos(angle + offset),
                 rd * np.sin(angle + offset),
-            ]
+            ],
+            colorio.cs.CIELAB(),
         )
-        # now just translate to srgb
-        srgb_vals = srgb.to_rgb1(
-            srgb.from_xyz100(cielab.to_xyz100(lab_pts), mode="clip")
-        )
+
     elif colorspace.upper() == "OKLAB":
         oklab = colorio.cs.OKLAB()
-        srgb = colorio.cs.SrgbLinear()
-        # The max radius is about 29.5, but crank up colors a little bit to make the
-        # images more saturated. This leads to SRGB-cut-off of course.
-        # OKLAB is designed such that the D65 whitepoint, scaled to Y=100, has lightness
-        # 1. Without the scaling in Y, this results in a whitepoint lightness of
-        # 4.64158795.
-        # lab = oklab.from_xyz100(colorio.cs.illuminants.whitepoints_cie1931["D65"])
-        max_lightness = 4.64158795
         # from .create import find_max_srgb_radius
-        # r0 = find_max_srgb_radius(oklab, srgb, L=max_lightness / 2)
-        # The actual value is 0.3945164382457733, but allow a slight oversaturation.
-        r0 = 0.50
+        # r0 = find_max_srgb_radius(oklab, L=0.5)
+        r0 = 0.08499547839164734
+        r0 *= saturation_adjustment
+
         # Rotate the angles such a "green" color represents positive real values. The
         # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
         # point 1.0.
@@ -157,17 +147,17 @@ def get_srgb1(
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
         rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
-        lab_pts = np.array(
+        coords = ColorCoordinates(
             [
-                max_lightness * absval_scaled,
+                # OKLAB is designed such that the D65 whitepoint, scaled to Y=100, has
+                # lightness 1.
+                absval_scaled,
                 rd * np.cos(angle + offset),
                 rd * np.sin(angle + offset),
-            ]
+            ],
+            oklab,
         )
-        # now just translate to srgb
-        srgb_vals = srgb.to_rgb1(
-            srgb.from_xyz100(oklab.to_xyz100(lab_pts), mode="clip")
-        )
+
     else:
         assert (
             colorspace.upper() == "HSL"
@@ -175,15 +165,16 @@ def get_srgb1(
         hsl = colorio.cs.HSL()
         # rotate by 120 degrees to have green (0, 1, 0) for real positive numbers
         offset = 120
-        hsl_vals = np.array(
+        coords = ColorCoordinates(
             [
                 np.mod(angle / (2 * np.pi) * 360 + offset, 360),
                 np.ones(angle.shape),
                 absval_scaled,
-            ]
+            ],
+            hsl,
         )
-        srgb_vals = hsl.to_rgb1(hsl_vals)
-        # iron out the -1.82131e-17 round-offs
-        srgb_vals[srgb_vals < 0] = 0
+
+    # now just translate to srgb
+    srgb_vals = coords.get_rgb1("clip")
 
     return np.moveaxis(srgb_vals, 0, -1)
