@@ -170,9 +170,15 @@ args = [
     ("ellipj-cn-06.svg", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
     ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
     #
+    # bessel
+    ("bessel-1.svg", lambda z: scipy.special.jn(1, z), (-9, +9), (-9, +9)),
+    ("bessel-2.svg", lambda z: scipy.special.jn(2, z), (-9, +9), (-9, +9)),
+    ("bessel-3.svg", lambda z: scipy.special.jn(3, z), (-9, +9), (-9, +9)),
+    #
     # airy functions
     ("airy-ai.svg", lambda z: scipy.special.airy(z)[0], (-6, +6), (-6, +6)),
     ("airy-bi.svg", lambda z: scipy.special.airy(z)[2], (-6, +6), (-6, +6)),
+    ("airye-ai.svg", lambda z: scipy.special.airye(z)[0], (-6, +6), (-6, +6)),
     #
     (
         "tanh-sinh.svg",

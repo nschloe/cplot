@@ -177,6 +177,18 @@ All plots are created with default settings.
 | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
 |                    Jacobi elliptic function `sn(0.6)`                    |                                `cn(0.6)`                                 |                                `dn(0.6)`                                 |
 
+| <img src="https://nschloe.github.io/cplot/bessel-1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel-2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel-3.svg" width="70%"> |
+| :------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------: |
+|                 Bessel function, first kind, order 1                 |                               order 2                                |                               order 3                                |
+
+| <img src="https://nschloe.github.io/cplot/airy-ai.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/airy-bi.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/airye-ai.svg" width="70%"> |
+| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :------------------------------------------------------------------: |
+|                          Airy function Ai                           |                                 Bi                                  |                       Exponentially scaled eAi                       |
+
+| <img src="https://nschloe.github.io/cplot/tanh-sinh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinh-sinh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp-sinh.svg" width="70%"> |
+| :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :------------------------------------------------------------------: |
+|                       `tanh(pi / 2 \* sinh(z))                        |                       sinh(pi / 2 \* sinh(z))`                        |                       `exp(pi / 2 * sinh(z))`                        |
+
 ### Testing
 
 To run the cplot unit tests, check out this repository and run
