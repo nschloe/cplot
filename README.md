@@ -119,11 +119,11 @@ All plots are created with default settings.
 
 | <img src="https://nschloe.github.io/cplot/z1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z3.svg" width="70%"> |
 | :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
-|                             `z**1`                             |                             `z**2`                             |                             `z**3`                             |
+|                            `z ** 1`                            |                            `z ** 2`                            |                            `z ** 3`                            |
 
-| <img src="https://nschloe.github.io/cplot/1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z+1-z-1.svg" width="70%"> |
-| :------------------------------------------------------------: | :----------------------------------------------------------------: | :-----------------------------------------------------------------: |
-|                             `1/z`                              |                            `z / abs(z)`                            |                           `(z+1) / (z-1)`                           |
+| <img src="https://nschloe.github.io/cplot/1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/1z2.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z+1-z-1.svg" width="70%"> |
+| :------------------------------------------------------------: | :-------------------------------------------------------------: | :-----------------------------------------------------------------: |
+|                            `1 / z`                             |                          `1 / z ** 2`                           |                         `(z + 1) / (z - 1)`                         |
 
 | <img src="https://nschloe.github.io/cplot/z6+1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z6-1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-6+1.svg" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :---------------------------------------------------------------: |
@@ -141,6 +141,10 @@ All plots are created with default settings.
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :--------------------------------------------------------------: |
 |                            `np.log`                             |                            `np.exp`                             |                            `np.exp2`                             |
 
+| <img src="https://nschloe.github.io/cplot/re.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/conj.svg" width="70%"> |
+| :------------------------------------------------------------: | :----------------------------------------------------------------: | :--------------------------------------------------------------: |
+|                           `np.real`                            |                            `z / abs(z)`                            |                            `np.conj`                             |
+
 | <img src="https://nschloe.github.io/cplot/exp1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/zsin1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cos1z.svg" width="70%"> |
 | :---------------------------------------------------------------: | :----------------------------------------------------------------: | :---------------------------------------------------------------: |
 |                          `np.exp(1 / z)`                          |                        `z * np.sin(1 / z)`                         |                          `np.cos(1 / z)`                          |
@@ -152,6 +156,10 @@ All plots are created with default settings.
 | <img src="https://nschloe.github.io/cplot/sin.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.svg" width="70%"> |
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
 |                            `np.sin`                             |                            `np.cos`                             |                            `np.tan`                             |
+
+| <img src="https://nschloe.github.io/cplot/sec.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/csc.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cot.svg" width="70%"> |
+| :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
+|                              `sec`                              |                              `csc`                              |                              `cot`                              |
 
 | <img src="https://nschloe.github.io/cplot/sinh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.svg" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
@@ -220,3 +228,9 @@ tox
 - [Juan Carlos Ponce Campuzano, _DC
   gallery_, 2018](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
 - [3Blue1Brown, _Winding numbers and domain coloring_, 2018](https://youtu.be/b7FxPsqfkOY)
+
+### License
+
+This software is published under the [GPL-3.0 license](LICENSE). In cases where the
+constraints of the GPL prevent you from using this software, feel free contact the
+author.
