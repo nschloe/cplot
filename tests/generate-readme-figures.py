@@ -114,8 +114,9 @@ args = [
     ("z3.svg", lambda z: z ** 3, (-2, +2), (-2, +2)),
     #
     ("1z.svg", lambda z: 1 / z, (-2.0, +2.0), (-2.0, +2.0)),
-    ("z-absz.svg", lambda z: z / np.abs(z), (-2, +2), (-2, +2)),
+    ("1z2.svg", lambda z: 1 / z ** 2, (-2.0, +2.0), (-2.0, +2.0)),
     ("z+1-z-1.svg", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
+    #
     # roots of unity
     ("z6+1.svg", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
     ("z6-1.svg", lambda z: z ** 6 - 1, (-1.5, 1.5), (-1.5, 1.5)),
@@ -132,6 +133,13 @@ args = [
     ("log.svg", np.log, (-2, +2), (-2, +2)),
     ("exp.svg", np.exp, (-3, +3), (-3, +3)),
     ("exp2.svg", np.exp2, (-3, +3), (-3, +3)),
+    #
+    # non-analytic functions
+    ("re.svg", np.real, (-2, +2), (-2, +2)),
+    # ("abs.svg", np.abs, (-2, +2), (-2, +2)),
+    ("z-absz.svg", lambda z: z / np.abs(z), (-2, +2), (-2, +2)),
+    ("conj.svg", np.conj, (-2, +2), (-2, +2)),
+    #
     # essential singularities
     ("exp1z.svg", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
     ("zsin1z.svg", lambda z: z * np.sin(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
@@ -144,6 +152,10 @@ args = [
     ("sin.svg", np.sin, (-5, +5), (-5, +5)),
     ("cos.svg", np.cos, (-5, +5), (-5, +5)),
     ("tan.svg", np.tan, (-5, +5), (-5, +5)),
+    #
+    ("sec.svg", lambda z: 1 / np.cos(z), (-5, +5), (-5, +5)),
+    ("csc.svg", lambda z: 1 / np.sin(z), (-5, +5), (-5, +5)),
+    ("cot.svg", lambda z: 1 / np.tan(z), (-5, +5), (-5, +5)),
     #
     ("sinh.svg", np.sinh, (-5, +5), (-5, +5)),
     ("cosh.svg", np.cosh, (-5, +5), (-5, +5)),
