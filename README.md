@@ -6,7 +6,7 @@
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.org/project/cplot)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cplot.svg?style=flat-square)](https://pypi.org/pypi/cplot/)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
-[![PyPi downloads](https://img.shields.io/pypi/dm/cplot.svg?style=flat-square)](https://pypistats.org/packages/cplot)
+[![Downloads](https://pepy.tech/badge/cplot/month)](https://pepy.tech/project/cplot)
 
 [![Discord](https://img.shields.io/static/v1?logo=discord&label=chat&message=on%20discord&color=7289da&style=flat-square)](https://discord.gg/hnTJ5MRX2Y)
 
@@ -125,6 +125,10 @@ All plots are created with default settings.
 | :------------------------------------------------------------: | :-------------------------------------------------------------: | :-----------------------------------------------------------------: |
 |                            `1 / z`                             |                          `1 / z ** 2`                           |                         `(z + 1) / (z - 1)`                         |
 
+| <img src="https://nschloe.github.io/cplot/re.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/conj.svg" width="70%"> |
+| :------------------------------------------------------------: | :----------------------------------------------------------------: | :--------------------------------------------------------------: |
+|                           `np.real`                            |                            `z / abs(z)`                            |                            `np.conj`                             |
+
 | <img src="https://nschloe.github.io/cplot/z6+1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z6-1.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-6+1.svg" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :---------------------------------------------------------------: |
 |                           `z ** 6 + 1`                           |                           `z ** 6 - 1`                           |                          `z ** (-6) + 1`                          |
@@ -140,10 +144,6 @@ All plots are created with default settings.
 | <img src="https://nschloe.github.io/cplot/log.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/exp2.svg" width="70%"> |
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :--------------------------------------------------------------: |
 |                            `np.log`                             |                            `np.exp`                             |                            `np.exp2`                             |
-
-| <img src="https://nschloe.github.io/cplot/re.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/conj.svg" width="70%"> |
-| :------------------------------------------------------------: | :----------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                           `np.real`                            |                            `z / abs(z)`                            |                            `np.conj`                             |
 
 | <img src="https://nschloe.github.io/cplot/exp1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/zsin1z.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cos1z.svg" width="70%"> |
 | :---------------------------------------------------------------: | :----------------------------------------------------------------: | :---------------------------------------------------------------: |
