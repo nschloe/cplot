@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import mpmath
 import numpy as np
-import scipy.special
 import scipyx as spx
+from scipy.special import airy, airye, digamma, erf, fresnel, gamma, jn, lambertw, wofz
 
 import cplot
 
@@ -29,14 +29,7 @@ def riemann_zeta(z):
 
 def riemann_xi(z):
     # https://en.wikipedia.org/wiki/Riemann_Xi_function
-    return (
-        0.5
-        * z
-        * (z - 1)
-        * np.pi ** (-z / 2)
-        * scipy.special.gamma(z / 2)
-        * riemann_zeta(z)
-    )
+    return 0.5 * z * (z - 1) * np.pi ** (-z / 2) * gamma(z / 2) * riemann_zeta(z)
 
 
 def riemann_siegel_z(z):
@@ -147,7 +140,11 @@ args = [
     #
     ("exp-z2.svg", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
     ("11z2.svg", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
-    ("erf.svg", scipy.special.erf, (-3, +3), (-3, +3)),
+    ("erf.svg", erf, (-3, +3), (-3, +3)),
+    #
+    ("fresnel-s.svg", lambda z: fresnel(z)[0], (-4, +4), (-4, +4)),
+    ("fresnel-c.svg", lambda z: fresnel(z)[1], (-4, +4), (-4, +4)),
+    ("faddeeva.svg", wofz, (-4, +4), (-4, +4)),
     #
     ("sin.svg", np.sin, (-5, +5), (-5, +5)),
     ("cos.svg", np.cos, (-5, +5), (-5, +5)),
@@ -169,8 +166,8 @@ args = [
     ("cosz-z.svg", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
     ("tanz-z.svg", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
     #
-    ("gamma.svg", scipy.special.gamma, (-5, +5), (-5, +5)),
-    ("digamma.svg", scipy.special.digamma, (-5, +5), (-5, +5)),
+    ("gamma.svg", gamma, (-5, +5), (-5, +5)),
+    ("digamma.svg", digamma, (-5, +5), (-5, +5)),
     ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
     #
     ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
@@ -183,14 +180,14 @@ args = [
     ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
     #
     # bessel
-    ("bessel-1.svg", lambda z: scipy.special.jn(1, z), (-9, +9), (-9, +9)),
-    ("bessel-2.svg", lambda z: scipy.special.jn(2, z), (-9, +9), (-9, +9)),
-    ("bessel-3.svg", lambda z: scipy.special.jn(3, z), (-9, +9), (-9, +9)),
+    ("bessel-1.svg", lambda z: jn(1, z), (-9, +9), (-9, +9)),
+    ("bessel-2.svg", lambda z: jn(2, z), (-9, +9), (-9, +9)),
+    ("bessel-3.svg", lambda z: jn(3, z), (-9, +9), (-9, +9)),
     #
     # airy functions
-    ("airy-ai.svg", lambda z: scipy.special.airy(z)[0], (-6, +6), (-6, +6)),
-    ("airy-bi.svg", lambda z: scipy.special.airy(z)[2], (-6, +6), (-6, +6)),
-    ("airye-ai.svg", lambda z: scipy.special.airye(z)[0], (-6, +6), (-6, +6)),
+    ("airy-ai.svg", lambda z: airy(z)[0], (-6, +6), (-6, +6)),
+    ("airy-bi.svg", lambda z: airy(z)[2], (-6, +6), (-6, +6)),
+    ("airye-ai.svg", lambda z: airye(z)[0], (-6, +6), (-6, +6)),
     #
     (
         "tanh-sinh.svg",
@@ -211,7 +208,7 @@ args = [
         (-2.5, +2.5),
     ),
     #
-    ("lambertw.svg", scipy.special.lambertw, (-5, +5), (-5, +5)),
+    ("lambertw.svg", lambertw, (-5, +5), (-5, +5)),
     # https://www.dynamicmath.xyz
     (
         "some-polynomial.svg",

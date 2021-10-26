@@ -190,6 +190,10 @@ All plots are created with default settings.
 | :------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------: |
 |                 Bessel function, first kind, order 1                 |                               order 2                                |                               order 3                                |
 
+| <img src="https://nschloe.github.io/cplot/fresnel-s.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/fresnel-c.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/faddeeva.svg" width="70%"> |
+| :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :------------------------------------------------------------------: |
+|                               Fresnel S                               |                               Fresnel C                               |                          Faddeeva function                           |
+
 | <img src="https://nschloe.github.io/cplot/airy-ai.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/airy-bi.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/airye-ai.svg" width="70%"> |
 | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :------------------------------------------------------------------: |
 |                          Airy function Ai                           |                                 Bi                                  |                       Exponentially scaled eAi                       |
