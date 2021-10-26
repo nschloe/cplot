@@ -237,5 +237,11 @@ def plot(
     if add_axes_labels:
         plt.xlabel("Re(z)")
         # ylabel off-center, <https://github.com/matplotlib/matplotlib/issues/21467>
-        plt.ylabel("Im(z)", rotation="horizontal", loc="center", labelpad=10)
+        plt.ylabel(
+            "Im(z)",
+            rotation="horizontal",
+            loc="center",
+            verticalalignment="center",
+            labelpad=10,
+        )
     return plt
