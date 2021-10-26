@@ -5,6 +5,7 @@
 
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.org/project/cplot)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cplot.svg?style=flat-square)](https://pypi.org/pypi/cplot/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5599493.svg?style=flat-square)](https://doi.org/10.5281/zenodo.5599493)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 [![Downloads](https://pepy.tech/badge/cplot/month)](https://pepy.tech/project/cplot)
 

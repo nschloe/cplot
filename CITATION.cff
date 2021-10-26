@@ -5,5 +5,6 @@ authors:
   given-names: "Nico"
   orcid: "https://orcid.org/0000-0001-5228-0946"
 title: "cplot: Plot complex functions"
+doi: 10.5281/zenodo.5599493
 url: https://github.com/nschloe/cplot
 license: GPL-3.0
