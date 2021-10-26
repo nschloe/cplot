@@ -93,6 +93,11 @@ def get_srgb1(
         # Rotate the angles such that a "green" color represents positive real values.
         # The rotation offset is chosen such that the ratio g/(r+b) (in rgb) is the
         # largest for the point 1.0.
+        #
+        # Out of green/red, green is rather associated with "positive value":
+        # <https://twitter.com/nschloesoft/status/1452222867152715776>
+        # Same for blue in blue vs. orange:
+        # <https://twitter.com/nschloesoft/status/1452222679113781249>
         offset = 0.916708 * np.pi
         # Map (r, angle) to a point in the color space; bicone mapping similar to what
         # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.

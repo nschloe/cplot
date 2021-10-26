@@ -4,6 +4,7 @@ from typing import Callable
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import mplx
 import numpy as np
 from numpy.typing import ArrayLike
 
@@ -142,6 +143,7 @@ def plot_contour_arg(
     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
     saturation_adjustment: float = 1.28,
+    max_jump: float = 1.0,
 ):
     contours = np.asarray(contours)
 
@@ -159,9 +161,9 @@ def plot_contour_arg(
     contours2 = contours[~is_level1]
     contours2 = np.mod(contours2, 2 * np.pi)
 
-    for contours, angle_fun, branch_cut in [
-        (contours1, np.angle, (-np.pi, np.pi)),
-        (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi), (0.0, 2 * np.pi)),
+    for contours, angle_fun in [
+        (contours1, np.angle),
+        (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi)),
     ]:
         contours = np.asarray(contours)
 
@@ -170,7 +172,7 @@ def plot_contour_arg(
 
         # Draw the arg contour lines a little lighter. This way, arg contours which
         # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
-        # zeta, erf,...)
+        # zeta, erf,...).
         lightness_adjustment = 1.5
 
         linecolors = get_srgb1(
@@ -180,7 +182,7 @@ def plot_contour_arg(
             saturation_adjustment=saturation_adjustment,
         )
 
-        c = plt.contour(
+        mplx.contour(
             Z.real,
             Z.imag,
             angle_fun(fz),
@@ -188,20 +190,8 @@ def plot_contour_arg(
             colors=linecolors,
             linestyles="solid",
             alpha=0.4,
+            max_jump=max_jump,
         )
-        # plt.contour draws some lines in excess which need to be cut off. This is
-        # done via setting some values to NaN, see
-        # <https://github.com/matplotlib/matplotlib/issues/20548>.
-        for level, allseg in zip(contours, c.allsegs):
-            for segment in allseg:
-                x, y = segment.T
-                z = x + 1j * y
-                angle = angle_fun(f(z))
-                # cut off segments close to the branch cut
-                is_near_branch_cut = np.logical_or(
-                    *[np.abs(angle - bc) < np.abs(angle - level) for bc in branch_cut]
-                )
-                segment[is_near_branch_cut] = np.nan
     plt.gca().set_aspect("equal")
 
 
@@ -213,6 +203,7 @@ def plot(
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    contour_arg_max_jump: float = 1.0,
     highlight_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool = True,
@@ -236,7 +227,12 @@ def plot(
         )
     if contours_arg is not None:
         plot_contour_arg(
-            Z, fz, f, contours=contours_arg, saturation_adjustment=saturation_adjustment
+            Z,
+            fz,
+            f,
+            contours=contours_arg,
+            saturation_adjustment=saturation_adjustment,
+            max_jump=contour_arg_max_jump,
         )
     if add_axes_labels:
         plt.xlabel("Re(z)")
