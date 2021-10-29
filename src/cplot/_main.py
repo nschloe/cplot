@@ -28,7 +28,7 @@ def _get_z_grid_for_image(
     return X[0] + 1j * X[1]
 
 
-def plot_colors(
+def _plot_colors(
     fz,
     extent,
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
@@ -94,12 +94,15 @@ def plot_colors(
         cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
 
 
-def plot_contour_abs(
+def _plot_contour_abs(
     Z,
     fz,
     # Literal["auto"] needs Python 3.8
     contours: ArrayLike | str = "auto",
+    base: float = 2.0,
     highlight_contour_1: bool = True,
+    alpha: float = 1.0,
+    color: str | None = None,
 ):
     vals = np.abs(fz)
 
@@ -115,7 +118,6 @@ def plot_contour_abs(
         )
 
     if contours == "auto":
-        base = 2.0
         min_exp = np.log(np.min(vals)) / np.log(base)
         min_exp = int(max(min_exp, -100))
         max_exp = np.log(np.max(vals)) / np.log(base)
@@ -123,7 +125,7 @@ def plot_contour_abs(
         contours_neg = [base ** k for k in range(min_exp, 0)]
         contours_pos = [base ** k for k in range(1, max_exp + 1)]
 
-        _plot_contour(contours_neg, "0.8", "solid", 0.2)
+        _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
         if highlight_contour_1:
             # subtle highlight
             _plot_contour([1.0], "0.6", "solid", 0.7)
@@ -131,23 +133,23 @@ def plot_contour_abs(
             # _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
             # _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
         else:
-            _plot_contour([1.0], "0.8", "solid", 0.2)
+            _plot_contour([1.0], color if color else "0.8", "solid", alpha)
 
-        _plot_contour(contours_pos, "0.3", "solid", 0.2)
+        _plot_contour(contours_pos, color if color else "0.3", "solid", alpha)
     else:
         contours = np.asarray(contours)
-        _plot_contour(contours, "0.8", "solid", 0.2)
-
-    plt.gca().set_aspect("equal")
+        _plot_contour(contours, color if color else "0.8", "solid", alpha)
 
 
-def plot_contour_arg(
+def _plot_contour_arg(
     Z,
     fz,
     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
     saturation_adjustment: float = 1.28,
     max_jump: float = 1.0,
+    lightness_adjustment: float = 1.0,
+    alpha: float = 1.0,
 ):
     contours = np.asarray(contours)
 
@@ -174,11 +176,6 @@ def plot_contour_arg(
         if len(contours) == 0:
             continue
 
-        # Draw the arg contour lines a little lighter. This way, arg contours which
-        # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
-        # zeta, erf,...).
-        lightness_adjustment = 1.5
-
         linecolors = get_srgb1(
             lightness_adjustment * np.exp(contours * 1j),
             abs_scaling=lambda r: r / (r + 1),
@@ -192,7 +189,7 @@ def plot_contour_arg(
             angle_fun(fz),
             levels=contours,
             colors=linecolors,
-            alpha=0.4,
+            alpha=alpha,
             max_jump=max_jump,
         )
     plt.gca().set_aspect("equal")
@@ -215,8 +212,9 @@ def plot(
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
     fz = f(Z)
+
     extent = (x_range[0], x_range[1], y_range[0], y_range[1])
-    plot_colors(
+    _plot_colors(
         fz,
         extent,
         abs_scaling,
@@ -224,18 +222,31 @@ def plot(
         add_colorbars=add_colorbars,
         saturation_adjustment=saturation_adjustment,
     )
+
     if contours_abs is not None:
-        plot_contour_abs(
-            Z, fz, contours=contours_abs, highlight_contour_1=highlight_abs_contour_1
+        _plot_contour_abs(
+            Z,
+            fz,
+            contours=contours_abs,
+            highlight_contour_1=highlight_abs_contour_1,
+            alpha=0.2,
         )
+
     if contours_arg is not None:
-        plot_contour_arg(
+        _plot_contour_arg(
             Z,
             fz,
             contours=contours_arg,
+            colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
+            alpha=0.4,
+            # Draw the arg contour lines a little lighter. This way, arg contours which
+            # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
+            # zeta, erf,...).
+            lightness_adjustment=1.5,
         )
+
     if add_axes_labels:
         plt.xlabel("Re(z)")
         # ylabel off-center, <https://github.com/matplotlib/matplotlib/issues/21467>
@@ -268,7 +279,7 @@ def plot_abs(
 
 
 # only show the phase, with some default value adjustments
-def plot_phase(*args, add_colorbars: bool = True, **kwargs):
+def plot_arg(*args, add_colorbars: bool = True, **kwargs):
     return plot(
         *args,
         abs_scaling=lambda r: np.full_like(r, 0.5),
@@ -280,4 +291,44 @@ def plot_phase(*args, add_colorbars: bool = True, **kwargs):
     )
 
 
-plot_arg = plot_phase
+# "Phase plot" is a common name for this kind of plots
+plot_phase = plot_abs
+
+
+# only show the phase, with some default value adjustments
+def plot_contours(
+    f: Callable[[np.ndarray], np.ndarray],
+    x_range: tuple[float, float, int],
+    y_range: tuple[float, float, int],
+    contours_abs: str | ArrayLike | None = "auto",
+    contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    colorspace: str = "cam16",
+    contour_arg_max_jump: float = 1.0,
+    saturation_adjustment: float = 1.28,
+):
+    Z = _get_z_grid_for_image(x_range, y_range)
+    fz = f(Z)
+
+    if contours_arg is not None:
+        _plot_contour_arg(
+            Z,
+            fz,
+            contours=contours_arg,
+            colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
+            max_jump=contour_arg_max_jump,
+            alpha=1.0,
+            lightness_adjustment=1.5,
+        )
+
+    if contours_abs is not None:
+        _plot_contour_abs(
+            Z,
+            fz,
+            contours=contours_abs,
+            alpha=0.8,
+            color="0.7",
+            highlight_contour_1=False,
+        )
+
+    plt.gca().set_aspect("equal")
