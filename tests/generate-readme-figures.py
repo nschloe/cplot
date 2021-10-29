@@ -108,15 +108,15 @@ plt.close()
 
 n = 400
 cplot.plot_abs(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z-abs.svg", transparent=True, bbox_inches="tight")
+plt.savefig("sinz3z-abs.svg", bbox_inches="tight")
 plt.close()
 
 cplot.plot_arg(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z-arg.svg", transparent=True, bbox_inches="tight")
+plt.savefig("sinz3z-arg.svg", bbox_inches="tight")
 plt.close()
 
 cplot.plot_contours(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z-contours.svg", transparent=True, bbox_inches="tight")
+plt.savefig("sinz3z-contours.svg", bbox_inches="tight")
 plt.close()
 
 cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))

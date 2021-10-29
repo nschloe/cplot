@@ -98,8 +98,7 @@ def _plot_contour_abs(
     Z,
     fz,
     # Literal["auto"] needs Python 3.8
-    contours: ArrayLike | str = "auto",
-    base: float = 2.0,
+    contours: ArrayLike | float = 2.0,
     emphasize_contour_1: bool = True,
     alpha: float = 1.0,
     color: str | None = None,
@@ -117,7 +116,8 @@ def _plot_contour_abs(
             alpha=alpha,
         )
 
-    if contours == "auto":
+    if isinstance(contours, (float, int)):
+        base = contours
         min_exp = np.log(np.min(vals)) / np.log(base)
         min_exp = int(max(min_exp, -100))
         max_exp = np.log(np.max(vals)) / np.log(base)
@@ -201,7 +201,7 @@ def plot(
     y_range: tuple[float, float, int],
     # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r ** 2 / (r ** 2 + 1),
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
-    contours_abs: str | ArrayLike | None = "auto",
+    contours_abs: float | ArrayLike | None = 2.0,
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     contour_arg_max_jump: float = 1.0,
     emphasize_abs_contour_1: bool = True,
