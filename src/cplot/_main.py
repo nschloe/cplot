@@ -249,6 +249,24 @@ def plot(
     return plt
 
 
+# only show the absolute value
+def plot_abs(
+    *args,
+    add_colorbars: bool = True,
+    contours_abs: str | ArrayLike | None = None,
+    **kwargs
+):
+    return plot(
+        *args,
+        contours_abs=contours_abs,
+        contours_arg=None,
+        highlight_abs_contour_1=False,
+        add_colorbars=(add_colorbars, False),
+        saturation_adjustment=0.0,
+        **kwargs
+    )
+
+
 # only show the phase, with some default value adjustments
 def plot_phase(*args, add_colorbars: bool = True, **kwargs):
     return plot(

@@ -1,6 +1,7 @@
 from ._colors import get_srgb1
 from ._main import (
     plot,
+    plot_abs,
     plot_arg,
     plot_colors,
     plot_contour_abs,
@@ -25,6 +26,7 @@ __all__ = [
     "plot",
     "plot_phase",
     "plot_arg",
+    "plot_abs",
     #
     "tripcolor",
     "tricontour_abs",
