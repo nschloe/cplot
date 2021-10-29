@@ -54,13 +54,13 @@ plt.show()
 Historically, plotting of complex functions was in one of three ways
 
 | <img src="https://nschloe.github.io/cplot/sinz3z-abs.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-arg.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-contours.svg" width="70%"> |
--| :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
--|      Only show the absolute value; sometimes as a 3D plot         |        Only show the phase/the argument in a color wheel (phase portrait)        |          Show contour lines for both arg and abs                      |
+| :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
+|      Only show the absolute value; sometimes as a 3D plot         |        Only show the phase/the argument in a color wheel (phase portrait)        |          Show contour lines for both arg and abs                      |
 
 Combining all three of them gives you a _cplot_:
 
 <p align="center">
-  <img src="https://nschloe.github.io/cplot/sinz3z.svg" width="50%">
+  <img src="https://nschloe.github.io/cplot/sinz3z.svg" width="60%">
 </p>
 
 See also [Wikipedia: Domain coloring](https://en.wikipedia.org/wiki/Domain_coloring).
