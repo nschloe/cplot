@@ -28,12 +28,12 @@ def _get_z_grid_for_image(
     return X[0] + 1j * X[1]
 
 
-def plot_colors(
+def _plot_colors(
     fz,
     extent,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
     colorspace: str = "cam16",
-    add_colorbars: bool = True,
+    add_colorbars: bool | tuple[bool, bool] = True,
     saturation_adjustment: float = 1.28,
 ):
     plt.imshow(
@@ -49,7 +49,10 @@ def plot_colors(
         aspect="equal",
     )
 
-    if add_colorbars:
+    if isinstance(add_colorbars, bool):
+        add_colorbars = (add_colorbars, add_colorbars)
+
+    if add_colorbars[1]:
         # arg colorbar
         # create new colormap
         z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
@@ -63,16 +66,18 @@ def plot_colors(
         newcmp = mpl.colors.ListedColormap(rgba_vals)
         #
         norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+
         cb1 = plt.colorbar(
             mpl.cm.ScalarMappable(norm=norm, cmap=newcmp),
             fraction=0.046,
-            pad=0.08,
+            pad=0.08 if add_colorbars[0] else 0.04,
         )
         cb1.set_label("arg", rotation=0, ha="center", va="top")
         cb1.ax.yaxis.set_label_coords(0.5, -0.03)
         cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
         cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
 
+    if add_colorbars[0]:
         # abs colorbar
         norm = mpl.colors.Normalize(vmin=0, vmax=1)
         cb0 = plt.colorbar(
@@ -89,12 +94,15 @@ def plot_colors(
         cb0.set_ticklabels(["0", "1/8", "1/4", "1/2", "1", "2", "4", "8", "∞"])
 
 
-def plot_contour_abs(
+def _plot_contour_abs(
     Z,
     fz,
     # Literal["auto"] needs Python 3.8
     contours: ArrayLike | str = "auto",
-    highlight_contour_1: bool = True,
+    base: float = 2.0,
+    emphasize_contour_1: bool = True,
+    alpha: float = 1.0,
+    color: str | None = None,
 ):
     vals = np.abs(fz)
 
@@ -110,7 +118,6 @@ def plot_contour_abs(
         )
 
     if contours == "auto":
-        base = 2.0
         min_exp = np.log(np.min(vals)) / np.log(base)
         min_exp = int(max(min_exp, -100))
         max_exp = np.log(np.max(vals)) / np.log(base)
@@ -118,32 +125,31 @@ def plot_contour_abs(
         contours_neg = [base ** k for k in range(min_exp, 0)]
         contours_pos = [base ** k for k in range(1, max_exp + 1)]
 
-        _plot_contour(contours_neg, "0.8", "solid", 0.2)
-        if highlight_contour_1:
-            # subtle highlight
+        _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
+        if emphasize_contour_1:
+            # subtle emphasize
             _plot_contour([1.0], "0.6", "solid", 0.7)
             # "dash":
             # _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
             # _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
         else:
-            _plot_contour([1.0], "0.8", "solid", 0.2)
+            _plot_contour([1.0], color if color else "0.8", "solid", alpha)
 
-        _plot_contour(contours_pos, "0.3", "solid", 0.2)
+        _plot_contour(contours_pos, color if color else "0.3", "solid", alpha)
     else:
         contours = np.asarray(contours)
-        _plot_contour(contours, "0.8", "solid", 0.2)
-
-    plt.gca().set_aspect("equal")
+        _plot_contour(contours, color if color else "0.8", "solid", alpha)
 
 
-def plot_contour_arg(
+def _plot_contour_arg(
     Z,
     fz,
-    f: Callable[[np.ndarray], np.ndarray],
     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
     saturation_adjustment: float = 1.28,
     max_jump: float = 1.0,
+    lightness_adjustment: float = 1.0,
+    alpha: float = 1.0,
 ):
     contours = np.asarray(contours)
 
@@ -170,14 +176,9 @@ def plot_contour_arg(
         if len(contours) == 0:
             continue
 
-        # Draw the arg contour lines a little lighter. This way, arg contours which
-        # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
-        # zeta, erf,...).
-        lightness_adjustment = 1.5
-
         linecolors = get_srgb1(
             lightness_adjustment * np.exp(contours * 1j),
-            abs_scaling=lambda x: x / (x + 1),
+            abs_scaling=lambda r: r / (r + 1),
             colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
         )
@@ -188,8 +189,7 @@ def plot_contour_arg(
             angle_fun(fz),
             levels=contours,
             colors=linecolors,
-            linestyles="solid",
-            alpha=0.4,
+            alpha=alpha,
             max_jump=max_jump,
         )
     plt.gca().set_aspect("equal")
@@ -199,21 +199,22 @@ def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
     y_range: tuple[float, float, int],
-    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x ** 2 / (x ** 2 + 1),
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r ** 2 / (r ** 2 + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     contour_arg_max_jump: float = 1.0,
-    highlight_abs_contour_1: bool = True,
+    emphasize_abs_contour_1: bool = True,
     colorspace: str = "cam16",
-    add_colorbars: bool = True,
+    add_colorbars: bool | tuple[bool, bool] = True,
     add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
     fz = f(Z)
+
     extent = (x_range[0], x_range[1], y_range[0], y_range[1])
-    plot_colors(
+    _plot_colors(
         fz,
         extent,
         abs_scaling,
@@ -221,19 +222,31 @@ def plot(
         add_colorbars=add_colorbars,
         saturation_adjustment=saturation_adjustment,
     )
+
     if contours_abs is not None:
-        plot_contour_abs(
-            Z, fz, contours=contours_abs, highlight_contour_1=highlight_abs_contour_1
-        )
-    if contours_arg is not None:
-        plot_contour_arg(
+        _plot_contour_abs(
             Z,
             fz,
-            f,
+            contours=contours_abs,
+            emphasize_contour_1=emphasize_abs_contour_1,
+            alpha=0.2,
+        )
+
+    if contours_arg is not None:
+        _plot_contour_arg(
+            Z,
+            fz,
             contours=contours_arg,
+            colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
+            alpha=0.4,
+            # Draw the arg contour lines a little lighter. This way, arg contours which
+            # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
+            # zeta, erf,...).
+            lightness_adjustment=1.5,
         )
+
     if add_axes_labels:
         plt.xlabel("Re(z)")
         # ylabel off-center, <https://github.com/matplotlib/matplotlib/issues/21467>
@@ -245,3 +258,77 @@ def plot(
             labelpad=10,
         )
     return plt
+
+
+# only show the absolute value
+def plot_abs(
+    *args,
+    add_colorbars: bool = True,
+    contours_abs: str | ArrayLike | None = None,
+    **kwargs
+):
+    return plot(
+        *args,
+        contours_abs=contours_abs,
+        contours_arg=None,
+        emphasize_abs_contour_1=False,
+        add_colorbars=(add_colorbars, False),
+        saturation_adjustment=0.0,
+        **kwargs
+    )
+
+
+# only show the phase, with some default value adjustments
+def plot_arg(*args, add_colorbars: bool = True, **kwargs):
+    return plot(
+        *args,
+        abs_scaling=lambda r: np.full_like(r, 0.5),
+        contours_abs=None,
+        contours_arg=None,
+        emphasize_abs_contour_1=False,
+        add_colorbars=(False, add_colorbars),
+        **kwargs
+    )
+
+
+# "Phase plot" is a common name for this kind of plots
+plot_phase = plot_abs
+
+
+# only show the phase, with some default value adjustments
+def plot_contours(
+    f: Callable[[np.ndarray], np.ndarray],
+    x_range: tuple[float, float, int],
+    y_range: tuple[float, float, int],
+    contours_abs: str | ArrayLike | None = "auto",
+    contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
+    colorspace: str = "cam16",
+    contour_arg_max_jump: float = 1.0,
+    saturation_adjustment: float = 1.28,
+):
+    Z = _get_z_grid_for_image(x_range, y_range)
+    fz = f(Z)
+
+    if contours_arg is not None:
+        _plot_contour_arg(
+            Z,
+            fz,
+            contours=contours_arg,
+            colorspace=colorspace,
+            saturation_adjustment=saturation_adjustment,
+            max_jump=contour_arg_max_jump,
+            alpha=1.0,
+            lightness_adjustment=1.5,
+        )
+
+    if contours_abs is not None:
+        _plot_contour_abs(
+            Z,
+            fz,
+            contours=contours_abs,
+            alpha=0.8,
+            color="0.7",
+            emphasize_contour_1=False,
+        )
+
+    plt.gca().set_aspect("equal")
