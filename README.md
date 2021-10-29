@@ -40,7 +40,7 @@ plt = cplot.plot(
     (-2.0, +2.0, 400),
     (-2.0, +2.0, 400),
     # abs_scaling=lambda x: x / (x + 1),  # how to scale the lightness in domain coloring
-    # contours_abs="auto",
+    # contours_abs=2.0,
     # contours_arg=(-np.pi / 2, 0, np.pi / 2, np.pi),
     # emphasize_abs_contour_1: bool = True,
     # colorspace: str = "cam16",
