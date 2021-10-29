@@ -51,20 +51,29 @@ plt = cplot.plot(
 plt.show()
 ```
 
+Historically, plotting of complex functions was in one of three ways
+
+| <img src="https://nschloe.github.io/cplot/sinz3z-abs.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-arg.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-contours.svg" width="70%"> |
+-| :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
+-|      Only show the absolute value; sometimes as a 3D plot         |        Only show the phase/the argument in a color wheel (phase portrait)        |          Show contour lines for both arg and abs                      |
+
+Combining all three of them gives you a _cplot_:
+
 <p align="center">
   <img src="https://nschloe.github.io/cplot/sinz3z.svg" width="50%">
 </p>
 
-The plot consists of three building blocks:
+See also [Wikipedia: Domain coloring](https://en.wikipedia.org/wiki/Domain_coloring).
 
-- [domain coloring](https://en.wikipedia.org/wiki/Domain_coloring), i.e.,
-  mapping the absolute value to lightness and the complex argument to the chroma of
-  the representing color
-- Contours of constant absolute value (the contour `abs(z) == 1` is emphasized, the
-  other contours are at (2, 4, 8, etc. and 1/2, 1/4, 1/8, etc., respectively)
-- Contours along constant argument (angle). For `arg(z) == 0`, the color is green, for
-  `arg(z) == pi/2` it's blue, for `arg(z) = -pi / 2` it's orange, and for `arg(z) = pi`
-  it's pink
+Features of this software:
+
+- By default, cplot uses a perceptually uniform color space for the argument colors.
+  This avoids streaks of colors occurring with other color spaces, e.g., HSL.
+- The contour `abs(z) == 1` is emphasized, other abs contours are at 2, 4, 8, etc. and
+  1/2, 1/4, 1/8, etc., respectively. This makes it easy to tell the absolte value
+  precisely.
+- For `arg(z) == 0`, the color is green, for `arg(z) == pi/2` it's blue, for `arg(z) =
+  -pi / 2` it's orange, and for `arg(z) = pi` it's pink.
 
 Other useful functions:
 
@@ -80,39 +89,9 @@ z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
 
-<!--
-- `abs_scaling` can be used to adjust the use of colors. `h` with a value less than
-  `1.0` adds more color which can help isolating the roots and poles (which are still
-  black and white, respectively). `h-0.0` ignores the magnitude of `f(z)` completely.
-  `arctan` is another possible scaling.
+#### Gallery
 
-- `colorspace` can be set to `hsl` to get the common fully saturated, vibrant colors.
-  This is usually a bad idea since it creates artifacts which are not related with the
-  underlying data. From [Wikipedia](https://en.wikipedia.org/wiki/Domain_coloring):
-
-  > Since the HSL color space is not perceptually uniform, one can see streaks of
-  > perceived brightness at yellow, cyan, and magenta (even though their absolute values
-  > are the same as red, green, and blue) and a halo around L = 1/2. Use of the Lab
-  > color space corrects this, making the images more accurate, but also makes them more
-  > drab/pastel.
-
-  Default is [`"cam16"`](https://doi.org/10.1002/col.22131);
-  very similar is `"cielab"` (not shown here).
-Consider the test function (math rendered with [xdoc](https://github.com/nschloe/xdoc))
-
-```math
-f(z) = \frac{(z^2 - 1) (z - 2 - 1j)^2}{z^2 + 2 + 2j}
-```
-
-|                               `h-1.0`                                |                               `h-0.5`                                |                               `h-0.0`                                |
-| :------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------: |
-| <img src="https://nschloe.github.io/cplot/cam16-10.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-05.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/cam16-00.svg" width="70%"> |
-|  <img src="https://nschloe.github.io/cplot/hsl-10.svg" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-05.svg" width="70%">  |  <img src="https://nschloe.github.io/cplot/hsl-00.svg" width="70%">  |
-
-With this, it is easy to see where a function has very small and very large values, and
-the multiplicty of zeros and poles is instantly identified by counting the color wheel
-passes around a black or white point.
--->
+[This way to the gallery!](https://github.com/nschloe/cplot/wiki/Gallery)
 
 
 ### Testing
