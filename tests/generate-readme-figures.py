@@ -2,7 +2,18 @@ import matplotlib.pyplot as plt
 import mpmath
 import numpy as np
 import scipyx as spx
-from scipy.special import airy, airye, digamma, erf, fresnel, gamma, jn, lambertw, wofz
+from scipy.special import (
+    airy,
+    airye,
+    digamma,
+    erf,
+    fresnel,
+    gamma,
+    jn,
+    lambertw,
+    sici,
+    wofz,
+)
 
 import cplot
 
@@ -166,6 +177,10 @@ args = [
     ("cosz-z.svg", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
     ("tanz-z.svg", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
     #
+    ("si.svg", lambda z: sici(z)[0], (-15, +15), (-15, +15)),
+    ("ci.svg", lambda z: sici(z)[1], (-15, +15), (-15, +15)),
+    ("lambertw.svg", lambertw, (-5, +5), (-5, +5)),
+    #
     ("gamma.svg", gamma, (-5, +5), (-5, +5)),
     ("digamma.svg", digamma, (-5, +5), (-5, +5)),
     ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
@@ -208,22 +223,21 @@ args = [
         (-2.5, +2.5),
     ),
     #
-    ("lambertw.svg", lambertw, (-5, +5), (-5, +5)),
-    # https://www.dynamicmath.xyz
-    (
-        "some-polynomial.svg",
-        lambda z: 0.926 * (z + 7.3857e-2 * z ** 5 + 4.5458e-3 * z ** 9),
-        (-3, 3),
-        (-3, 3),
-    ),
-    # non-analytic
-    (
-        "non-analytic.svg",
-        lambda z: np.imag(np.exp(-1j * np.pi / 4) * z ** n)
-        + 1j * np.imag(np.exp(1j * np.pi / 4) * (z - 1) ** 4),
-        (-2.0, +3.0),
-        (-2.0, +3.0),
-    ),
+    # # https://www.dynamicmath.xyz
+    # (
+    #     "some-polynomial.svg",
+    #     lambda z: 0.926 * (z + 7.3857e-2 * z ** 5 + 4.5458e-3 * z ** 9),
+    #     (-3, 3),
+    #     (-3, 3),
+    # ),
+    # # non-analytic
+    # (
+    #     "non-analytic.svg",
+    #     lambda z: np.imag(np.exp(-1j * np.pi / 4) * z ** n)
+    #     + 1j * np.imag(np.exp(1j * np.pi / 4) * (z - 1) ** 4),
+    #     (-2.0, +3.0),
+    #     (-2.0, +3.0),
+    # ),
 ]
 for filename, fun, x, y in args:
     cplot.plot(

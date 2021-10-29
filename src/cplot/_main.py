@@ -31,9 +31,9 @@ def _get_z_grid_for_image(
 def plot_colors(
     fz,
     extent,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
     colorspace: str = "cam16",
-    add_colorbars: bool = True,
+    add_colorbars: bool | tuple[bool, bool] = True,
     saturation_adjustment: float = 1.28,
 ):
     plt.imshow(
@@ -49,7 +49,10 @@ def plot_colors(
         aspect="equal",
     )
 
-    if add_colorbars:
+    if isinstance(add_colorbars, bool):
+        add_colorbars = (add_colorbars, add_colorbars)
+
+    if add_colorbars[1]:
         # arg colorbar
         # create new colormap
         z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
@@ -63,16 +66,18 @@ def plot_colors(
         newcmp = mpl.colors.ListedColormap(rgba_vals)
         #
         norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+
         cb1 = plt.colorbar(
             mpl.cm.ScalarMappable(norm=norm, cmap=newcmp),
             fraction=0.046,
-            pad=0.08,
+            pad=0.08 if add_colorbars[0] else 0.04,
         )
         cb1.set_label("arg", rotation=0, ha="center", va="top")
         cb1.ax.yaxis.set_label_coords(0.5, -0.03)
         cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
         cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
 
+    if add_colorbars[0]:
         # abs colorbar
         norm = mpl.colors.Normalize(vmin=0, vmax=1)
         cb0 = plt.colorbar(
@@ -139,7 +144,6 @@ def plot_contour_abs(
 def plot_contour_arg(
     Z,
     fz,
-    f: Callable[[np.ndarray], np.ndarray],
     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
     saturation_adjustment: float = 1.28,
@@ -177,7 +181,7 @@ def plot_contour_arg(
 
         linecolors = get_srgb1(
             lightness_adjustment * np.exp(contours * 1j),
-            abs_scaling=lambda x: x / (x + 1),
+            abs_scaling=lambda r: r / (r + 1),
             colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
         )
@@ -188,7 +192,6 @@ def plot_contour_arg(
             angle_fun(fz),
             levels=contours,
             colors=linecolors,
-            linestyles="solid",
             alpha=0.4,
             max_jump=max_jump,
         )
@@ -199,14 +202,14 @@ def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
     y_range: tuple[float, float, int],
-    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x ** 2 / (x ** 2 + 1),
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    # abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r ** 2 / (r ** 2 + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     contour_arg_max_jump: float = 1.0,
     highlight_abs_contour_1: bool = True,
     colorspace: str = "cam16",
-    add_colorbars: bool = True,
+    add_colorbars: bool | tuple[bool, bool] = True,
     add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
 ):
@@ -229,7 +232,6 @@ def plot(
         plot_contour_arg(
             Z,
             fz,
-            f,
             contours=contours_arg,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
@@ -245,3 +247,19 @@ def plot(
             labelpad=10,
         )
     return plt
+
+
+# only show the phase, with some default value adjustments
+def plot_phase(*args, add_colorbars: bool = True, **kwargs):
+    return plot(
+        *args,
+        abs_scaling=lambda r: np.full_like(r, 0.5),
+        contours_abs=None,
+        contours_arg=None,
+        highlight_abs_contour_1=False,
+        add_colorbars=(False, add_colorbars),
+        **kwargs
+    )
+
+
+plot_arg = plot_phase
