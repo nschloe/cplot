@@ -100,7 +100,7 @@ def _plot_contour_abs(
     # Literal["auto"] needs Python 3.8
     contours: ArrayLike | str = "auto",
     base: float = 2.0,
-    highlight_contour_1: bool = True,
+    emphasize_contour_1: bool = True,
     alpha: float = 1.0,
     color: str | None = None,
 ):
@@ -126,8 +126,8 @@ def _plot_contour_abs(
         contours_pos = [base ** k for k in range(1, max_exp + 1)]
 
         _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
-        if highlight_contour_1:
-            # subtle highlight
+        if emphasize_contour_1:
+            # subtle emphasize
             _plot_contour([1.0], "0.6", "solid", 0.7)
             # "dash":
             # _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
@@ -204,7 +204,7 @@ def plot(
     contours_abs: str | ArrayLike | None = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     contour_arg_max_jump: float = 1.0,
-    highlight_abs_contour_1: bool = True,
+    emphasize_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool | tuple[bool, bool] = True,
     add_axes_labels: bool = True,
@@ -228,7 +228,7 @@ def plot(
             Z,
             fz,
             contours=contours_abs,
-            highlight_contour_1=highlight_abs_contour_1,
+            emphasize_contour_1=emphasize_abs_contour_1,
             alpha=0.2,
         )
 
@@ -271,7 +271,7 @@ def plot_abs(
         *args,
         contours_abs=contours_abs,
         contours_arg=None,
-        highlight_abs_contour_1=False,
+        emphasize_abs_contour_1=False,
         add_colorbars=(add_colorbars, False),
         saturation_adjustment=0.0,
         **kwargs
@@ -285,7 +285,7 @@ def plot_arg(*args, add_colorbars: bool = True, **kwargs):
         abs_scaling=lambda r: np.full_like(r, 0.5),
         contours_abs=None,
         contours_arg=None,
-        highlight_abs_contour_1=False,
+        emphasize_abs_contour_1=False,
         add_colorbars=(False, add_colorbars),
         **kwargs
     )
@@ -328,7 +328,7 @@ def plot_contours(
             contours=contours_abs,
             alpha=0.8,
             color="0.7",
-            highlight_contour_1=False,
+            emphasize_contour_1=False,
         )
 
     plt.gca().set_aspect("equal")
