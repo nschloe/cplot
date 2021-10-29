@@ -44,7 +44,9 @@ def _plot_colors(
             saturation_adjustment=saturation_adjustment,
         ),
         extent=extent,
-        interpolation="nearest",
+        # Don't use "nearest" interpolation, it creates color blocking artifacts:
+        # <https://github.com/matplotlib/matplotlib/issues/21499>
+        # interpolation="nearest",
         origin="lower",
         aspect="equal",
     )
