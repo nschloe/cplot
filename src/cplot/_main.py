@@ -99,7 +99,6 @@ def _plot_colors(
 def _plot_contour_abs(
     Z,
     fz,
-    # Literal["auto"] needs Python 3.8
     contours: ArrayLike | float = 2.0,
     emphasize_contour_1: bool = True,
     alpha: float = 1.0,
@@ -302,7 +301,7 @@ def plot_contours(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
     y_range: tuple[float, float, int],
-    contours_abs: str | ArrayLike | None = "auto",
+    contours_abs: float | ArrayLike | None = 2.0,
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     colorspace: str = "cam16",
     contour_arg_max_jump: float = 1.0,
