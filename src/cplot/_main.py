@@ -100,9 +100,9 @@ def _add_colorbar_abs(
         cb0.set_ticklabels(
             [
                 "$0$",
-                f"${a}^{-3}$",
-                f"${a}^{-2}$",
-                f"${a}^{-1}$",
+                f"${a}^{{-3}}$",
+                f"${a}^{{-2}}$",
+                f"${a}^{{-1}}$",
                 "$1$",
                 f"${a}^1$",
                 f"${a}^2$",
@@ -271,7 +271,7 @@ def plot(
         add_colorbars = (add_colorbars, add_colorbars)
     if add_colorbars[1]:
         _add_colorbar_arg(
-            colorspace, saturation_adjustment, pad=0.08 if add_colorbars[0] else 0.04
+            colorspace, saturation_adjustment, pad=0.09 if add_colorbars[0] else 0.04
         )
     if add_colorbars[0]:
         if contours_abs is None:
