@@ -72,7 +72,9 @@ def _add_colorbar_arg(colorspace: str, saturation_adjustment: float, pad: float)
     cb1.set_label("arg", rotation=0, ha="center", va="top")
     cb1.ax.yaxis.set_label_coords(0.5, -0.03)
     cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
-    cb1.set_ticklabels(["-π", "-π/2", "0", "π/2", "π"])
+    cb1.set_ticklabels(
+        [r"$-\pi$", r"$-\dfrac{\pi}{2}$", "$0$", r"$\dfrac{\pi}{2}$", r"$\pi$"]
+    )
 
 
 def _add_colorbar_abs(
@@ -97,15 +99,15 @@ def _add_colorbar_abs(
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
         cb0.set_ticklabels(
             [
-                "0",
-                f"1/{a ** 3}",
-                f"1/{a ** 2}",
-                f"1/{a}",
-                "1",
-                f"{a}",
-                f"{a ** 2}",
-                f"{a ** 3}",
-                "∞",
+                "$0$",
+                f"${a}^{-3}$",
+                f"${a}^{-2}$",
+                f"${a}^{-1}$",
+                "$1$",
+                f"${a}^1$",
+                f"${a}^2$",
+                f"${a}^3$",
+                "$\\infty$",
             ]
         )
     else:
@@ -230,7 +232,8 @@ def plot(
     # If you're changing contours_abs to x and want the abs_scaling to follow along,
     # you'll have to set it to the same value.
     abs_scaling: float | Callable[[np.ndarray], np.ndarray] = 2,
-    contours_abs: float | list[float] | None = 2,
+    # Literal["auto"]
+    contours_abs: float | list[float] | None | str = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     contour_arg_max_jump: float = 1.0,
     emphasize_abs_contour_1: bool = True,
@@ -273,6 +276,9 @@ def plot(
     if add_colorbars[0]:
         if contours_abs is None:
             contours_abs = 2
+        elif contours_abs == "auto":
+            assert isinstance(abs_scaling, (int, float))
+            contours_abs = abs_scaling
         _add_colorbar_abs(asc, contours_abs, pad=0.04)
 
     if contours_abs is not None:
