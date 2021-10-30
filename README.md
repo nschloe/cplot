@@ -125,6 +125,10 @@ tox
 - [Juan Carlos Ponce Campuzano, _DC
   gallery_, 2018](https://www.dynamicmath.xyz/domain-coloring/dcgallery.html)
 - [3Blue1Brown, _Winding numbers and domain coloring_, 2018](https://youtu.be/b7FxPsqfkOY)
+- [Ricky Reusser, _Domain Coloring with Adaptive
+  Contouring_, 2019](https://observablehq.com/@rreusser/adaptive-domain-coloring)
+- [Ricky Reusser, _Locally Scaled Domain Coloring, Part 1: Contour
+  Plots_, 2020](https://observablehq.com/@rreusser/locally-scaled-domain-coloring-part-1-contour-plots)
 
 ### License
 
