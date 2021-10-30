@@ -236,6 +236,14 @@ args = [
         (-2.5, +2.5),
     ),
     #
+    #
+    (
+        "moebius1.svg",
+        lambda z: (z + 1.5 - 0.5j) * (1.5 - 0.5j) / (z - 1.5 + 0.5j) * (-1.5 + 0.5j),
+        (-5, +5),
+        (-5, +5),
+    ),
+    #
     # # https://www.dynamicmath.xyz
     # (
     #     "some-polynomial.svg",
