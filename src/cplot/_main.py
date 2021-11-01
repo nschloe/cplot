@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from typing import Callable
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import mplx
 import numpy as np
+from matplotlib import cm, colors
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.typing import ArrayLike
 
 from ._colors import get_srgb1
@@ -51,7 +52,7 @@ def _plot_colors(
     )
 
 
-def _add_colorbar_arg(colorspace: str, saturation_adjustment: float, pad: float):
+def _add_colorbar_arg(cax, colorspace: str, saturation_adjustment: float):
     # arg colorbar
     # create new colormap
     z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
@@ -62,13 +63,12 @@ def _add_colorbar_arg(colorspace: str, saturation_adjustment: float, pad: float)
         saturation_adjustment=saturation_adjustment,
     )
     rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
-    newcmp = mpl.colors.ListedColormap(rgba_vals)
+    newcmp = colors.ListedColormap(rgba_vals)
     #
-    norm = mpl.colors.Normalize(vmin=-np.pi, vmax=np.pi)
+    norm = colors.Normalize(vmin=-np.pi, vmax=np.pi)
 
-    cb1 = plt.colorbar(
-        mpl.cm.ScalarMappable(norm=norm, cmap=newcmp), fraction=0.046, pad=pad
-    )
+    cb1 = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=newcmp), cax=cax)
+
     cb1.set_label("arg", rotation=0, ha="center", va="top")
     cb1.ax.yaxis.set_label_coords(0.5, -0.03)
     cb1.set_ticks([-np.pi, -np.pi / 2, 0, +np.pi / 2, np.pi])
@@ -77,17 +77,12 @@ def _add_colorbar_arg(colorspace: str, saturation_adjustment: float, pad: float)
     )
 
 
-def _add_colorbar_abs(
-    abs_scaling: Callable, abs_contours: float | list[float], pad: float
-):
+def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[float]):
     # abs colorbar
-    norm = mpl.colors.Normalize(vmin=0, vmax=1)
+    norm = colors.Normalize(vmin=0, vmax=1)
     cb0 = plt.colorbar(
-        mpl.cm.ScalarMappable(norm=norm, cmap=mpl.cm.gray),
-        pad=pad,
-        # This works okay-ish trying to match the height of the colorbar with that
-        # of the axes. <https://stackoverflow.com/a/26720422/353337>
-        fraction=0.046,
+        cm.ScalarMappable(norm=norm, cmap=cm.gray),
+        cax=cax,
     )
     cb0.set_label("abs", rotation=0, ha="center", va="top")
     cb0.ax.yaxis.set_label_coords(0.5, -0.03)
@@ -97,19 +92,34 @@ def _add_colorbar_abs(
             np.array([1 / a ** 3, 1 / a ** 2, 1 / a, 1, a, a ** 2, a ** 3])
         )
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
-        cb0.set_ticklabels(
-            [
-                "$0$",
-                f"${a}^{{-3}}$",
-                f"${a}^{{-2}}$",
-                f"${a}^{{-1}}$",
-                "$1$",
-                f"${a}^1$",
-                f"${a}^2$",
-                f"${a}^3$",
-                "$\\infty$",
-            ]
-        )
+        if isinstance(abs_contours, int) and abs_contours < 4:
+            cb0.set_ticklabels(
+                [
+                    "0",
+                    f"$\\frac{{1}}{{{abs_contours ** 3}}}$",
+                    f"$\\frac{{1}}{{{abs_contours ** 2}}}$",
+                    f"$\\frac{{1}}{{{abs_contours ** 1}}}$",
+                    "$1$",
+                    f"{abs_contours ** 1}",
+                    f"{abs_contours ** 2}",
+                    f"{abs_contours ** 3}",
+                    "$\\infty$",
+                ]
+            )
+        else:
+            cb0.set_ticklabels(
+                [
+                    "$0$",
+                    f"${a}^{{-3}}$",
+                    f"${a}^{{-2}}$",
+                    f"${a}^{{-1}}$",
+                    "$1$",
+                    f"${a}^1$",
+                    f"${a}^2$",
+                    f"${a}^3$",
+                    "$\\infty$",
+                ]
+            )
     else:
         scaled_vals = abs_scaling(np.asarray(abs_contours))
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
@@ -239,6 +249,7 @@ def plot(
     emphasize_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool | tuple[bool, bool] = True,
+    colorbar_pad: tuple[bool, bool] = (0.2, 0.5),
     add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
 ):
@@ -266,20 +277,11 @@ def plot(
         saturation_adjustment=saturation_adjustment,
     )
 
-    # colorbars?
-    if isinstance(add_colorbars, bool):
-        add_colorbars = (add_colorbars, add_colorbars)
-    if add_colorbars[1]:
-        _add_colorbar_arg(
-            colorspace, saturation_adjustment, pad=0.09 if add_colorbars[0] else 0.04
-        )
-    if add_colorbars[0]:
-        if contours_abs is None:
-            contours_abs = 2
-        elif contours_abs == "auto":
-            assert isinstance(abs_scaling, (int, float))
-            contours_abs = abs_scaling
-        _add_colorbar_abs(asc, contours_abs, pad=0.04)
+    if contours_abs is None:
+        contours_abs = 2
+    elif contours_abs == "auto":
+        assert isinstance(abs_scaling, (int, float))
+        contours_abs = abs_scaling
 
     if contours_abs is not None:
         _plot_contour_abs(
@@ -300,7 +302,7 @@ def plot(
             max_jump=contour_arg_max_jump,
             alpha=0.4,
             # Draw the arg contour lines a little lighter. This way, arg contours which
-            # dissolve into areas of nearly equal arg remain recognizable. (E.g., tangent,
+            # dissolve into areas of nearly equal arg remain recognizable. (E.g., tan,
             # zeta, erf,...).
             lightness_adjustment=1.5,
         )
@@ -315,6 +317,21 @@ def plot(
             verticalalignment="center",
             labelpad=10,
         )
+
+    # colorbars?
+    if isinstance(add_colorbars, bool):
+        add_colorbars = (add_colorbars, add_colorbars)
+
+    ax = plt.gca()
+    divider = make_axes_locatable(ax)
+
+    if add_colorbars[0]:
+        cax1 = divider.append_axes("right", size="5%", pad=colorbar_pad[0])
+        _add_colorbar_abs(cax1, asc, contours_abs)
+
+    if add_colorbars[1]:
+        cax2 = divider.append_axes("right", size="5%", pad=colorbar_pad[1])
+        _add_colorbar_arg(cax2, colorspace, saturation_adjustment)
     return plt
 
 
@@ -322,7 +339,7 @@ def plot(
 def plot_abs(
     *args,
     add_colorbars: bool = True,
-    contours_abs: str | ArrayLike | None = None,
+    contours_abs: str | float | list[float] | None = None,
     **kwargs,
 ):
     return plot(
