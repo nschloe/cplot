@@ -249,7 +249,7 @@ def plot(
     emphasize_abs_contour_1: bool = True,
     colorspace: str = "cam16",
     add_colorbars: bool | tuple[bool, bool] = True,
-    colorbar_pad: tuple[bool, bool] = (0.2, 0.5),
+    colorbar_pad: tuple[float, float] = (0.2, 0.5),
     add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
 ):
