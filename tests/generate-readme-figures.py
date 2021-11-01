@@ -7,6 +7,8 @@ from scipy.special import (
     airye,
     digamma,
     erf,
+    exp1,
+    expi,
     fresnel,
     gamma,
     jn,
@@ -192,6 +194,9 @@ args = [
     #
     ("si.svg", lambda z: sici(z)[0], (-15, +15), (-15, +15)),
     ("ci.svg", lambda z: sici(z)[1], (-15, +15), (-15, +15)),
+    ("expi.svg", expi, (-15, +15), (-15, +15)),
+    #
+    ("exp1.svg", exp1, (-5, +5), (-5, +5)),
     ("lambertw.svg", lambertw, (-5, +5), (-5, +5)),
     #
     ("gamma.svg", gamma, (-5, +5), (-5, +5)),
