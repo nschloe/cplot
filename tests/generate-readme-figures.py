@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
-import mpmath
 import numpy as np
 import scipyx as spx
+from mpmath import fp
 from scipy.special import (
     airy,
     airye,
@@ -31,10 +31,17 @@ style = {
 plt.style.use(style)
 
 
+def kleinj(z):
+    z = np.asarray(z)
+    z_shape = z.shape
+    out = np.array([fp.kleinj(tau=complex(val)) for val in z.flatten()])
+    return out.reshape(z_shape)
+
+
 def riemann_zeta(z):
     z = np.asarray(z)
     z_shape = z.shape
-    vals = [mpmath.zeta(val) for val in z.flatten()]
+    vals = [fp.zeta(val) for val in z.flatten()]
     return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
         z_shape
     )
@@ -48,7 +55,7 @@ def riemann_xi(z):
 def riemann_siegel_z(z):
     z = np.asarray(z)
     z_shape = z.shape
-    vals = [mpmath.siegelz(val) for val in z.flatten()]
+    vals = [fp.siegelz(val) for val in z.flatten()]
     return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
         z_shape
     )
@@ -57,7 +64,7 @@ def riemann_siegel_z(z):
 def riemann_siegel_theta(z):
     z = np.asarray(z)
     z_shape = z.shape
-    vals = [mpmath.siegeltheta(val) for val in z.flatten()]
+    vals = [fp.siegeltheta(val) for val in z.flatten()]
     return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
         z_shape
     )
@@ -67,43 +74,40 @@ def f(z):
     return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
 
 
-n = 201
-for name in ["cam16", "cielab", "oklab", "hsl"]:
-    cplot.plot(f, (-3, +3, n), (-3, +3, n), colorspace=name, add_colorbars=False)
-    plt.savefig(f"{name}-10.svg", transparent=True, bbox_inches="tight")
-    plt.close()
-    #
-    cplot.plot(
-        f,
-        (-3, +3, n),
-        (-3, +3, n),
-        colorspace=name,
-        abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
-        add_colorbars=False,
-    )
-    plt.savefig(f"{name}-05.svg", transparent=True, bbox_inches="tight")
-    plt.close()
-    #
-    cplot.plot(
-        f,
-        (-3, +3, n),
-        (-3, +3, n),
-        colorspace=name,
-        abs_scaling=lambda x: np.full_like(x, 0.5),
-        add_colorbars=False,
-    )
-    plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
-    plt.close()
+# n = 201
+# for name in ["cam16", "cielab", "oklab", "hsl"]:
+#     cplot.plot(f, (-3, +3, n), (-3, +3, n), colorspace=name, add_colorbars=False)
+#     plt.savefig(f"{name}-10.svg", transparent=True, bbox_inches="tight")
+#     plt.close()
+#     #
+#     cplot.plot(
+#         f,
+#         (-3, +3, n),
+#         (-3, +3, n),
+#         colorspace=name,
+#         abs_scaling=2.0,
+#         add_colorbars=False,
+#     )
+#     plt.savefig(f"{name}-05.svg", transparent=True, bbox_inches="tight")
+#     plt.close()
+#     #
+#     cplot.plot(
+#         f,
+#         (-3, +3, n),
+#         (-3, +3, n),
+#         colorspace=name,
+#         abs_scaling=lambda x: np.full_like(x, 0.5),
+#         add_colorbars=False,
+#     )
+#     plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
+#     plt.close()
 
 
 # First function from the SIAM-100-digit challenge
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
 n = 401
 cplot.plot(
-    lambda z: np.cos(np.log(z) / z) / z,
-    (-1, 1, n),
-    (-1, 1, n),
-    abs_scaling=lambda x: np.sqrt(x) / (np.sqrt(x) + 1),
+    lambda z: np.cos(np.log(z) / z) / z, (-1, 1, n), (-1, 1, n), abs_scaling=10.0
 )
 plt.savefig("siam.svg", transparent=True, bbox_inches="tight")
 plt.close()
@@ -207,7 +211,7 @@ args = [
     ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
     ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
     #
-    # jacobian elliptic functions
+    # jacobi elliptic functions
     ("ellipj-sn-06.svg", lambda z: spx.ellipj(z, 0.6)[0], (-6, +6), (-6, +6)),
     ("ellipj-cn-06.svg", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
     ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
@@ -248,6 +252,7 @@ args = [
         (-5, +5),
         (-5, +5),
     ),
+    ("kleinj.svg", kleinj, (-1.0, +1.0), (1.0e-5, +2.0)),
     #
     # # https://www.dynamicmath.xyz
     # (
@@ -264,6 +269,7 @@ args = [
     #     (-2.0, +3.0),
     #     (-2.0, +3.0),
     # ),
+    #
 ]
 for filename, fun, x, y in args:
     cplot.plot(

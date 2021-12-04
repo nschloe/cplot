@@ -259,7 +259,11 @@ def plot(
     if callable(abs_scaling):
         asc = abs_scaling
     else:
-        assert isinstance(abs_scaling, (int, float))
+        try:
+            abs_scaling = float(abs_scaling)
+        except TypeError:
+            raise TypeError("abs_scaling must be callable or float")
+
         assert abs_scaling > 1
         alpha = np.log(2) / np.log(abs_scaling)
 
@@ -280,7 +284,9 @@ def plot(
     if contours_abs is None:
         contours_abs = 2
     elif contours_abs == "auto":
-        assert isinstance(abs_scaling, (int, float))
+        assert isinstance(
+            abs_scaling, (int, float)
+        ), f"abs_scaling must be int or float, not {abs_scaling}"
         contours_abs = abs_scaling
 
     if contours_abs is not None:
