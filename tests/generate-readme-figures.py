@@ -1,3 +1,5 @@
+from typing import Callable
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipyx as spx
@@ -31,43 +33,19 @@ style = {
 plt.style.use(style)
 
 
-def kleinj(z):
-    z = np.asarray(z)
-    z_shape = z.shape
-    out = np.array([fp.kleinj(tau=complex(val)) for val in z.flatten()])
-    return out.reshape(z_shape)
+def _wrap(fun: Callable) -> Callable:
+    def wrapped_fun(z):
+        z = np.asarray(z)
+        z_shape = z.shape
+        out = np.array([fun(complex(val)) for val in z.flatten()])
+        return out.reshape(z_shape)
 
-
-def riemann_zeta(z):
-    z = np.asarray(z)
-    z_shape = z.shape
-    vals = [fp.zeta(val) for val in z.flatten()]
-    return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
-        z_shape
-    )
+    return wrapped_fun
 
 
 def riemann_xi(z):
     # https://en.wikipedia.org/wiki/Riemann_Xi_function
-    return 0.5 * z * (z - 1) * np.pi ** (-z / 2) * gamma(z / 2) * riemann_zeta(z)
-
-
-def riemann_siegel_z(z):
-    z = np.asarray(z)
-    z_shape = z.shape
-    vals = [fp.siegelz(val) for val in z.flatten()]
-    return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
-        z_shape
-    )
-
-
-def riemann_siegel_theta(z):
-    z = np.asarray(z)
-    z_shape = z.shape
-    vals = [fp.siegeltheta(val) for val in z.flatten()]
-    return np.array([float(val.real) + 1j * float(val.imag) for val in vals]).reshape(
-        z_shape
-    )
+    return 0.5 * z * (z - 1) * np.pi ** (-z / 2) * gamma(z / 2) * _wrap(fp.zeta)(z)
 
 
 def f(z):
@@ -138,7 +116,21 @@ args = [
     #
     ("1z.svg", lambda z: 1 / z, (-2.0, +2.0), (-2.0, +2.0)),
     ("1z2.svg", lambda z: 1 / z ** 2, (-2.0, +2.0), (-2.0, +2.0)),
-    ("z+1-z-1.svg", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
+    ("1z3.svg", lambda z: 1 / z ** 3, (-2.0, +2.0), (-2.0, +2.0)),
+    # möbius
+    ("moebius1.svg", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
+    (
+        "moebius2.svg",
+        lambda z: (z + 1.5 - 0.5j) * (1.5 - 0.5j) / (z - 1.5 + 0.5j) * (-1.5 + 0.5j),
+        (-5, +5),
+        (-5, +5),
+    ),
+    (
+        "moebius3.svg",
+        lambda z: (-1.0j * z) / (1.0j * z + 1.5 - 0.5j),
+        (-5, +5),
+        (-5, +5),
+    ),
     #
     # roots of unity
     ("z6+1.svg", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
@@ -205,16 +197,35 @@ args = [
     #
     ("gamma.svg", gamma, (-5, +5), (-5, +5)),
     ("digamma.svg", digamma, (-5, +5), (-5, +5)),
-    ("zeta.svg", riemann_zeta, (-30, +30), (-30, +30)),
+    ("zeta.svg", _wrap(fp.zeta), (-30, +30), (-30, +30)),
     #
     ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
-    ("riemann-siegel-z.svg", riemann_siegel_z, (-20, +20), (-20, +20)),
-    ("riemann-siegel-theta.svg", riemann_siegel_theta, (-20, +20), (-20, +20)),
+    ("riemann-siegel-z.svg", _wrap(fp.siegelz), (-20, +20), (-20, +20)),
+    ("riemann-siegel-theta.svg", _wrap(fp.siegeltheta), (-20, +20), (-20, +20)),
     #
     # jacobi elliptic functions
     ("ellipj-sn-06.svg", lambda z: spx.ellipj(z, 0.6)[0], (-6, +6), (-6, +6)),
     ("ellipj-cn-06.svg", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
     ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
+    # jacobi theta
+    (
+        "jtheta1.svg",
+        _wrap(lambda z: fp.jtheta(1, z, complex(0.1 * np.exp(0.1j * np.pi)))),
+        (-8, +8),
+        (-8, +8),
+    ),
+    (
+        "jtheta2.svg",
+        _wrap(lambda z: fp.jtheta(2, z, complex(0.1 * np.exp(0.1j * np.pi)))),
+        (-8, +8),
+        (-8, +8),
+    ),
+    (
+        "jtheta3.svg",
+        _wrap(lambda z: fp.jtheta(3, z, complex(0.1 * np.exp(0.1j * np.pi)))),
+        (-8, +8),
+        (-8, +8),
+    ),
     #
     # bessel
     ("bessel-1.svg", lambda z: jn(1, z), (-9, +9), (-9, +9)),
@@ -245,14 +256,9 @@ args = [
         (-2.5, +2.5),
     ),
     #
-    #
-    (
-        "moebius1.svg",
-        lambda z: (z + 1.5 - 0.5j) * (1.5 - 0.5j) / (z - 1.5 + 0.5j) * (-1.5 + 0.5j),
-        (-5, +5),
-        (-5, +5),
-    ),
-    ("kleinj.svg", kleinj, (-1.0, +1.0), (1.0e-5, +2.0)),
+    # modular forms
+    ("kleinj.svg", _wrap(fp.kleinj), (-1.5, +1.5), (1.0e-5, +2.0)),
+    ("dedekind-eta.svg", _wrap(fp.eta), (-0.4, +0.4), (1.0e-5, +0.5)),
     #
     # # https://www.dynamicmath.xyz
     # (
@@ -272,12 +278,14 @@ args = [
     #
 ]
 for filename, fun, x, y in args:
+    diag_length = np.sqrt((x[1] - x[0]) ** 2 + (y[1] - y[0]) ** 2)
     cplot.plot(
         fun,
         (x[0], x[1], n),
         (y[0], y[1], n),
         add_colorbars=False,
         add_axes_labels=False,
+        min_contour_length=1.0e-2 * diag_length,
     )
     plt.savefig(filename, transparent=True, bbox_inches="tight")
     plt.close()
