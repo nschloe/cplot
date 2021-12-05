@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Callable
 
 import matplotlib.pyplot as plt
-import mplx
+import matplotx
 import numpy as np
 from matplotlib import cm, colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -133,11 +133,12 @@ def _plot_contour_abs(
     emphasize_contour_1: bool = True,
     alpha: float = 1.0,
     color: str | None = None,
+    min_contour_length: float | None = None,
 ):
     vals = np.abs(fz)
 
     def _plot_contour(levels, colors, linestyles, alpha):
-        plt.contour(
+        matplotx.contour(
             Z.real,
             Z.imag,
             vals,
@@ -145,6 +146,10 @@ def _plot_contour_abs(
             colors=colors,
             linestyles=linestyles,
             alpha=alpha,
+            min_contour_length=min_contour_length,
+            # choose a minjump above machine precision; avoids
+            # speckles for functions like `z / abs(z)`
+            min_jump=1.0e-15,
         )
 
     if isinstance(contours, (float, int)):
@@ -184,51 +189,53 @@ def _plot_contour_abs(
 def _plot_contour_arg(
     Z,
     fz,
-    contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
+    angles: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
     colorspace: str = "CAM16",
     saturation_adjustment: float = 1.28,
     max_jump: float = 1.0,
     lightness_adjustment: float = 1.0,
     alpha: float = 1.0,
+    min_contour_length: float | None = None,
 ):
-    contours = np.asarray(contours)
+    angles = np.asarray(angles)
 
-    # assert contours in [-pi, pi], like np.angle
-    contours = np.mod(contours + np.pi, 2 * np.pi) - np.pi
+    # assert angles in [-pi, pi], like np.angle
+    angles = np.mod(angles + np.pi, 2 * np.pi) - np.pi
 
     # Contour contours must be increasing
-    contours = np.sort(contours)
+    angles = np.sort(angles)
 
     # mpl has problems with plotting the contour at +pi because that's where the
     # branch cut in np.angle happens. Separate out this case and move the branch cut
     # to 0/2*pi there.
-    is_level1 = (contours > -np.pi + 0.1) & (contours < np.pi - 0.1)
-    contours1 = contours[is_level1]
-    contours2 = contours[~is_level1]
-    contours2 = np.mod(contours2, 2 * np.pi)
+    is_level1 = (angles > -np.pi + 0.1) & (angles < np.pi - 0.1)
+    angles1 = angles[is_level1]
+    angles2 = angles[~is_level1]
+    angles2 = np.mod(angles2, 2 * np.pi)
 
-    for contours, angle_fun in [
-        (contours1, np.angle),
-        (contours2, lambda z: np.mod(np.angle(z), 2 * np.pi)),
+    for angles, angle_fun in [
+        (angles1, np.angle),
+        (angles2, lambda z: np.mod(np.angle(z), 2 * np.pi)),
     ]:
-        contours = np.asarray(contours)
+        angles = np.asarray(angles)
 
-        if len(contours) == 0:
+        if len(angles) == 0:
             continue
 
         linecolors = get_srgb1(
-            lightness_adjustment * np.exp(contours * 1j),
+            lightness_adjustment * np.exp(angles * 1j),
             abs_scaling=lambda r: r / (r + 1),
             colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
         )
 
-        mplx.contour(
+        matplotx.contour(
             Z.real,
             Z.imag,
             angle_fun(fz),
-            levels=list(contours),
+            levels=list(angles),
             colors=list(linecolors),
+            min_contour_length=min_contour_length,
             alpha=alpha,
             max_jump=max_jump,
         )
@@ -252,6 +259,7 @@ def plot(
     colorbar_pad: tuple[float, float] = (0.2, 0.5),
     add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
+    min_contour_length: float | None = None,
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
     fz = f(Z)
@@ -259,11 +267,6 @@ def plot(
     if callable(abs_scaling):
         asc = abs_scaling
     else:
-        try:
-            abs_scaling = float(abs_scaling)
-        except TypeError:
-            raise TypeError("abs_scaling must be callable or float")
-
         assert abs_scaling > 1
         alpha = np.log(2) / np.log(abs_scaling)
 
@@ -296,13 +299,14 @@ def plot(
             contours=contours_abs,
             emphasize_contour_1=emphasize_abs_contour_1,
             alpha=0.2,
+            min_contour_length=min_contour_length,
         )
 
     if contours_arg is not None:
         _plot_contour_arg(
             Z,
             fz,
-            contours=contours_arg,
+            angles=contours_arg,
             colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
@@ -311,6 +315,7 @@ def plot(
             # dissolve into areas of nearly equal arg remain recognizable. (E.g., tan,
             # zeta, erf,...).
             lightness_adjustment=1.5,
+            min_contour_length=min_contour_length,
         )
 
     if add_axes_labels:
@@ -394,7 +399,7 @@ def plot_contours(
         _plot_contour_arg(
             Z,
             fz,
-            contours=contours_arg,
+            angles=contours_arg,
             colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
