@@ -155,16 +155,18 @@ def _plot_contour_abs(
     if isinstance(contours, (float, int)):
         base = contours
 
-        min_exp = np.log(np.min(vals)) / np.log(base)
-        if np.isnan(min_exp):
+        minval = np.min(vals)
+        if np.any(np.isnan(vals)) or minval == 0.0:
             min_exp = -100
         else:
+            min_exp = np.log(np.min(vals)) / np.log(base)
             min_exp = int(max(min_exp, -100))
 
-        max_exp = np.log(np.max(vals)) / np.log(base)
-        if np.isnan(max_exp):
-            max_exp = -100
+        maxval = np.max(vals)
+        if np.any(np.isnan(vals)) or maxval == 0.0:
+            max_exp = 100
         else:
+            max_exp = np.log(maxval) / np.log(base)
             max_exp = int(min(max_exp, 100))
 
         contours_neg = [base ** k for k in range(min_exp, 0)]
@@ -242,10 +244,34 @@ def _plot_contour_arg(
     plt.gca().set_aspect("equal")
 
 
+class Plotter:
+    def __init__(
+        self, x_range: tuple[float, float, int], y_range: tuple[float, float, int]
+    ):
+        self.Z = _get_z_grid_for_image(x_range, y_range)
+        self.extent = (x_range[0], x_range[1], y_range[0], y_range[1])
+
+    def plot(self, fz, *args, **kwargs):
+        return _plot(self.Z, fz, self.extent, *args, **kwargs)
+
+
 def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
     y_range: tuple[float, float, int],
+    *args,
+    **kwargs,
+):
+    extent = (x_range[0], x_range[1], y_range[0], y_range[1])
+    Z = _get_z_grid_for_image(x_range, y_range)
+    fz = f(Z)
+    _plot(Z, fz, extent, *args, **kwargs)
+
+
+def _plot(
+    Z: np.ndarray,
+    fz: np.ndarray,
+    extent: tuple[float, float, float, float],
     # If you're changing contours_abs to x and want the abs_scaling to follow along,
     # you'll have to set it to the same value.
     abs_scaling: float | Callable[[np.ndarray], np.ndarray] = 2,
@@ -261,8 +287,7 @@ def plot(
     saturation_adjustment: float = 1.28,
     min_contour_length: float | None = None,
 ):
-    Z = _get_z_grid_for_image(x_range, y_range)
-    fz = f(Z)
+    assert Z.shape == fz.shape
 
     if callable(abs_scaling):
         asc = abs_scaling
@@ -275,7 +300,6 @@ def plot(
 
         asc = alpha_scaling
 
-    extent = (x_range[0], x_range[1], y_range[0], y_range[1])
     _plot_colors(
         fz,
         extent,

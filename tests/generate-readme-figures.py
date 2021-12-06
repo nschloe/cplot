@@ -257,8 +257,8 @@ args = [
     ),
     #
     # modular forms
-    ("kleinj.svg", _wrap(fp.kleinj), (-1.5, +1.5), (1.0e-5, +2.0)),
-    ("dedekind-eta.svg", _wrap(fp.eta), (-0.4, +0.4), (1.0e-5, +0.5)),
+    ("kleinj.svg", _wrap(fp.kleinj), (-2.0, +2.0), (1.0e-5, +2.0)),
+    ("dedekind-eta.svg", _wrap(fp.eta), (-0.3, +0.3), (1.0e-5, +0.3)),
     #
     # # https://www.dynamicmath.xyz
     # (
@@ -279,10 +279,11 @@ args = [
 ]
 for filename, fun, x, y in args:
     diag_length = np.sqrt((x[1] - x[0]) ** 2 + (y[1] - y[0]) ** 2)
+    m = int(n * (y[1] - y[0]) / (x[1] - x[0]))
     cplot.plot(
         fun,
         (x[0], x[1], n),
-        (y[0], y[1], n),
+        (y[0], y[1], m),
         add_colorbars=False,
         add_axes_labels=False,
         min_contour_length=1.0e-2 * diag_length,
