@@ -33,37 +33,41 @@ class Taylor:
         return self.val
 
 
-def create_taylor_anim(taylor, p, title, max_degree):
+def create_taylor_anim(taylor: Taylor, p: cplot.Plotter, name: str, max_degree: int):
+    p.plot(lambdify(taylor.var, taylor.df)(p.Z))
+    plt.savefig(f"{name}.svg", bbox_inches="tight")
+    plt.close()
+
     idx = 0
     for k in range(max_degree + 1):
         print(f"{k}...")
         val = next(taylor)
         p.plot(val)
-        plt.suptitle(f"{title}, degree {k}")
+        plt.suptitle(f"Taylor expansion of {name} around {taylor.z0}, degree {k}")
         plt.savefig(f"data/out{idx:04d}.png", bbox_inches="tight")
         plt.close()
         idx += 1
 
 
-# title = "Taylor expansion of exp around 0"
-# p = cplot.Plotter((-7.0, 7.0, 400), (-7.0, 7.0, 400))
-# taylor = Taylor(sympy.exp, 0.0, p.Z)
-# max_degree = 30
+name = "exp"
+p = cplot.Plotter((-7.0, 7.0, 400), (-7.0, 7.0, 400))
+taylor = Taylor(sympy.exp, 0, p.Z)
+max_degree = 30
 
-# title = "Taylor expansion of sin around 0"
+# name = "sin"
 # p = cplot.Plotter((-10.0, 10.0, 640), (-6.0, 6.0, 400))
 # taylor = Taylor(sympy.sin, 0.0, p.Z)
 # max_degree = 30
 
-# title = "Taylor expansion of log around 1"
+# name = "log"
 # p = cplot.Plotter((-0.7, 2.7, 400), (-1.7, 1.7, 400))
 # taylor = Taylor(sympy.log, 1.0, p.Z)
 # max_degree = 40
 
-title = "Taylor expansion of tan around 0"
-p = cplot.Plotter((-2.2, 2.2, 400), (-2.2, 2.2, 400))
-taylor = Taylor(sympy.tan, 0.0, p.Z)
-max_degree = 40
+# name = "tan"
+# p = cplot.Plotter((-2.2, 2.2, 400), (-2.2, 2.2, 400))
+# taylor = Taylor(sympy.tan, 0.0, p.Z)
+# max_degree = 40
 
 
-create_taylor_anim(taylor, p, title, max_degree)
+create_taylor_anim(taylor, p, name, max_degree)
