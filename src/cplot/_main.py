@@ -266,6 +266,7 @@ def plot(
     Z = _get_z_grid_for_image(x_range, y_range)
     fz = f(Z)
     _plot(Z, fz, extent, *args, **kwargs)
+    return plt
 
 
 def _plot(
