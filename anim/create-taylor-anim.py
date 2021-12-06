@@ -12,7 +12,7 @@ import cplot
 
 class Taylor:
     def __init__(self, f: Callable, z0: complex, Z: np.ndarray):
-        self.z0 = np.full_like(Z, z0)
+        self.z0 = z0
         self.var = sympy.Symbol("z")
         self.Zz0 = Z - self.z0
         self.val = None
@@ -22,7 +22,7 @@ class Taylor:
 
     def __next__(self) -> np.ndarray:
         if self.k == 0:
-            self.val = lambdify(self.var, self.df)(self.z0)
+            self.val = lambdify(self.var, self.df)(self.z0).astype(complex) * self.zk
             self.k += 1
             return self.val
 
@@ -33,9 +33,10 @@ class Taylor:
         return self.val
 
 
-def create_taylor_anim(taylor, p, title):
+def create_taylor_anim(taylor, p, title, max_degree):
     idx = 0
-    for k in range(41):
+    for k in range(max_degree + 1):
+        print(f"{k}...")
         val = next(taylor)
         p.plot(val)
         plt.suptitle(f"{title}, degree {k}")
@@ -45,21 +46,24 @@ def create_taylor_anim(taylor, p, title):
 
 
 # title = "Taylor expansion of exp around 0"
-# p = cplot.Plotter((-5.0, 5.0, 400), (-5.0, 5.0, 400))
+# p = cplot.Plotter((-7.0, 7.0, 400), (-7.0, 7.0, 400))
 # taylor = Taylor(sympy.exp, 0.0, p.Z)
+# max_degree = 30
 
 # title = "Taylor expansion of sin around 0"
-# p = cplot.Plotter((-8.0, 8.0, 640), (-5.0, 5.0, 400))
+# p = cplot.Plotter((-10.0, 10.0, 640), (-6.0, 6.0, 400))
 # taylor = Taylor(sympy.sin, 0.0, p.Z)
+# max_degree = 30
 
-title = "Taylor expansion of log around 1"
-p = cplot.Plotter((-0.7, 2.7, 400), (-1.7, 1.7, 400))
-taylor = Taylor(sympy.log, 1.0, p.Z)
+# title = "Taylor expansion of log around 1"
+# p = cplot.Plotter((-0.7, 2.7, 400), (-1.7, 1.7, 400))
+# taylor = Taylor(sympy.log, 1.0, p.Z)
+# max_degree = 40
 
-# title = "Taylor expansion of tan around 0"
-# p = cplot.Plotter((-2.2, 2.2, 400), (-2.2, 2.2, 400))
-# taylor = Taylor(sympy.tan, 0.0, p.Z)
+title = "Taylor expansion of tan around 0"
+p = cplot.Plotter((-2.2, 2.2, 400), (-2.2, 2.2, 400))
+taylor = Taylor(sympy.tan, 0.0, p.Z)
+max_degree = 40
 
 
-create_taylor_anim(taylor, p, title)
-# create_taylor_anim_smooth()
+create_taylor_anim(taylor, p, title, max_degree)
