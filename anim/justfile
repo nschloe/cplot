@@ -1,0 +1,23 @@
+opt:
+	# for file in data/*.png; do convert -resize x400 $file $file; done
+	for file in data/*.png; do optipng -quiet $file; done
+
+apng:
+	# /kc is essential for the frames not to overlap
+	apngasm out.png data/*.png /kc /kp
+
+gif:
+	# <https://stackoverflow.com/a/23285387/353337>
+	convert -dispose 2 -delay 10 -loop 0 data/*.png out.gif
+
+webp:
+	img2webp data/*.png -min_size -lossy -o out.webp
+
+mp4:
+	ffmpeg -framerate 2 -i data/out%04d.png -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white" -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+
+webm:
+	# ffmpeg -framerate 2 -i data/out%04d.png -c:v libaom-av1 -strict -2 -r 30 -pix_fmt yuv420p out.webm
+	# ffmpeg -framerate 2 -i data/out%04d.png -c:v libvpx-vp9 out.webm
+	# Two-pass encoding, see <https://trac.ffmpeg.org/wiki/Encode/VP9>
+	ffmpeg -framerate 2 -i data/out%04d.png -c:v libvpx-vp9 -b:v 0 -crf 30 -pass 1 -an -f null /dev/null && ffmpeg -framerate 2 -i data/out%04d.png -c:v libvpx-vp9 -b:v 0 -crf 30 -pass 2 -an out.webm
