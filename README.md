@@ -95,7 +95,7 @@ val = cplot.get_srgb1(z)
 [This way to the gallery!](https://github.com/nschloe/cplot/wiki/Gallery)
 
 <a href="https://github.com/nschloe/cplot/wiki/Gallery">
-  <img alt="cplot" src="https://nschloe.github.io/cplot/gallery-thumbnail.svg" width="30%"/>
+  <img alt="cplot" src="https://nschloe.github.io/cplot/gallery-thumbnail.png" width="30%"/>
 </a>
 
 
