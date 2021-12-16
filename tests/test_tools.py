@@ -7,7 +7,7 @@ import cplot
 def test_create():
     rgb = cplot.create_colormap(L=50)
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list(
-        "custom", rgb.T, N=len(rgb.T)
+        "custom", rgb.data.T, N=len(rgb.data.T)
     )
     # cmap = 'gray'
 
