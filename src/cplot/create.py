@@ -1,11 +1,11 @@
 import colorio
 import matplotlib.pyplot as plt
 import numpy as np
-from colorio.cs import ColorCoordinates
+from colorio.cs import SRGB1, ColorCoordinates, convert
 
 
-def show_linear(vals):
-    plt.imshow(np.multiply.outer(np.ones(60), vals.T))
+def show_linear(vals: ColorCoordinates) -> None:
+    plt.imshow(np.multiply.outer(np.ones(60), vals.data.T))
     plt.show()
 
 
@@ -15,11 +15,11 @@ def show_circular(vals, rot=0.0):
 
     alpha = np.mod(np.arctan2(y, x) - rot, 2 * np.pi)
 
-    m = vals.shape[1]
+    m = vals.data.shape[1]
     ls = np.linspace(0, 2 * np.pi, m, endpoint=False)
-    r = np.interp(alpha.reshape(-1), ls, vals[0]).reshape(alpha.shape)
-    g = np.interp(alpha.reshape(-1), ls, vals[1]).reshape(alpha.shape)
-    b = np.interp(alpha.reshape(-1), ls, vals[2]).reshape(alpha.shape)
+    r = np.interp(alpha.reshape(-1), ls, vals.data[0]).reshape(alpha.shape)
+    g = np.interp(alpha.reshape(-1), ls, vals.data[1]).reshape(alpha.shape)
+    b = np.interp(alpha.reshape(-1), ls, vals.data[2]).reshape(alpha.shape)
     out = np.array([r, g, b])
 
     plt.imshow(out.T)
@@ -41,7 +41,7 @@ def find_max_srgb_radius(cs, L=50, tol=1.0e-6):
         coords = ColorCoordinates(
             [np.full(n, L), r * np.cos(alpha), r * np.sin(alpha)], cs
         )
-        vals = coords.get_rgb1(mode="ignore")
+        vals = convert(coords, SRGB1(mode="ignore"))
 
         if np.any(vals < 0) or np.any(vals > 1):
             r1 = r
@@ -63,4 +63,4 @@ def create_colormap(L=50):
     coords = ColorCoordinates(
         [np.full(n, L), r0 * np.cos(alpha), r0 * np.sin(alpha)], cs
     )
-    return coords.get_rgb1("clip")
+    return convert(coords, SRGB1("clip"))

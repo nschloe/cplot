@@ -4,7 +4,7 @@ from typing import Callable
 
 import colorio
 import numpy as np
-from colorio.cs import ColorCoordinates
+from colorio.cs import SRGB1, ColorCoordinates, convert
 from numpy.typing import ArrayLike
 
 
@@ -110,7 +110,7 @@ def get_srgb1(
             ],
             cam,
         )
-        srgb_vals = coords.get_rgb1("clip")
+        srgb_vals = convert(coords, SRGB1("clip"))
 
     elif colorspace.upper() == "CIELAB":
         cielab = colorio.cs.CIELAB()
@@ -137,7 +137,7 @@ def get_srgb1(
             ],
             cielab,
         )
-        srgb_vals = coords.get_rgb1("clip")
+        srgb_vals = convert(coords, SRGB1("clip"))
 
     elif colorspace.upper() == "OKLAB":
         oklab = colorio.cs.OKLAB()
@@ -163,7 +163,7 @@ def get_srgb1(
             ],
             oklab,
         )
-        srgb_vals = coords.get_rgb1("clip")
+        srgb_vals = convert(coords, SRGB1("clip"))
 
     else:
         assert (
@@ -181,4 +181,4 @@ def get_srgb1(
         )
         srgb_vals = hsl.to_rgb1(coords)
 
-    return np.moveaxis(srgb_vals, 0, -1)
+    return np.moveaxis(srgb_vals.data, 0, -1)
