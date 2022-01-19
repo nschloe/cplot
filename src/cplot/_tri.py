@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Callable
 
 import matplotlib as mpl
@@ -30,14 +31,18 @@ def tricontour_abs(triang, fz: ArrayLike, contours: ArrayLike | None = None):
     vals = np.abs(fz)
 
     def plot_contours(levels, colors, linestyles, alpha):
-        plt.tricontour(
-            triang,
-            vals,
-            levels=levels,
-            colors=colors,
-            linestyles=linestyles,
-            alpha=alpha,
-        )
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore", "No contour levels were found within the data range."
+            )
+            plt.tricontour(
+                triang,
+                vals,
+                levels=levels,
+                colors=colors,
+                linestyles=linestyles,
+                alpha=alpha,
+            )
 
     if contours is None:
         base = 2.0

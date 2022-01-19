@@ -1,3 +1,4 @@
+from .__about__ import __version__
 from ._colors import get_srgb1
 from ._main import Plotter, plot, plot_abs, plot_arg, plot_contours, plot_phase
 from ._tri import tricontour_abs, tripcolor
@@ -22,4 +23,6 @@ __all__ = [
     "tricontour_abs",
     #
     "Plotter",
+    #
+    "__version__",
 ]
