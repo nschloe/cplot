@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Callable
 
 import matplotlib.pyplot as plt
@@ -13,6 +14,8 @@ from scipy.special import (
     expi,
     fresnel,
     gamma,
+    hankel1,
+    hankel2,
     jn,
     lambertw,
     sici,
@@ -31,6 +34,8 @@ style = {
     "ytick.color": _gray,
 }
 plt.style.use(style)
+
+plot_dir = Path(__file__).resolve().parent / ".." / "plots"
 
 
 def _wrap(fun: Callable) -> Callable:
@@ -87,24 +92,24 @@ n = 401
 cplot.plot(
     lambda z: np.cos(np.log(z) / z) / z, (-1, 1, n), (-1, 1, n), abs_scaling=10.0
 )
-plt.savefig("siam.svg", transparent=True, bbox_inches="tight")
+plt.savefig(plot_dir / "siam.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 n = 400
 cplot.plot_abs(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z-abs.svg", bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z-abs.svg", bbox_inches="tight")
 plt.close()
 
 cplot.plot_arg(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z-arg.svg", bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z-arg.svg", bbox_inches="tight")
 plt.close()
 
 cplot.plot_contours(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z-contours.svg", bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z-contours.svg", bbox_inches="tight")
 plt.close()
 
 cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig("sinz3z.svg", transparent=True, bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 
@@ -260,6 +265,10 @@ args = [
     ("kleinj.svg", _wrap(fp.kleinj), (-2.0, +2.0), (1.0e-5, +2.0)),
     ("dedekind-eta.svg", _wrap(fp.eta), (-0.3, +0.3), (1.0e-5, +0.3)),
     #
+    ("hankel1a.svg", lambda z: hankel1(1.0, z), (-2, +2), (-2, +2)),
+    ("hankel1b.svg", lambda z: hankel1(3.1, z), (-3, +3), (-3, +3)),
+    ("hankel2.svg", lambda z: hankel2(1.0, z), (-2, +2), (-2, +2)),
+    #
     # # https://www.dynamicmath.xyz
     # (
     #     "some-polynomial.svg",
@@ -277,6 +286,7 @@ args = [
     # ),
     #
 ]
+
 for filename, fun, x, y in args:
     diag_length = np.sqrt((x[1] - x[0]) ** 2 + (y[1] - y[0]) ** 2)
     m = int(n * (y[1] - y[0]) / (x[1] - x[0]))
@@ -288,5 +298,5 @@ for filename, fun, x, y in args:
         add_axes_labels=False,
         min_contour_length=1.0e-2 * diag_length,
     )
-    plt.savefig(filename, transparent=True, bbox_inches="tight")
+    plt.savefig(plot_dir / filename, transparent=True, bbox_inches="tight")
     plt.close()
