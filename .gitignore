@@ -13,3 +13,5 @@ build/
 *.svg
 .tox/
 plots/
+experiments/
+article/
