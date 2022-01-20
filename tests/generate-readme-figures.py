@@ -20,6 +20,7 @@ from scipy.special import (
     lambertw,
     sici,
     wofz,
+    yv,
 )
 
 import cplot
@@ -60,7 +61,7 @@ def f(z):
 # n = 201
 # for name in ["cam16", "cielab", "oklab", "hsl"]:
 #     cplot.plot(f, (-3, +3, n), (-3, +3, n), colorspace=name, add_colorbars=False)
-#     plt.savefig(f"{name}-10.svg", transparent=True, bbox_inches="tight")
+#     plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
 #     plt.close()
 #     #
 #     cplot.plot(
@@ -71,7 +72,7 @@ def f(z):
 #         abs_scaling=2.0,
 #         add_colorbars=False,
 #     )
-#     plt.savefig(f"{name}-05.svg", transparent=True, bbox_inches="tight")
+#     plt.savefig(f"{name}-05.png", transparent=True, bbox_inches="tight")
 #     plt.close()
 #     #
 #     cplot.plot(
@@ -82,7 +83,7 @@ def f(z):
 #         abs_scaling=lambda x: np.full_like(x, 0.5),
 #         add_colorbars=False,
 #     )
-#     plt.savefig(f"{name}-00.svg", transparent=True, bbox_inches="tight")
+#     plt.savefig(f"{name}-00.png", transparent=True, bbox_inches="tight")
 #     plt.close()
 
 
@@ -92,193 +93,197 @@ n = 401
 cplot.plot(
     lambda z: np.cos(np.log(z) / z) / z, (-1, 1, n), (-1, 1, n), abs_scaling=10.0
 )
-plt.savefig(plot_dir / "siam.svg", transparent=True, bbox_inches="tight")
+plt.savefig(plot_dir / "siam.png", transparent=True, bbox_inches="tight")
 plt.close()
 
 n = 400
 cplot.plot_abs(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig(plot_dir / "sinz3z-abs.svg", bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z-abs.png", bbox_inches="tight")
 plt.close()
 
 cplot.plot_arg(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig(plot_dir / "sinz3z-arg.svg", bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z-arg.png", bbox_inches="tight")
 plt.close()
 
 cplot.plot_contours(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig(plot_dir / "sinz3z-contours.svg", bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z-contours.png", bbox_inches="tight")
 plt.close()
 
 cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
-plt.savefig(plot_dir / "sinz3z.svg", transparent=True, bbox_inches="tight")
+plt.savefig(plot_dir / "sinz3z.png", transparent=True, bbox_inches="tight")
 plt.close()
 
 
 args = [
     #
-    ("z1.svg", lambda z: z ** 1, (-2, +2), (-2, +2)),
-    ("z2.svg", lambda z: z ** 2, (-2, +2), (-2, +2)),
-    ("z3.svg", lambda z: z ** 3, (-2, +2), (-2, +2)),
+    ("z1.png", lambda z: z ** 1, (-2, +2), (-2, +2)),
+    ("z2.png", lambda z: z ** 2, (-2, +2), (-2, +2)),
+    ("z3.png", lambda z: z ** 3, (-2, +2), (-2, +2)),
     #
-    ("1z.svg", lambda z: 1 / z, (-2.0, +2.0), (-2.0, +2.0)),
-    ("1z2.svg", lambda z: 1 / z ** 2, (-2.0, +2.0), (-2.0, +2.0)),
-    ("1z3.svg", lambda z: 1 / z ** 3, (-2.0, +2.0), (-2.0, +2.0)),
+    ("1z.png", lambda z: 1 / z, (-2.0, +2.0), (-2.0, +2.0)),
+    ("1z2.png", lambda z: 1 / z ** 2, (-2.0, +2.0), (-2.0, +2.0)),
+    ("1z3.png", lambda z: 1 / z ** 3, (-2.0, +2.0), (-2.0, +2.0)),
     # möbius
-    ("moebius1.svg", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
+    ("moebius1.png", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
     (
-        "moebius2.svg",
+        "moebius2.png",
         lambda z: (z + 1.5 - 0.5j) * (1.5 - 0.5j) / (z - 1.5 + 0.5j) * (-1.5 + 0.5j),
         (-5, +5),
         (-5, +5),
     ),
     (
-        "moebius3.svg",
+        "moebius3.png",
         lambda z: (-1.0j * z) / (1.0j * z + 1.5 - 0.5j),
         (-5, +5),
         (-5, +5),
     ),
     #
     # roots of unity
-    ("z6+1.svg", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
-    ("z6-1.svg", lambda z: z ** 6 - 1, (-1.5, 1.5), (-1.5, 1.5)),
-    ("z-6+1.svg", lambda z: z ** (-6) + 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z6+1.png", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z6-1.png", lambda z: z ** 6 - 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z-6+1.png", lambda z: z ** (-6) + 1, (-1.5, 1.5), (-1.5, 1.5)),
     #
-    ("zz.svg", lambda z: z ** z, (-3, +3), (-3, +3)),
-    ("1zz.svg", lambda z: (1 / z) ** z, (-3, +3), (-3, +3)),
-    ("z1z.svg", lambda z: z ** (1 / z), (-3, +3), (-3, +3)),
+    ("zz.png", lambda z: z ** z, (-3, +3), (-3, +3)),
+    ("1zz.png", lambda z: (1 / z) ** z, (-3, +3), (-3, +3)),
+    ("z1z.png", lambda z: z ** (1 / z), (-3, +3), (-3, +3)),
     #
-    ("root2.svg", np.sqrt, (-2, +2), (-2, +2)),
-    ("root3.svg", lambda x: x ** (1 / 3), (-2, +2), (-2, +2)),
-    ("root4.svg", lambda x: x ** 0.25, (-2, +2), (-2, +2)),
+    ("root2.png", np.sqrt, (-2, +2), (-2, +2)),
+    ("root3.png", lambda x: x ** (1 / 3), (-2, +2), (-2, +2)),
+    ("root4.png", lambda x: x ** 0.25, (-2, +2), (-2, +2)),
     #
-    ("log.svg", np.log, (-2, +2), (-2, +2)),
-    ("exp.svg", np.exp, (-3, +3), (-3, +3)),
-    ("exp2.svg", np.exp2, (-3, +3), (-3, +3)),
+    ("log.png", np.log, (-2, +2), (-2, +2)),
+    ("exp.png", np.exp, (-3, +3), (-3, +3)),
+    ("exp2.png", np.exp2, (-3, +3), (-3, +3)),
     #
     # non-analytic functions
-    ("re.svg", np.real, (-2, +2), (-2, +2)),
-    # ("abs.svg", np.abs, (-2, +2), (-2, +2)),
-    ("z-absz.svg", lambda z: z / np.abs(z), (-2, +2), (-2, +2)),
-    ("conj.svg", np.conj, (-2, +2), (-2, +2)),
+    ("re.png", np.real, (-2, +2), (-2, +2)),
+    # ("abs.png", np.abs, (-2, +2), (-2, +2)),
+    ("z-absz.png", lambda z: z / np.abs(z), (-2, +2), (-2, +2)),
+    ("conj.png", np.conj, (-2, +2), (-2, +2)),
     #
     # essential singularities
-    ("exp1z.svg", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
-    ("zsin1z.svg", lambda z: z * np.sin(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
-    ("cos1z.svg", lambda z: np.cos(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
+    ("exp1z.png", lambda z: np.exp(1 / z), (-1, +1), (-1, +1)),
+    ("zsin1z.png", lambda z: z * np.sin(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
+    ("cos1z.png", lambda z: np.cos(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
     #
-    ("exp-z2.svg", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
-    ("11z2.svg", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
-    ("erf.svg", erf, (-3, +3), (-3, +3)),
+    ("exp-z2.png", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
+    ("11z2.png", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
+    ("erf.png", erf, (-3, +3), (-3, +3)),
     #
-    ("fresnel-s.svg", lambda z: fresnel(z)[0], (-4, +4), (-4, +4)),
-    ("fresnel-c.svg", lambda z: fresnel(z)[1], (-4, +4), (-4, +4)),
-    ("faddeeva.svg", wofz, (-4, +4), (-4, +4)),
+    ("fresnel-s.png", lambda z: fresnel(z)[0], (-4, +4), (-4, +4)),
+    ("fresnel-c.png", lambda z: fresnel(z)[1], (-4, +4), (-4, +4)),
+    ("faddeeva.png", wofz, (-4, +4), (-4, +4)),
     #
-    ("sin.svg", np.sin, (-5, +5), (-5, +5)),
-    ("cos.svg", np.cos, (-5, +5), (-5, +5)),
-    ("tan.svg", np.tan, (-5, +5), (-5, +5)),
+    ("sin.png", np.sin, (-5, +5), (-5, +5)),
+    ("cos.png", np.cos, (-5, +5), (-5, +5)),
+    ("tan.png", np.tan, (-5, +5), (-5, +5)),
     #
-    ("sec.svg", lambda z: 1 / np.cos(z), (-5, +5), (-5, +5)),
-    ("csc.svg", lambda z: 1 / np.sin(z), (-5, +5), (-5, +5)),
-    ("cot.svg", lambda z: 1 / np.tan(z), (-5, +5), (-5, +5)),
+    ("sec.png", lambda z: 1 / np.cos(z), (-5, +5), (-5, +5)),
+    ("csc.png", lambda z: 1 / np.sin(z), (-5, +5), (-5, +5)),
+    ("cot.png", lambda z: 1 / np.tan(z), (-5, +5), (-5, +5)),
     #
-    ("sinh.svg", np.sinh, (-5, +5), (-5, +5)),
-    ("cosh.svg", np.cosh, (-5, +5), (-5, +5)),
-    ("tanh.svg", np.tanh, (-5, +5), (-5, +5)),
+    ("sinh.png", np.sinh, (-5, +5), (-5, +5)),
+    ("cosh.png", np.cosh, (-5, +5), (-5, +5)),
+    ("tanh.png", np.tanh, (-5, +5), (-5, +5)),
     #
-    ("arcsin.svg", np.arcsin, (-2, +2), (-2, +2)),
-    ("arccos.svg", np.arccos, (-2, +2), (-2, +2)),
-    ("arctan.svg", np.arctan, (-2, +2), (-2, +2)),
+    ("arcsin.png", np.arcsin, (-2, +2), (-2, +2)),
+    ("arccos.png", np.arccos, (-2, +2), (-2, +2)),
+    ("arctan.png", np.arctan, (-2, +2), (-2, +2)),
     #
-    ("sinz-z.svg", lambda z: np.sin(z) / z, (-7, +7), (-7, +7)),
-    ("cosz-z.svg", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
-    ("tanz-z.svg", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
+    ("sinz-z.png", lambda z: np.sin(z) / z, (-7, +7), (-7, +7)),
+    ("cosz-z.png", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
+    ("tanz-z.png", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
     #
-    ("si.svg", lambda z: sici(z)[0], (-15, +15), (-15, +15)),
-    ("ci.svg", lambda z: sici(z)[1], (-15, +15), (-15, +15)),
-    ("expi.svg", expi, (-15, +15), (-15, +15)),
+    ("si.png", lambda z: sici(z)[0], (-15, +15), (-15, +15)),
+    ("ci.png", lambda z: sici(z)[1], (-15, +15), (-15, +15)),
+    ("expi.png", expi, (-15, +15), (-15, +15)),
     #
-    ("exp1.svg", exp1, (-5, +5), (-5, +5)),
-    ("lambertw.svg", lambertw, (-5, +5), (-5, +5)),
+    ("exp1.png", exp1, (-5, +5), (-5, +5)),
+    ("lambertw.png", lambertw, (-5, +5), (-5, +5)),
     #
-    ("gamma.svg", gamma, (-5, +5), (-5, +5)),
-    ("digamma.svg", digamma, (-5, +5), (-5, +5)),
-    ("zeta.svg", _wrap(fp.zeta), (-30, +30), (-30, +30)),
+    ("gamma.png", gamma, (-5, +5), (-5, +5)),
+    ("digamma.png", digamma, (-5, +5), (-5, +5)),
+    ("zeta.png", _wrap(fp.zeta), (-30, +30), (-30, +30)),
     #
-    ("riemann-xi.svg", riemann_xi, (-20, +20), (-20, +20)),
-    ("riemann-siegel-z.svg", _wrap(fp.siegelz), (-20, +20), (-20, +20)),
-    ("riemann-siegel-theta.svg", _wrap(fp.siegeltheta), (-20, +20), (-20, +20)),
+    ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
+    ("riemann-siegel-z.png", _wrap(fp.siegelz), (-20, +20), (-20, +20)),
+    ("riemann-siegel-theta.png", _wrap(fp.siegeltheta), (-20, +20), (-20, +20)),
     #
     # jacobi elliptic functions
-    ("ellipj-sn-06.svg", lambda z: spx.ellipj(z, 0.6)[0], (-6, +6), (-6, +6)),
-    ("ellipj-cn-06.svg", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
-    ("ellipj-dn-06.svg", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
+    ("ellipj-sn-06.png", lambda z: spx.ellipj(z, 0.6)[0], (-6, +6), (-6, +6)),
+    ("ellipj-cn-06.png", lambda z: spx.ellipj(z, 0.6)[1], (-6, +6), (-6, +6)),
+    ("ellipj-dn-06.png", lambda z: spx.ellipj(z, 0.6)[2], (-6, +6), (-6, +6)),
     # jacobi theta
     (
-        "jtheta1.svg",
+        "jtheta1.png",
         _wrap(lambda z: fp.jtheta(1, z, complex(0.1 * np.exp(0.1j * np.pi)))),
         (-8, +8),
         (-8, +8),
     ),
     (
-        "jtheta2.svg",
+        "jtheta2.png",
         _wrap(lambda z: fp.jtheta(2, z, complex(0.1 * np.exp(0.1j * np.pi)))),
         (-8, +8),
         (-8, +8),
     ),
     (
-        "jtheta3.svg",
+        "jtheta3.png",
         _wrap(lambda z: fp.jtheta(3, z, complex(0.1 * np.exp(0.1j * np.pi)))),
         (-8, +8),
         (-8, +8),
     ),
     #
-    # bessel
-    ("bessel-1.svg", lambda z: jn(1, z), (-9, +9), (-9, +9)),
-    ("bessel-2.svg", lambda z: jn(2, z), (-9, +9), (-9, +9)),
-    ("bessel-3.svg", lambda z: jn(3, z), (-9, +9), (-9, +9)),
+    # bessel, first kind
+    ("bessel1-1.png", lambda z: jn(1, z), (-9, +9), (-9, +9)),
+    ("bessel1-2.png", lambda z: jn(2, z), (-9, +9), (-9, +9)),
+    ("bessel1-3.png", lambda z: jn(3, z), (-9, +9), (-9, +9)),
+    # bessel, second kind
+    ("bessel2-1.png", lambda z: yv(1, z), (-9, +9), (-9, +9)),
+    ("bessel2-2.png", lambda z: yv(2, z), (-9, +9), (-9, +9)),
+    ("bessel2-3.png", lambda z: yv(3, z), (-9, +9), (-9, +9)),
     #
     # airy functions
-    ("airy-ai.svg", lambda z: airy(z)[0], (-6, +6), (-6, +6)),
-    ("airy-bi.svg", lambda z: airy(z)[2], (-6, +6), (-6, +6)),
-    ("airye-ai.svg", lambda z: airye(z)[0], (-6, +6), (-6, +6)),
+    ("airy-ai.png", lambda z: airy(z)[0], (-6, +6), (-6, +6)),
+    ("airy-bi.png", lambda z: airy(z)[2], (-6, +6), (-6, +6)),
+    ("airye-ai.png", lambda z: airye(z)[0], (-6, +6), (-6, +6)),
     #
     (
-        "tanh-sinh.svg",
+        "tanh-sinh.png",
         lambda z: np.tanh(np.pi / 2 * np.sinh(z)),
         (-2.5, +2.5),
         (-2.5, +2.5),
     ),
     (
-        "sinh-sinh.svg",
+        "sinh-sinh.png",
         lambda z: np.sinh(np.pi / 2 * np.sinh(z)),
         (-2.5, +2.5),
         (-2.5, +2.5),
     ),
     (
-        "exp-sinh.svg",
+        "exp-sinh.png",
         lambda z: np.exp(np.pi / 2 * np.sinh(z)),
         (-2.5, +2.5),
         (-2.5, +2.5),
     ),
     #
     # modular forms
-    ("kleinj.svg", _wrap(fp.kleinj), (-2.0, +2.0), (1.0e-5, +2.0)),
-    ("dedekind-eta.svg", _wrap(fp.eta), (-0.3, +0.3), (1.0e-5, +0.3)),
+    ("kleinj.png", _wrap(fp.kleinj), (-2.0, +2.0), (1.0e-5, +2.0)),
+    ("dedekind-eta.png", _wrap(fp.eta), (-0.3, +0.3), (1.0e-5, +0.3)),
     #
-    ("hankel1a.svg", lambda z: hankel1(1.0, z), (-2, +2), (-2, +2)),
-    ("hankel1b.svg", lambda z: hankel1(3.1, z), (-3, +3), (-3, +3)),
-    ("hankel2.svg", lambda z: hankel2(1.0, z), (-2, +2), (-2, +2)),
+    ("hankel1a.png", lambda z: hankel1(1.0, z), (-2, +2), (-2, +2)),
+    ("hankel1b.png", lambda z: hankel1(3.1, z), (-3, +3), (-3, +3)),
+    ("hankel2.png", lambda z: hankel2(1.0, z), (-2, +2), (-2, +2)),
     #
     # # https://www.dynamicmath.xyz
     # (
-    #     "some-polynomial.svg",
+    #     "some-polynomial.png",
     #     lambda z: 0.926 * (z + 7.3857e-2 * z ** 5 + 4.5458e-3 * z ** 9),
     #     (-3, 3),
     #     (-3, 3),
     # ),
     # # non-analytic
     # (
-    #     "non-analytic.svg",
+    #     "non-analytic.png",
     #     lambda z: np.imag(np.exp(-1j * np.pi / 4) * z ** n)
     #     + 1j * np.imag(np.exp(1j * np.pi / 4) * (z - 1) ** 4),
     #     (-2.0, +3.0),
