@@ -89,7 +89,7 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
     if isinstance(abs_contours, (int, float)):
         a = abs_contours
         scaled_vals = abs_scaling(
-            np.array([1 / a ** 3, 1 / a ** 2, 1 / a, 1, a, a ** 2, a ** 3])
+            np.array([1 / a**3, 1 / a**2, 1 / a, 1, a, a**2, a**3])
         )
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
         if isinstance(abs_contours, int) and abs_contours < 4:
@@ -169,8 +169,8 @@ def _plot_contour_abs(
             max_exp = np.log(maxval) / np.log(base)
             max_exp = int(min(max_exp, 100))
 
-        contours_neg = [base ** k for k in range(min_exp, 0)]
-        contours_pos = [base ** k for k in range(1, max_exp + 1)]
+        contours_neg = [base**k for k in range(min_exp, 0)]
+        contours_pos = [base**k for k in range(1, max_exp + 1)]
 
         _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
         if emphasize_contour_1:
@@ -297,7 +297,7 @@ def _plot(
         alpha = np.log(2) / np.log(abs_scaling)
 
         def alpha_scaling(r):
-            return r ** alpha / (r ** alpha + 1)
+            return r**alpha / (r**alpha + 1)
 
         asc = alpha_scaling
 
