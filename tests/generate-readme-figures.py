@@ -55,7 +55,7 @@ def riemann_xi(z):
 
 
 def f(z):
-    return (z ** 2 - 1) * (z - 2 - 1j) ** 2 / (z ** 2 + 2 + 2j)
+    return (z**2 - 1) * (z - 2 - 1j) ** 2 / (z**2 + 2 + 2j)
 
 
 # n = 201
@@ -97,32 +97,32 @@ plt.savefig(plot_dir / "siam.png", transparent=True, bbox_inches="tight")
 plt.close()
 
 n = 400
-cplot.plot_abs(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
+cplot.plot_abs(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z-abs.png", bbox_inches="tight")
 plt.close()
 
-cplot.plot_arg(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
+cplot.plot_arg(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z-arg.png", bbox_inches="tight")
 plt.close()
 
-cplot.plot_contours(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
+cplot.plot_contours(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z-contours.png", bbox_inches="tight")
 plt.close()
 
-cplot.plot(lambda z: np.sin(z ** 3) / z, (-2, 2, n), (-2, 2, n))
+cplot.plot(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z.png", transparent=True, bbox_inches="tight")
 plt.close()
 
 
 args = [
     #
-    ("z1.png", lambda z: z ** 1, (-2, +2), (-2, +2)),
-    ("z2.png", lambda z: z ** 2, (-2, +2), (-2, +2)),
-    ("z3.png", lambda z: z ** 3, (-2, +2), (-2, +2)),
+    ("z1.png", lambda z: z**1, (-2, +2), (-2, +2)),
+    ("z2.png", lambda z: z**2, (-2, +2), (-2, +2)),
+    ("z3.png", lambda z: z**3, (-2, +2), (-2, +2)),
     #
     ("1z.png", lambda z: 1 / z, (-2.0, +2.0), (-2.0, +2.0)),
-    ("1z2.png", lambda z: 1 / z ** 2, (-2.0, +2.0), (-2.0, +2.0)),
-    ("1z3.png", lambda z: 1 / z ** 3, (-2.0, +2.0), (-2.0, +2.0)),
+    ("1z2.png", lambda z: 1 / z**2, (-2.0, +2.0), (-2.0, +2.0)),
+    ("1z3.png", lambda z: 1 / z**3, (-2.0, +2.0), (-2.0, +2.0)),
     # möbius
     ("moebius1.png", lambda z: (z + 1) / (z - 1), (-5, +5), (-5, +5)),
     (
@@ -139,17 +139,17 @@ args = [
     ),
     #
     # roots of unity
-    ("z6+1.png", lambda z: z ** 6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
-    ("z6-1.png", lambda z: z ** 6 - 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z6+1.png", lambda z: z**6 + 1, (-1.5, 1.5), (-1.5, 1.5)),
+    ("z6-1.png", lambda z: z**6 - 1, (-1.5, 1.5), (-1.5, 1.5)),
     ("z-6+1.png", lambda z: z ** (-6) + 1, (-1.5, 1.5), (-1.5, 1.5)),
     #
-    ("zz.png", lambda z: z ** z, (-3, +3), (-3, +3)),
+    ("zz.png", lambda z: z**z, (-3, +3), (-3, +3)),
     ("1zz.png", lambda z: (1 / z) ** z, (-3, +3), (-3, +3)),
     ("z1z.png", lambda z: z ** (1 / z), (-3, +3), (-3, +3)),
     #
     ("root2.png", np.sqrt, (-2, +2), (-2, +2)),
     ("root3.png", lambda x: x ** (1 / 3), (-2, +2), (-2, +2)),
-    ("root4.png", lambda x: x ** 0.25, (-2, +2), (-2, +2)),
+    ("root4.png", lambda x: x**0.25, (-2, +2), (-2, +2)),
     #
     ("log.png", np.log, (-2, +2), (-2, +2)),
     ("exp.png", np.exp, (-3, +3), (-3, +3)),
@@ -166,8 +166,8 @@ args = [
     ("zsin1z.png", lambda z: z * np.sin(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
     ("cos1z.png", lambda z: np.cos(1 / z), (-0.6, +0.6), (-0.6, +0.6)),
     #
-    ("exp-z2.png", lambda z: np.exp(-(z ** 2)), (-3, +3), (-3, +3)),
-    ("11z2.png", lambda z: 1 / (1 + z ** 2), (-3, +3), (-3, +3)),
+    ("exp-z2.png", lambda z: np.exp(-(z**2)), (-3, +3), (-3, +3)),
+    ("11z2.png", lambda z: 1 / (1 + z**2), (-3, +3), (-3, +3)),
     ("erf.png", erf, (-3, +3), (-3, +3)),
     #
     ("fresnel-s.png", lambda z: fresnel(z)[0], (-4, +4), (-4, +4)),
@@ -289,7 +289,8 @@ args = [
     #     (-2.0, +3.0),
     #     (-2.0, +3.0),
     # ),
-    #
+    # logistic regression:
+    ("sigmoid.png", lambda z: 1.0 / (1.0 + np.exp(-z)), (-10, +10), (-10, +10)),
 ]
 
 for filename, fun, x, y in args:

@@ -50,8 +50,8 @@ def tricontour_abs(triang, fz: ArrayLike, contours: ArrayLike | None = None):
         min_exp = int(max(min_exp, -100))
         max_exp = np.log(np.max(vals)) / np.log(base)
         max_exp = int(min(max_exp, 100))
-        contours_neg = [base ** k for k in range(min_exp, 0)]
-        contours_pos = [base ** k for k in range(1, max_exp + 1)]
+        contours_neg = [base**k for k in range(min_exp, 0)]
+        contours_pos = [base**k for k in range(1, max_exp + 1)]
 
         plot_contours(levels=contours_neg, colors="0.8", linestyles="solid", alpha=0.2)
         plot_contours([1.0], colors="0.8", linestyles=[(5, (5, 5))], alpha=0.3)
