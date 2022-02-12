@@ -32,7 +32,7 @@ import cplot
 
 
 def f(z):
-    return np.sin(z ** 3) / z
+    return np.sin(z**3) / z
 
 
 plt = cplot.plot(

@@ -271,7 +271,11 @@ def plot(
 ):
     extent = (x_range[0], x_range[1], y_range[0], y_range[1])
     Z = _get_z_grid_for_image(x_range, y_range)
-    fz = f(Z)
+
+    # always reshape to vector, makes it easier for f()
+    Z_shape = Z.shape
+    fz = f(Z.flatten()).reshape(Z_shape)
+
     _plot(Z, fz, extent, *args, **kwargs)
     return plt
 
@@ -425,7 +429,10 @@ def plot_contours(
     saturation_adjustment: float = 1.28,
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
-    fz = f(Z)
+
+    # always reshape to vector, makes it easier for f()
+    Z_shape = Z.shape
+    fz = f(Z.flatten()).reshape(Z_shape)
 
     if contours_arg is not None:
         _plot_contour_arg(
