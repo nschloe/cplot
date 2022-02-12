@@ -36,13 +36,20 @@ def _plot_colors(
     colorspace: str = "cam16",
     saturation_adjustment: float = 1.28,
 ):
+    rgb_vals = get_srgb1(
+        fz,
+        abs_scaling=abs_scaling,
+        colorspace=colorspace,
+        saturation_adjustment=saturation_adjustment,
+    )
+
+    # set nan values to white
+    assert rgb_vals.shape[-1] == 3
+    is_nan = np.any(np.isnan(rgb_vals), axis=-1)
+    rgb_vals[is_nan] = [1.0, 1.0, 1.0]
+
     plt.imshow(
-        get_srgb1(
-            fz,
-            abs_scaling=abs_scaling,
-            colorspace=colorspace,
-            saturation_adjustment=saturation_adjustment,
-        ),
+        rgb_vals,
         extent=extent,
         # Don't use "nearest" interpolation, it creates color blocking artifacts:
         # <https://github.com/matplotlib/matplotlib/issues/21499>
@@ -264,7 +271,11 @@ def plot(
 ):
     extent = (x_range[0], x_range[1], y_range[0], y_range[1])
     Z = _get_z_grid_for_image(x_range, y_range)
-    fz = f(Z)
+
+    # always reshape to vector, makes it easier for f()
+    Z_shape = Z.shape
+    fz = f(Z.flatten()).reshape(Z_shape)
+
     _plot(Z, fz, extent, *args, **kwargs)
     return plt
 
@@ -418,7 +429,10 @@ def plot_contours(
     saturation_adjustment: float = 1.28,
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
-    fz = f(Z)
+
+    # always reshape to vector, makes it easier for f()
+    Z_shape = Z.shape
+    fz = f(Z.flatten()).reshape(Z_shape)
 
     if contours_arg is not None:
         _plot_contour_arg(

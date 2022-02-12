@@ -58,6 +58,15 @@ def f(z):
     return (z**2 - 1) * (z - 2 - 1j) ** 2 / (z**2 + 2 + 2j)
 
 
+def lambert_series(z, n=100):
+    zn = z.copy()
+    s = np.zeros_like(z)
+    for _ in range(n):
+        s += zn / (1 - zn)
+        zn *= z
+    return s
+
+
 # n = 201
 # for name in ["cam16", "cielab", "oklab", "hsl"]:
 #     cplot.plot(f, (-3, +3, n), (-3, +3, n), colorspace=name, add_colorbars=False)
@@ -291,6 +300,8 @@ args = [
     # ),
     # logistic regression:
     ("sigmoid.png", lambda z: 1.0 / (1.0 + np.exp(-z)), (-10, +10), (-10, +10)),
+    # Lambert series
+    ("lambert-series.png", lambert_series, (-1.1, 1.1), (-1.1, 1.1)),
 ]
 
 for filename, fun, x, y in args:
