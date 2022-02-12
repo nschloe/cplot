@@ -36,13 +36,20 @@ def _plot_colors(
     colorspace: str = "cam16",
     saturation_adjustment: float = 1.28,
 ):
+    rgb_vals = get_srgb1(
+        fz,
+        abs_scaling=abs_scaling,
+        colorspace=colorspace,
+        saturation_adjustment=saturation_adjustment,
+    )
+
+    # set nan values to white
+    assert rgb_vals.shape[-1] == 3
+    is_nan = np.any(np.isnan(rgb_vals), axis=-1)
+    rgb_vals[is_nan] = [1.0, 1.0, 1.0]
+
     plt.imshow(
-        get_srgb1(
-            fz,
-            abs_scaling=abs_scaling,
-            colorspace=colorspace,
-            saturation_adjustment=saturation_adjustment,
-        ),
+        rgb_vals,
         extent=extent,
         # Don't use "nearest" interpolation, it creates color blocking artifacts:
         # <https://github.com/matplotlib/matplotlib/issues/21499>
