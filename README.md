@@ -123,6 +123,7 @@ tox
   Calendars _Complex Beauties_, 2011-](https://tu-freiberg.de/en/fakult1/ana/institute/institute-of-applied-analysis/organisation/complex-beauties)
 - [Elias Wegert, _Visual Complex
   Functions_, 2012](https://www.springer.com/gp/book/9783034801799)
+- [empet, _Visualizing complex-valued functions with Matplotlib and Mayavi, Domain coloring method_, 2014](https://nbviewer.org/github/empet/Math/blob/master/DomainColoring.ipynb)
 - [John D. Cook, _Visualizing complex
   functions_, 2017](https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/)
 - [endolith, _complex-colormap_, 2017](https://github.com/endolith/complex_colormap)
