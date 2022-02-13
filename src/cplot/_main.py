@@ -139,6 +139,8 @@ def _plot_contour_abs(
     contours: ArrayLike | float = 2.0,
     emphasize_contour_1: bool = True,
     alpha: float = 1.0,
+    # in each direction, positive and negative:
+    max_num_contours: int = 100,
     color: str | None = None,
     min_contour_length: float | None = None,
 ):
@@ -162,24 +164,20 @@ def _plot_contour_abs(
     if isinstance(contours, (float, int)):
         base = contours
 
-        minval = np.min(vals)
-        if np.any(np.isnan(vals)) or minval == 0.0:
-            min_exp = -100
-        else:
-            min_exp = np.log(np.min(vals)) / np.log(base)
-            min_exp = int(max(min_exp, -100))
+        minval = np.nanmin(vals)
+        min_exp = -np.inf if minval == 0.0 else np.log(minval) / np.log(base)
+        min_exp = int(max(min_exp, -max_num_contours))
 
-        maxval = np.max(vals)
-        if np.any(np.isnan(vals)) or maxval == 0.0:
-            max_exp = 100
-        else:
-            max_exp = np.log(maxval) / np.log(base)
-            max_exp = int(min(max_exp, 100))
+        maxval = np.nanmax(vals)
+        max_exp = np.log(maxval) / np.log(base)
+        max_exp = int(min(max_exp, max_num_contours))
 
+        # exclude exponent 0, that's treated separately below
         contours_neg = [base**k for k in range(min_exp, 0)]
         contours_pos = [base**k for k in range(1, max_exp + 1)]
 
         _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
+
         if emphasize_contour_1:
             # subtle emphasize
             _plot_contour([1.0], "0.6", "solid", 0.7)

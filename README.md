@@ -135,6 +135,7 @@ tox
   Contouring_, 2019](https://observablehq.com/@rreusser/adaptive-domain-coloring)
 - [Ricky Reusser, _Locally Scaled Domain Coloring, Part 1: Contour
   Plots_, 2020](https://observablehq.com/@rreusser/locally-scaled-domain-coloring-part-1-contour-plots)
+- [David Lowry-Duda, _Visualizing modular forms_, 2020](https://arxiv.org/abs/2002.05234)
 
 ### License
 

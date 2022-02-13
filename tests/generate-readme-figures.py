@@ -58,13 +58,56 @@ def f(z):
     return (z**2 - 1) * (z - 2 - 1j) ** 2 / (z**2 + 2 + 2j)
 
 
-def lambert_series(z, n=100):
+def lambert_1(z, n=100):
     zn = z.copy()
     s = np.zeros_like(z)
     for _ in range(n):
         s += zn / (1 - zn)
         zn *= z
+
+    s[np.abs(z) > 1] = np.nan
     return s
+
+
+def lambert_phi(z):
+    return z / (1 - z) ** 2
+
+
+def lambert_von_mangoldt(z, n=1000):
+    zn = z.copy()
+    s = np.zeros_like(z)
+    for _ in range(n):
+        s += np.log(n) * zn
+        zn *= z
+
+    s[np.abs(z) > 1] = np.nan
+    return s
+
+
+def lambert_liouville(z, n=30):
+    zk2 = z.copy()
+    s = np.zeros_like(z)
+    for k in range(n):
+        s += zk2
+        # zk2 = z ** (k ** 2)
+        zk2 *= z ** (2 * k + 1)
+
+    s[np.abs(z) > 1] = np.nan
+    return s
+
+
+# https://en.wikipedia.org/wiki/Euler_function
+def euler_function(z, n=1000):
+    out = np.ones_like(z)
+    zk = z.copy()
+    for _ in range(n):
+        out *= 1 - zk
+        zk *= z
+
+    # Explicitly set some values to nan. This avoids contour artifacts near the
+    # boundary.
+    out[np.abs(zk) > 1] = np.nan
+    return out
 
 
 # n = 201
@@ -179,6 +222,9 @@ args = [
     ("11z2.png", lambda z: 1 / (1 + z**2), (-3, +3), (-3, +3)),
     ("erf.png", erf, (-3, +3), (-3, +3)),
     #
+    # generating function of fibonacci sequence
+    ("fibonacci.png", lambda z: 1 / (1 - z * (1 + z)), (-5.0, +5.0), (-5.0, +5.0)),
+    #
     ("fresnel-s.png", lambda z: fresnel(z)[0], (-4, +4), (-4, +4)),
     ("fresnel-c.png", lambda z: fresnel(z)[1], (-4, +4), (-4, +4)),
     ("faddeeva.png", wofz, (-4, +4), (-4, +4)),
@@ -278,10 +324,20 @@ args = [
     # modular forms
     ("kleinj.png", _wrap(fp.kleinj), (-2.0, +2.0), (1.0e-5, +2.0)),
     ("dedekind-eta.png", _wrap(fp.eta), (-0.3, +0.3), (1.0e-5, +0.3)),
+    # Dedekind eta = Ramanujan Delta ** 24; see
+    # https://www.youtube.com/watch?v=s6sdEbGNdic
+    # https://en.wikipedia.org/wiki/Ramanujan_tau_function
+    #
+    # TODO https://en.wikipedia.org/wiki/Euler_function
+    # ("euler-function.png", _wrap(fp.eta), (-0.3, +0.3), (1.0e-5, +0.3)),
     #
     ("hankel1a.png", lambda z: hankel1(1.0, z), (-2, +2), (-2, +2)),
     ("hankel1b.png", lambda z: hankel1(3.1, z), (-3, +3), (-3, +3)),
     ("hankel2.png", lambda z: hankel2(1.0, z), (-2, +2), (-2, +2)),
+    # lambert series
+    ("lambert-1.png", lambert_1, (-1.1, 1.1), (-1.1, 1.1)),
+    ("lambert-von-mangoldt.png", lambert_von_mangoldt, (-1.1, 1.1), (-1.1, 1.1)),
+    ("lambert-liouville.png", lambert_liouville, (-1.1, 1.1), (-1.1, 1.1)),
     #
     # # https://www.dynamicmath.xyz
     # (
@@ -300,8 +356,7 @@ args = [
     # ),
     # logistic regression:
     ("sigmoid.png", lambda z: 1.0 / (1.0 + np.exp(-z)), (-10, +10), (-10, +10)),
-    # Lambert series
-    ("lambert-series.png", lambert_series, (-1.1, 1.1), (-1.1, 1.1)),
+    ("euler-function.png", euler_function, (-1.1, 1.1), (-1.1, 1.1)),
 ]
 
 for filename, fun, x, y in args:
