@@ -140,7 +140,7 @@ def _plot_contour_abs(
     emphasize_contour_1: bool = True,
     alpha: float = 1.0,
     # in each direction, positive and negative:
-    max_num_contours: int = 50,
+    max_num_contours: int = 100,
     color: str | None = None,
     min_contour_length: float | None = None,
 ):
