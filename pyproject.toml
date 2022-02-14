@@ -35,6 +35,9 @@ dependencies = [
   "numpy >= 1.20.0",
 ]
 
+[project.optional-dependencies]
+all = ["meshzoo", "pyvista"]
+
 [project.urls]
 Code = "https://github.com/nschloe/cplot"
 Issues = "https://github.com/nschloe/cplot/issues"
