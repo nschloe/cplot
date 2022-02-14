@@ -23,7 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        # don't test on 3.10 yet, VTK is not available
+        python-version: ["3.7", "3.8", "3.9"]
     steps:
       - uses: actions/setup-python@v2
         with:

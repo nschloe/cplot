@@ -90,6 +90,23 @@ z = 2 + 5j
 val = cplot.get_srgb1(z)
 ```
 
+#### Riemann sphere
+
+<p align="center">
+  <img src="https://nschloe.github.io/cplot/riemann-log.png" width="60%">
+</p>
+
+cplot can also plot functions on the [Riemann
+sphere](https://en.wikipedia.org/wiki/Riemann_sphere), a mapping of the complex
+plane to the unit ball.
+
+```python
+import cplot
+import numpy as np
+
+cplot.riemann_sphere(np.log)
+```
+
 #### Gallery
 
 [This way to the gallery!](https://github.com/nschloe/cplot/wiki/Gallery)

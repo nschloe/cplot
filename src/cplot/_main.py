@@ -278,6 +278,16 @@ def plot(
     return plt
 
 
+def _abs_scaling_from_float(val: float) -> Callable:
+    assert val > 1
+    alpha = np.log(2) / np.log(val)
+
+    def alpha_scaling(r):
+        return r**alpha / (r**alpha + 1)
+
+    return alpha_scaling
+
+
 def _plot(
     Z: np.ndarray,
     fz: np.ndarray,
@@ -299,16 +309,7 @@ def _plot(
 ):
     assert Z.shape == fz.shape
 
-    if callable(abs_scaling):
-        asc = abs_scaling
-    else:
-        assert abs_scaling > 1
-        alpha = np.log(2) / np.log(abs_scaling)
-
-        def alpha_scaling(r):
-            return r**alpha / (r**alpha + 1)
-
-        asc = alpha_scaling
+    asc = abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling)
 
     _plot_colors(
         fz,
