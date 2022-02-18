@@ -311,6 +311,8 @@ def _plot(
 
     asc = abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling)
 
+    plt.figure()
+
     _plot_colors(
         fz,
         extent,
