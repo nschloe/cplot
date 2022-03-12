@@ -33,13 +33,11 @@ def _plot_colors(
     fz,
     extent,
     abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
-    colorspace: str = "cam16",
     saturation_adjustment: float = 1.28,
 ):
     rgb_vals = get_srgb1(
         fz,
         abs_scaling=abs_scaling,
-        colorspace=colorspace,
         saturation_adjustment=saturation_adjustment,
     )
 
@@ -59,14 +57,13 @@ def _plot_colors(
     )
 
 
-def _add_colorbar_arg(cax, colorspace: str, saturation_adjustment: float):
+def _add_colorbar_arg(cax, saturation_adjustment: float):
     # arg colorbar
     # create new colormap
     z = np.exp(1j * np.linspace(-np.pi, np.pi, 256))
     rgb_vals = get_srgb1(
         z,
         abs_scaling=lambda z: np.full_like(z, 0.5),
-        colorspace=colorspace,
         saturation_adjustment=saturation_adjustment,
     )
     rgba_vals = np.pad(rgb_vals, ((0, 0), (0, 1)), constant_values=1.0)
@@ -197,7 +194,6 @@ def _plot_contour_arg(
     Z,
     fz,
     angles: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
-    colorspace: str = "CAM16",
     saturation_adjustment: float = 1.28,
     max_jump: float = 1.0,
     lightness_adjustment: float = 1.0,
@@ -232,7 +228,6 @@ def _plot_contour_arg(
         linecolors = get_srgb1(
             lightness_adjustment * np.exp(angles * 1j),
             abs_scaling=lambda r: r / (r + 1),
-            colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
         )
 
@@ -300,7 +295,6 @@ def _plot(
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
     contour_arg_max_jump: float = 1.0,
     emphasize_abs_contour_1: bool = True,
-    colorspace: str = "cam16",
     add_colorbars: bool | tuple[bool, bool] = True,
     colorbar_pad: tuple[float, float] = (0.2, 0.5),
     add_axes_labels: bool = True,
@@ -315,7 +309,6 @@ def _plot(
         fz,
         extent,
         asc,
-        colorspace,
         saturation_adjustment=saturation_adjustment,
     )
 
@@ -342,7 +335,6 @@ def _plot(
             Z,
             fz,
             angles=contours_arg,
-            colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
             alpha=0.4,
@@ -377,7 +369,7 @@ def _plot(
 
     if add_colorbars[1]:
         cax2 = divider.append_axes("right", size="5%", pad=colorbar_pad[1])
-        _add_colorbar_arg(cax2, colorspace, saturation_adjustment)
+        _add_colorbar_arg(cax2, saturation_adjustment)
     return plt
 
 
@@ -423,7 +415,6 @@ def plot_contours(
     y_range: tuple[float, float, int],
     contours_abs: float | ArrayLike | None = 2,
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
-    colorspace: str = "cam16",
     contour_arg_max_jump: float = 1.0,
     saturation_adjustment: float = 1.28,
 ):
@@ -438,7 +429,6 @@ def plot_contours(
             Z,
             fz,
             angles=contours_arg,
-            colorspace=colorspace,
             saturation_adjustment=saturation_adjustment,
             max_jump=contour_arg_max_jump,
             alpha=1.0,
@@ -456,3 +446,4 @@ def plot_contours(
         )
 
     plt.gca().set_aspect("equal")
+    return plt

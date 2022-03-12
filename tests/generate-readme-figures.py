@@ -110,35 +110,6 @@ def euler_function(z, n=1000):
     return out
 
 
-# n = 201
-# for name in ["cam16", "cielab", "oklab", "hsl"]:
-#     cplot.plot(f, (-3, +3, n), (-3, +3, n), colorspace=name, add_colorbars=False)
-#     plt.savefig(f"{name}-10.png", transparent=True, bbox_inches="tight")
-#     plt.close()
-#     #
-#     cplot.plot(
-#         f,
-#         (-3, +3, n),
-#         (-3, +3, n),
-#         colorspace=name,
-#         abs_scaling=2.0,
-#         add_colorbars=False,
-#     )
-#     plt.savefig(f"{name}-05.png", transparent=True, bbox_inches="tight")
-#     plt.close()
-#     #
-#     cplot.plot(
-#         f,
-#         (-3, +3, n),
-#         (-3, +3, n),
-#         colorspace=name,
-#         abs_scaling=lambda x: np.full_like(x, 0.5),
-#         add_colorbars=False,
-#     )
-#     plt.savefig(f"{name}-00.png", transparent=True, bbox_inches="tight")
-#     plt.close()
-
-
 # First function from the SIAM-100-digit challenge
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
 n = 401

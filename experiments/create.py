@@ -1,10 +1,8 @@
-import colorio
 import matplotlib.pyplot as plt
 import numpy as np
-from colorio.cs import SRGB1, ColorCoordinates, convert
 
 
-def show_linear(vals: ColorCoordinates) -> None:
+def show_linear(vals) -> None:
     plt.imshow(np.multiply.outer(np.ones(60), vals.data.T))
     plt.show()
 
@@ -27,6 +25,8 @@ def show_circular(vals, rot=0.0):
 
 
 def find_max_srgb_radius(cs, L=50, tol=1.0e-6):
+    from colorio.cs import ColorCoordinates, convert
+
     # In the given color space find the circle in the L=50-plane with the center (50, 0,
     # 0) such that it's as large as possible while still being in the SRGB gamut.
     n = 256
@@ -41,7 +41,7 @@ def find_max_srgb_radius(cs, L=50, tol=1.0e-6):
         coords = ColorCoordinates(
             [np.full(n, L), r * np.cos(alpha), r * np.sin(alpha)], cs
         )
-        vals = convert(coords, SRGB1(mode="ignore"))
+        vals = convert(coords, "srgb1", mode="ignore")
 
         if np.any(vals < 0) or np.any(vals > 1):
             r1 = r
@@ -51,6 +51,9 @@ def find_max_srgb_radius(cs, L=50, tol=1.0e-6):
 
 
 def create_colormap(L=50):
+    import colorio
+    from colorio.cs import SRGB1, ColorCoordinates, convert
+
     cs = colorio.cs.CAM16UCS(c=0.69, Y_b=20, L_A=15)
     # cs = colorio.cs.CAM02('UCS', 0.69, 20, 15)
     # cs = colorio.cs.CIELAB()
