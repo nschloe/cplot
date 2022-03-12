@@ -71,5 +71,4 @@ def tricontour_abs(triang, fz: ArrayLike, contours: ArrayLike | None = None):
 #     fz: ArrayLike,
 #     # f: Callable[[np.ndarray], np.ndarray],
 #     contours: ArrayLike = (-np.pi / 2, 0.0, np.pi / 2, np.pi),
-#     colorspace: str = "CAM16",
 # ):

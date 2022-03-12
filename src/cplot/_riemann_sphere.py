@@ -15,7 +15,6 @@ def riemann_sphere(
     # If you're changing contours_abs to x and want the abs_scaling to follow along,
     # you'll have to set it to the same value.
     abs_scaling: float | Callable[[np.ndarray], np.ndarray] = 2,
-    colorspace: str = "cam16",
     saturation_adjustment: float = 1.28,
     off_screen: bool = False,
 ) -> None:
@@ -35,7 +34,6 @@ def riemann_sphere(
     rgb = get_srgb1(
         f(Z),
         abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling),
-        colorspace,
         saturation_adjustment,
     )
 

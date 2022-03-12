@@ -36,7 +36,7 @@ def show_kovesi_test_image(cmap):
     plt.show()
 
 
-def show_test_function(variant="a", colorspace="cam16", res=201):
+def show_test_function(variant="a", res=201):
     """Visual color map test after Peter Kovesi <https://arxiv.org/abs/1509.03700>,
     adapted for the complex color map.
     """
@@ -82,6 +82,5 @@ def show_test_function(variant="a", colorspace="cam16", res=201):
         (-5, +5, res),
         contours_abs=None,
         contours_arg=None,
-        colorspace=colorspace,
     )
     plt.show()

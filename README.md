@@ -9,7 +9,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
 [![Downloads](https://pepy.tech/badge/cplot/month)](https://pepy.tech/project/cplot)
 
-[![Discord](https://img.shields.io/static/v1?logo=discord&label=chat&message=on%20discord&color=7289da&style=flat-square)](https://discord.gg/hnTJ5MRX2Y)
+[![Discord](https://img.shields.io/static/v1?logo=discord&label=chat&labelColor=white&message=on%20discord&color=7289da&style=flat-square)](https://discord.gg/hnTJ5MRX2Y)
 
 [![gh-actions](https://img.shields.io/github/workflow/status/nschloe/cplot/ci?style=flat-square)](https://github.com/nschloe/cplot/actions?query=workflow%3Aci)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
@@ -43,7 +43,6 @@ plt = cplot.plot(
     # contours_abs=2.0,
     # contours_arg=(-np.pi / 2, 0, np.pi / 2, np.pi),
     # emphasize_abs_contour_1: bool = True,
-    # colorspace: str = "cam16",
     # add_colorbars: bool = True,
     # add_axes_labels: bool = True,
     # saturation_adjustment: float = 1.28,
@@ -68,7 +67,8 @@ See also [Wikipedia: Domain coloring](https://en.wikipedia.org/wiki/Domain_color
 
 Features of this software:
 
-- By default, cplot uses a perceptually uniform color space for the argument colors.
+- cplot uses [OKLAB](https://bottosson.github.io/posts/oklab/), a perceptually
+  uniform color space for the argument colors.
   This avoids streaks of colors occurring with other color spaces, e.g., HSL.
 - The contour `abs(z) == 1` is emphasized, other abs contours are at 2, 4, 8, etc. and
   1/2, 1/4, 1/8, etc., respectively. This makes it easy to tell the absolte value
