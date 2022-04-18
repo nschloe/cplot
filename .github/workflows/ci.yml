@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         # don't test on 3.10 yet, VTK is not available
-        python-version: ["3.7", "3.8", "3.9"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
       - uses: actions/setup-python@v2
         with:
