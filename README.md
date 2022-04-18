@@ -100,6 +100,8 @@ cplot can also plot functions on the [Riemann
 sphere](https://en.wikipedia.org/wiki/Riemann_sphere), a mapping of the complex
 plane to the unit ball.
 
+<!--pytest-codeblocks:importorskip(pyvista)-->
+
 ```python
 import cplot
 import numpy as np
