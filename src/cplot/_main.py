@@ -90,6 +90,7 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
     )
     cb0.set_label("abs", rotation=0, ha="center", va="top")
     cb0.ax.yaxis.set_label_coords(0.5, -0.03)
+
     if isinstance(abs_contours, (int, float)):
         a = abs_contours
         scaled_vals = abs_scaling(
@@ -314,10 +315,11 @@ def _plot(
 
     if contours_abs is None:
         contours_abs = 2
+
     elif contours_abs == "auto":
         assert isinstance(
             abs_scaling, (int, float)
-        ), f"abs_scaling must be int or float, not {abs_scaling}"
+        ), f'if contours_abs="auto", abs_scaling must be int or float, not {abs_scaling}'
         contours_abs = abs_scaling
 
     if contours_abs is not None:
