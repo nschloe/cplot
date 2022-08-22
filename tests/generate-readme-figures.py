@@ -54,6 +54,11 @@ def riemann_xi(z):
     return 0.5 * z * (z - 1) * np.pi ** (-z / 2) * gamma(z / 2) * _wrap(fp.zeta)(z)
 
 
+def dirichlet_eta(z):
+    # https://en.wikipedia.org/wiki/Dirichlet_eta_function
+    return (1 - 2 ** (1 - z)) * _wrap(fp.zeta)(z)
+
+
 def f(z):
     return (z**2 - 1) * (z - 2 - 1j) ** 2 / (z**2 + 2 + 2j)
 
@@ -193,6 +198,8 @@ args = [
     ("11z2.png", lambda z: 1 / (1 + z**2), (-3, +3), (-3, +3)),
     ("erf.png", erf, (-3, +3), (-3, +3)),
     #
+    ("exp1z1.png", lambda z: np.exp(1 / z) / (1 + np.exp(1 / z)), (-1, 1), (-1, 1)),
+    #
     # generating function of fibonacci sequence
     ("fibonacci.png", lambda z: 1 / (1 - z * (1 + z)), (-5.0, +5.0), (-5.0, +5.0)),
     #
@@ -230,6 +237,7 @@ args = [
     ("gamma.png", gamma, (-5, +5), (-5, +5)),
     ("digamma.png", digamma, (-5, +5), (-5, +5)),
     ("zeta.png", _wrap(fp.zeta), (-30, +30), (-30, +30)),
+    ("dirichlet-eta.png", dirichlet_eta, (-30, +30), (-30, +30)),
     #
     ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.png", _wrap(fp.siegelz), (-20, +20), (-20, +20)),
