@@ -47,6 +47,7 @@ plt = cplot.plot(
     # add_axes_labels: bool = True,
     # saturation_adjustment: float = 1.28,
     # min_contour_length = None,
+    # linewidth = None,
 )
 plt.show()
 ```
