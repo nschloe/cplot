@@ -164,11 +164,14 @@ def _plot_contour_abs(
 
         minval = np.nanmin(vals)
         min_exp = -np.inf if minval == 0.0 else np.log(minval) / np.log(base)
-        min_exp = int(max(min_exp, -max_num_contours))
+
+        mx = max(min_exp, -max_num_contours)
+        min_exp = 0 if np.isnan(mx) else int(mx)
 
         maxval = np.nanmax(vals)
         max_exp = np.log(maxval) / np.log(base)
-        max_exp = int(min(max_exp, max_num_contours))
+        mn = min(max_exp, max_num_contours)
+        max_exp = 0 if np.isnan(mn) else int(mn)
 
         # exclude exponent 0, that's treated separately below
         contours_neg = [base**k for k in range(min_exp, 0)]

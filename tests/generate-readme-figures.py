@@ -49,9 +49,29 @@ def _wrap(fun: Callable) -> Callable:
     return wrapped_fun
 
 
+def zeta(z, a=1):
+    z = np.asarray(z)
+    z_shape = z.shape
+
+    out = []
+    for val in z.flatten():
+        try:
+            val = fp.zeta(complex(val), a)
+        except Exception:
+            val = np.nan
+        out.append(val)
+
+    return np.reshape(out, z_shape)
+
+
 def riemann_xi(z):
     # https://en.wikipedia.org/wiki/Riemann_Xi_function
-    return 0.5 * z * (z - 1) * np.pi ** (-z / 2) * gamma(z / 2) * _wrap(fp.zeta)(z)
+    return 0.5 * z * (z - 1) * np.pi ** (-z / 2) * gamma(z / 2) * zeta(z)
+
+
+def dirichlet_eta(z):
+    # https://en.wikipedia.org/wiki/Dirichlet_eta_function
+    return (1 - 2 ** (1 - z)) * zeta(z)
 
 
 def f(z):
@@ -193,6 +213,8 @@ args = [
     ("11z2.png", lambda z: 1 / (1 + z**2), (-3, +3), (-3, +3)),
     ("erf.png", erf, (-3, +3), (-3, +3)),
     #
+    ("exp1z1.png", lambda z: np.exp(1 / z) / (1 + np.exp(1 / z)), (-1, 1), (-1, 1)),
+    #
     # generating function of fibonacci sequence
     ("fibonacci.png", lambda z: 1 / (1 - z * (1 + z)), (-5.0, +5.0), (-5.0, +5.0)),
     #
@@ -227,9 +249,15 @@ args = [
     ("exp1.png", exp1, (-5, +5), (-5, +5)),
     ("lambertw.png", lambertw, (-5, +5), (-5, +5)),
     #
+    ("zeta.png", zeta, (-30, +30), (-30, +30)),
+    ("hurwitz-zeta-1-3.png", lambda z: zeta(z, 1 / 3), (-10, +10), (-10, +10)),
+    ("hurwitz-zeta-24-25.png", lambda z: zeta(z, 24 / 25), (-10, +10), (-10, +10)),
+    # ("hurwitz-zeta-3-4i.png", lambda z: zeta(z, 3 + 4j), (-10, +10), (-10, +10)),
+    #
     ("gamma.png", gamma, (-5, +5), (-5, +5)),
     ("digamma.png", digamma, (-5, +5), (-5, +5)),
-    ("zeta.png", _wrap(fp.zeta), (-30, +30), (-30, +30)),
+    ("dirichlet-eta.png", dirichlet_eta, (-30, +30), (-30, +30)),
+    #
     #
     ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.png", _wrap(fp.siegelz), (-20, +20), (-20, +20)),
