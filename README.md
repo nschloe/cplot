@@ -79,7 +79,7 @@ Features of this software:
 
 Other useful functions:
 
-<!--pytest-codeblocks:skip-->
+<!--pytest.mark.skip-->
 
 ```python
 # There is a tripcolor function as well for triangulated 2D domains

@@ -158,7 +158,7 @@ def _plot_contour_abs(
             # choose a minjump above machine precision; avoids
             # speckles for functions like `z / abs(z)`
             min_jump=1.0e-15,
-            linewidth=linewidth,
+            linewidths=linewidth,
         )
 
     if isinstance(contours, (float, int)):
@@ -247,7 +247,7 @@ def _plot_contour_arg(
             min_contour_length=min_contour_length,
             alpha=alpha,
             max_jump=max_jump,
-            linewidth=linewidth,
+            linewidths=linewidth,
         )
     plt.gca().set_aspect("equal")
 
