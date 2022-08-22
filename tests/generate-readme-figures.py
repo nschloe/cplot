@@ -159,10 +159,6 @@ plt.close()
 
 args = [
     #
-    ("hurwitz-zeta-1-3.png", lambda z: zeta(z, 1 / 3), (-10, +10), (-10, +10)),
-    ("hurwitz-zeta-24-25.png", lambda z: zeta(z, 24 / 25), (-10, +10), (-10, +10)),
-    ("hurwitz-zeta-3-4i.png", lambda z: zeta(z, 3 + 4j), (-10, +10), (-10, +10)),
-    #
     ("z1.png", lambda z: z**1, (-2, +2), (-2, +2)),
     ("z2.png", lambda z: z**2, (-2, +2), (-2, +2)),
     ("z3.png", lambda z: z**3, (-2, +2), (-2, +2)),
@@ -253,10 +249,15 @@ args = [
     ("exp1.png", exp1, (-5, +5), (-5, +5)),
     ("lambertw.png", lambertw, (-5, +5), (-5, +5)),
     #
+    ("zeta.png", zeta, (-30, +30), (-30, +30)),
+    ("hurwitz-zeta-1-3.png", lambda z: zeta(z, 1 / 3), (-10, +10), (-10, +10)),
+    ("hurwitz-zeta-24-25.png", lambda z: zeta(z, 24 / 25), (-10, +10), (-10, +10)),
+    # ("hurwitz-zeta-3-4i.png", lambda z: zeta(z, 3 + 4j), (-10, +10), (-10, +10)),
+    #
     ("gamma.png", gamma, (-5, +5), (-5, +5)),
     ("digamma.png", digamma, (-5, +5), (-5, +5)),
-    ("zeta.png", zeta, (-30, +30), (-30, +30)),
     ("dirichlet-eta.png", dirichlet_eta, (-30, +30), (-30, +30)),
+    #
     #
     ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
     ("riemann-siegel-z.png", _wrap(fp.siegelz), (-20, +20), (-20, +20)),
