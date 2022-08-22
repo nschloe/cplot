@@ -141,6 +141,7 @@ def _plot_contour_abs(
     max_num_contours: int = 100,
     color: str | None = None,
     min_contour_length: float | None = None,
+    linewidth: float | None = None,
 ):
     vals = np.abs(fz)
 
@@ -157,6 +158,7 @@ def _plot_contour_abs(
             # choose a minjump above machine precision; avoids
             # speckles for functions like `z / abs(z)`
             min_jump=1.0e-15,
+            linewidths=linewidth,
         )
 
     if isinstance(contours, (float, int)):
@@ -203,6 +205,7 @@ def _plot_contour_arg(
     lightness_adjustment: float = 1.0,
     alpha: float = 1.0,
     min_contour_length: float | None = None,
+    linewidth: float | None = None,
 ):
     angles = np.asarray(angles)
 
@@ -244,6 +247,7 @@ def _plot_contour_arg(
             min_contour_length=min_contour_length,
             alpha=alpha,
             max_jump=max_jump,
+            linewidths=linewidth,
         )
     plt.gca().set_aspect("equal")
 
@@ -304,6 +308,7 @@ def _plot(
     add_axes_labels: bool = True,
     saturation_adjustment: float = 1.28,
     min_contour_length: float | None = None,
+    linewidth: float | None = None,
 ):
     assert Z.shape == fz.shape
 
@@ -333,6 +338,7 @@ def _plot(
             emphasize_contour_1=emphasize_abs_contour_1,
             alpha=0.2,
             min_contour_length=min_contour_length,
+            linewidth=linewidth,
         )
 
     if contours_arg is not None:
@@ -348,6 +354,7 @@ def _plot(
             # zeta, erf,...).
             lightness_adjustment=1.5,
             min_contour_length=min_contour_length,
+            linewidth=linewidth,
         )
 
     if add_axes_labels:

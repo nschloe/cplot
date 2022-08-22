@@ -47,6 +47,7 @@ plt = cplot.plot(
     # add_axes_labels: bool = True,
     # saturation_adjustment: float = 1.28,
     # min_contour_length = None,
+    # linewidth = None,
 )
 plt.show()
 ```
@@ -78,7 +79,7 @@ Features of this software:
 
 Other useful functions:
 
-<!--pytest-codeblocks:skip-->
+<!--pytest.mark.skip-->
 
 ```python
 # There is a tripcolor function as well for triangulated 2D domains
