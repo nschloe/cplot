@@ -70,7 +70,11 @@ def riemann_xi(z):
 
 
 def dirichlet_eta(z):
-    # https://en.wikipedia.org/wiki/Dirichlet_eta_function
+    """
+    https://en.wikipedia.org/wiki/Dirichlet_eta_function
+
+    Also called the _alternating zeta function_.
+    """
     return (1 - 2 ** (1 - z)) * zeta(z)
 
 
@@ -128,6 +132,13 @@ def euler_function(z, n=1000):
     # boundary.
     out[np.abs(zk) > 1] = np.nan
     return out
+
+
+def bernoulli(z):
+    """
+    (11) in https://luschny.de/math/zeta/The-Bernoulli-Manifesto.html
+    """
+    return -z * zeta(1 - z)
 
 
 # First function from the SIAM-100-digit challenge
@@ -234,6 +245,10 @@ args = [
     ("cosh.png", np.cosh, (-5, +5), (-5, +5)),
     ("tanh.png", np.tanh, (-5, +5), (-5, +5)),
     #
+    ("sech.png", lambda z: 1 / np.cosh(z), (-5, +5), (-5, +5)),
+    ("csch.png", lambda z: 1 / np.sinh(z), (-5, +5), (-5, +5)),
+    ("coth.png", lambda z: 1 / np.tanh(z), (-5, +5), (-5, +5)),
+    #
     ("arcsin.png", np.arcsin, (-2, +2), (-2, +2)),
     ("arccos.png", np.arccos, (-2, +2), (-2, +2)),
     ("arctan.png", np.arctan, (-2, +2), (-2, +2)),
@@ -250,13 +265,16 @@ args = [
     ("lambertw.png", lambertw, (-5, +5), (-5, +5)),
     #
     ("zeta.png", zeta, (-30, +30), (-30, +30)),
+    ("bernoulli.png", bernoulli, (-30, +30), (-30, +30)),
+    ("dirichlet-eta.png", dirichlet_eta, (-30, +30), (-30, +30)),
+    #
     ("hurwitz-zeta-1-3.png", lambda z: zeta(z, 1 / 3), (-10, +10), (-10, +10)),
     ("hurwitz-zeta-24-25.png", lambda z: zeta(z, 24 / 25), (-10, +10), (-10, +10)),
-    # ("hurwitz-zeta-3-4i.png", lambda z: zeta(z, 3 + 4j), (-10, +10), (-10, +10)),
+    ("hurwitz-zeta-3-4i.png", lambda z: zeta(z, 3 + 4j), (-10, +10), (-10, +10)),
     #
     ("gamma.png", gamma, (-5, +5), (-5, +5)),
+    ("reciprocal-gamma.png", lambda z: 1 / gamma(z), (-5, +5), (-5, +5)),
     ("digamma.png", digamma, (-5, +5), (-5, +5)),
-    ("dirichlet-eta.png", dirichlet_eta, (-30, +30), (-30, +30)),
     #
     #
     ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
