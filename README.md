@@ -119,6 +119,7 @@ All plots are created with default settings.
 |                            `z ** 1`                            |                            `z ** 2`                            |                            `z ** 3`                            |
 
 <details>
+<summary>Many more plots</summary>
 
 | <img src="https://nschloe.github.io/cplot/1z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1z2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1z3.png" width="70%"> |
 | :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
