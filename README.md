@@ -55,8 +55,8 @@ plt.show()
 Historically, plotting of complex functions was in one of three ways
 
 | <img src="https://nschloe.github.io/cplot/sinz3z-abs.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-arg.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-contours.svg" width="70%"> |
-| :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
-|      Only show the absolute value; sometimes as a 3D plot         |        Only show the phase/the argument in a color wheel (phase portrait)        |          Show contour lines for both arg and abs                      |
+| :--------------------------------------------------------------------: | :--------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
+|          Only show the absolute value; sometimes as a 3D plot          |   Only show the phase/the argument in a color wheel (phase portrait)   |                   Show contour lines for both arg and abs                   |
 
 Combining all three of them gives you a _cplot_:
 
@@ -74,8 +74,7 @@ Features of this software:
 - The contour `abs(z) == 1` is emphasized, other abs contours are at 2, 4, 8, etc. and
   1/2, 1/4, 1/8, etc., respectively. This makes it easy to tell the absolte value
   precisely.
-- For `arg(z) == 0`, the color is green, for `arg(z) == pi/2` it's blue, for `arg(z) =
-  -pi / 2` it's orange, and for `arg(z) = pi` it's pink.
+- For `arg(z) == 0`, the color is green, for `arg(z) == pi/2` it's blue, for `arg(z) = -pi / 2` it's orange, and for `arg(z) = pi` it's pink.
 
 Other useful functions:
 
@@ -122,13 +121,12 @@ All plots are created with default settings.
 <summary>Many more plots</summary>
 
 | <img src="https://nschloe.github.io/cplot/1z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1z2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1z3.png" width="70%"> |
-| :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
-|                            `1 / z`                            |                            `1 / z ** 2`                            |                            `1 / z ** 3`                            |
+| :------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
+|                            `1 / z`                             |                          `1 / z ** 2`                           |                          `1 / z ** 3`                           |
 
-
-| <img src="https://nschloe.github.io/cplot/moebius1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/moebius2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/moebius3.png" width="70%"> |
-| :------------------------------------------------------------: | :-------------------------------------------------------------: | :-----------------------------------------------------------------: |
-|                            `(z + 1) / (z - 1)`                             |                         Another [Möbius transformation](https://en.wikipedia.org/wiki/M%C3%B6bius_transformation)                           |                       A third Möbius transformation                        |
+| <img src="https://nschloe.github.io/cplot/moebius1.png" width="70%"> |           <img src="https://nschloe.github.io/cplot/moebius2.png" width="70%">            | <img src="https://nschloe.github.io/cplot/moebius3.png" width="70%"> |
+| :------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :------------------------------------------------------------------: |
+|                         `(z + 1) / (z - 1)`                          | Another [Möbius transformation](https://en.wikipedia.org/wiki/M%C3%B6bius_transformation) |                    A third Möbius transformation                     |
 
 | <img src="https://nschloe.github.io/cplot/re.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z-absz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/conj.png" width="70%"> |
 | :------------------------------------------------------------: | :----------------------------------------------------------------: | :--------------------------------------------------------------: |
@@ -136,7 +134,7 @@ All plots are created with default settings.
 
 | <img src="https://nschloe.github.io/cplot/z6+1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z6-1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z-6+1.png" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :---------------------------------------------------------------: |
-|                           `z ** 6 + 1`                           |                           [`z ** 6 - 1`](https://en.wikipedia.org/wiki/Root_of_unity)                           |                          `z ** (-6) + 1`                          |
+|                           `z ** 6 + 1`                           |   [`z ** 6 - 1`](https://en.wikipedia.org/wiki/Root_of_unity)    |                          `z ** (-6) + 1`                          |
 
 | <img src="https://nschloe.github.io/cplot/zz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/1zz.png" width="70%"> | <img src="https://nschloe.github.io/cplot/z1z.png" width="70%"> |
 | :------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
@@ -148,15 +146,15 @@ All plots are created with default settings.
 
 | <img src="https://nschloe.github.io/cplot/log.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp2.png" width="70%"> |
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                            [`np.log`](https://en.wikipedia.org/wiki/Logarithm)                             |                            `np.exp`                             |                            `np.exp2`                             |
+|       [`np.log`](https://en.wikipedia.org/wiki/Logarithm)       |                            `np.exp`                             |                            `np.exp2`                             |
 
 | <img src="https://nschloe.github.io/cplot/exp1z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/zsin1z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cos1z.png" width="70%"> |
 | :---------------------------------------------------------------: | :----------------------------------------------------------------: | :---------------------------------------------------------------: |
 |                          `np.exp(1 / z)`                          |                        `z * np.sin(1 / z)`                         |                          `np.cos(1 / z)`                          |
 
-| <img src="https://nschloe.github.io/cplot/exp-z2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/11z2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/erf.png" width="70%"> |
-| :----------------------------------------------------------------: | :--------------------------------------------------------------: | :-------------------------------------------------------------: |
-|                          `exp(- z ** 2)`                           |                        [`1 / (1 + z ** 2)`](https://en.wikipedia.org/wiki/Runge%27s_phenomenon)                        |                       [Error function](https://en.wikipedia.org/wiki/Error_function)                       |
+| <img src="https://nschloe.github.io/cplot/exp-z2.png" width="70%"> |     <img src="https://nschloe.github.io/cplot/11z2.png" width="70%">     | <img src="https://nschloe.github.io/cplot/erf.png" width="70%"> |
+| :----------------------------------------------------------------: | :----------------------------------------------------------------------: | :-------------------------------------------------------------: |
+|                          `exp(- z ** 2)`                           | [`1 / (1 + z ** 2)`](https://en.wikipedia.org/wiki/Runge%27s_phenomenon) | [Error function](https://en.wikipedia.org/wiki/Error_function)  |
 
 | <img src="https://nschloe.github.io/cplot/sin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tan.png" width="70%"> |
 | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
@@ -168,84 +166,84 @@ All plots are created with default settings.
 
 | <img src="https://nschloe.github.io/cplot/sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanh.png" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                            [`np.sinh`](https://en.wikipedia.org/wiki/Hyperbolic_functions)                             |                            `np.cosh`                             |                            `np.tanh`                             |
+| [`np.sinh`](https://en.wikipedia.org/wiki/Hyperbolic_functions)  |                            `np.cosh`                             |                            `np.tanh`                             |
 
 | <img src="https://nschloe.github.io/cplot/sech.png" width="70%"> | <img src="https://nschloe.github.io/cplot/csch.png" width="70%"> | <img src="https://nschloe.github.io/cplot/coth.png" width="70%"> |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                            secans hyperbolicus                             |                            cosecans hyperbolicus                             |                           cotangent hyperbolicus                            |
-
+|                       secans hyperbolicus                        |                      cosecans hyperbolicus                       |                      cotangent hyperbolicus                      |
 
 | <img src="https://nschloe.github.io/cplot/arcsin.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccos.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctan.png" width="70%"> |
 | :----------------------------------------------------------------: | :----------------------------------------------------------------: | :----------------------------------------------------------------: |
 |                            `np.arcsin`                             |                            `np.arccos`                             |                            `np.arctan`                             |
 
+| <img src="https://nschloe.github.io/cplot/arcsinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arccosh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/arctanh.png" width="70%"> |
+| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
+|                            `np.arcsinh`                             |                            `np.arccosh`                             |                            `np.arctanh`                             |
+
 | <img src="https://nschloe.github.io/cplot/sinz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/cosz-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/tanz-z.png" width="70%"> |
 | :----------------------------------------------------------------: | :----------------------------------------------------------------: | :----------------------------------------------------------------: |
-|                            [Sinc, `sin(z) / z`](https://en.wikipedia.org/wiki/Sinc_function)                            |                            `cos(z) / z`                            |                            `tan(z) / z`                            |
+| [Sinc, `sin(z) / z`](https://en.wikipedia.org/wiki/Sinc_function)  |                            `cos(z) / z`                            |                            `tan(z) / z`                            |
 
-| <img src="https://nschloe.github.io/cplot/si.png" width="70%"> | <img src="https://nschloe.github.io/cplot/ci.png" width="70%"> | <img src="https://nschloe.github.io/cplot/lambertw.png" width="70%"> |
-| :----------------------------------------------------------------: | :----------------------------------------------------------------: | :----------------------------------------------------------------: |
-|              [Integral sine _Si_](https://en.wikipedia.org/wiki/Trigonometric_integral)                      |         Integral cosine _Ci_                         |                            [Lambert W function](https://en.wikipedia.org/wiki/Lambert_W_function)           |
+|       <img src="https://nschloe.github.io/cplot/si.png" width="70%">       | <img src="https://nschloe.github.io/cplot/ci.png" width="70%"> |  <img src="https://nschloe.github.io/cplot/lambertw.png" width="70%">  |
+| :------------------------------------------------------------------------: | :------------------------------------------------------------: | :--------------------------------------------------------------------: |
+| [Integral sine _Si_](https://en.wikipedia.org/wiki/Trigonometric_integral) |                      Integral cosine _Ci_                      | [Lambert W function](https://en.wikipedia.org/wiki/Lambert_W_function) |
 
+|   <img src="https://nschloe.github.io/cplot/zeta.png" width="70%">   | <img src="https://nschloe.github.io/cplot/bernoulli.png" width="70%"> |   <img src="https://nschloe.github.io/cplot/dirichlet-eta.png" width="70%">    |
+| :------------------------------------------------------------------: | :-------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
+| [`mpmath.zeta`](https://en.wikipedia.org/wiki/Riemann_zeta_function) |                          Bernoulli function                           | [Dirichlet eta function](https://en.wikipedia.org/wiki/Dirichlet_eta_function) |
 
-| <img src="https://nschloe.github.io/cplot/zeta.png" width="70%"> | <img src="https://nschloe.github.io/cplot/bernoulli.png" width="70%"> | <img src="https://nschloe.github.io/cplot/dirichlet-eta.png" width="70%"> |
-| :---------------------------------------------------------------: | :-----------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                      [`mpmath.zeta`](https://en.wikipedia.org/wiki/Riemann_zeta_function)                       |                       Bernoulli function         |    [Dirichlet eta function](https://en.wikipedia.org/wiki/Dirichlet_eta_function)    |
+|        <img src="https://nschloe.github.io/cplot/hurwitz-zeta-1-3.png" width="70%">         | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-24-25.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-3-4i.png" width="70%"> |
+| :-----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
+| [Hurwitz zeta function](https://en.wikipedia.org/wiki/Hurwitz_zeta_function) with `a = 1/3` |                     Hurwitz zeta function with `a = 24/25`                     |                    Hurwitz zeta function with `a = 3 + 4i`                    |
 
-| <img src="https://nschloe.github.io/cplot/hurwitz-zeta-1-3.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-24-25.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-3-4i.png" width="70%"> |
-| :---------------------------------------------------------------: | :-----------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                       [Hurwitz zeta function](https://en.wikipedia.org/wiki/Hurwitz_zeta_function) with `a = 1/3`         |                          Hurwitz zeta function with `a = 24/25`                   |                          Hurwitz zeta function with `a = 3 + 4i`                |
+|   <img src="https://nschloe.github.io/cplot/gamma.png" width="70%">   | <img src="https://nschloe.github.io/cplot/reciprocal-gamma.png" width="70%"> |    <img src="https://nschloe.github.io/cplot/digamma.png" width="70%">    |
+| :-------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
+| [`scipy.special.gamma`](https://en.wikipedia.org/wiki/Gamma_function) | [reciprocal Gamma](https://en.wikipedia.org/wiki/Reciprocal_gamma_function)  | [`scipy.special.digamma`](https://en.wikipedia.org/wiki/Digamma_function) |
 
+|           <img src="https://nschloe.github.io/cplot/riemann-siegel-theta.png" width="70%">           | <img src="https://nschloe.github.io/cplot/riemann-siegel-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-xi.png" width="70%"> |
+| :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------: |
+| [Riemann-Siegel theta function](https://en.wikipedia.org/wiki/Riemann%E2%80%93Siegel_theta_function) |            [Z-function](https://en.wikipedia.org/wiki/Z_function)            |    [Riemann-Xi](https://en.wikipedia.org/wiki/Riemann_Xi_function)     |
 
-| <img src="https://nschloe.github.io/cplot/gamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/reciprocal-gamma.png" width="70%"> | <img src="https://nschloe.github.io/cplot/digamma.png" width="70%"> |
-| :---------------------------------------------------------------: | :-----------------------------------------------------------------: | :--------------------------------------------------------------: |
-|                       [`scipy.special.gamma`](https://en.wikipedia.org/wiki/Gamma_function)                       |                       [reciprocal Gamma](https://en.wikipedia.org/wiki/Reciprocal_gamma_function)                       |                          [`scipy.special.digamma`](https://en.wikipedia.org/wiki/Digamma_function)                      |
+|           <img src="https://nschloe.github.io/cplot/ellipj-sn-06.png" width="70%">            | <img src="https://nschloe.github.io/cplot/ellipj-cn-06.png" width="70%"> | <img src="https://nschloe.github.io/cplot/ellipj-dn-06.png" width="70%"> |
+| :-------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
+| [Jacobi elliptic function](https://en.wikipedia.org/wiki/Jacobi_elliptic_functions) `sn(0.6)` |                                `cn(0.6)`                                 |                                `dn(0.6)`                                 |
 
-| <img src="https://nschloe.github.io/cplot/riemann-siegel-theta.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-siegel-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-xi.png" width="70%"> |
-| :------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------: |
-|                               [Riemann-Siegel theta function](https://en.wikipedia.org/wiki/Riemann%E2%80%93Siegel_theta_function)                               |                               [Z-function](https://en.wikipedia.org/wiki/Z_function)                               |                               [Riemann-Xi](https://en.wikipedia.org/wiki/Riemann_Xi_function)                               |
+|               <img src="https://nschloe.github.io/cplot/jtheta1.png" width="70%">                | <img src="https://nschloe.github.io/cplot/jtheta2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/jtheta3.png" width="70%"> |
+| :----------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
+| [Jacobi theta](https://en.wikipedia.org/wiki/Theta_function) 1 with `q=0.1 * exp(0.1j * np.pi))` |                  Jacobi theta 2 with the same `q`                   |                  Jacobi theta 3 with the same `q`                   |
 
-| <img src="https://nschloe.github.io/cplot/ellipj-sn-06.png" width="70%"> | <img src="https://nschloe.github.io/cplot/ellipj-cn-06.png" width="70%"> | <img src="https://nschloe.github.io/cplot/ellipj-dn-06.png" width="70%"> |
-| :----------------------------------------------------------------------: | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
-|                    [Jacobi elliptic function](https://en.wikipedia.org/wiki/Jacobi_elliptic_functions) `sn(0.6)`                    |                                `cn(0.6)`                                 |                                `dn(0.6)`                                 |
-
-
-| <img src="https://nschloe.github.io/cplot/jtheta1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/jtheta2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/jtheta3.png" width="70%"> |
-| :----------------------------------------------------------------------: | :----------------------------------------------------------------------: | :----------------------------------------------------------------------: |
-|                    [Jacobi theta](https://en.wikipedia.org/wiki/Theta_function) 1 with `q=0.1 * exp(0.1j * np.pi))`                    |      Jacobi theta 2 with the same `q`                                 |                              Jacobi theta 3 with the same `q`                             |
-
-| <img src="https://nschloe.github.io/cplot/bessel1-1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel1-2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel1-3.png" width="70%"> |
-| :------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------: |
-|                 [Bessel function](https://en.wikipedia.org/wiki/Bessel_function), first kind, order 1                 |                               Bessel function, first kind, order 2                                |                              Bessel function, first kind, order 3                                |
+|         <img src="https://nschloe.github.io/cplot/bessel1-1.png" width="70%">         | <img src="https://nschloe.github.io/cplot/bessel1-2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel1-3.png" width="70%"> |
+| :-----------------------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
+| [Bessel function](https://en.wikipedia.org/wiki/Bessel_function), first kind, order 1 |                 Bessel function, first kind, order 2                  |                 Bessel function, first kind, order 3                  |
 
 | <img src="https://nschloe.github.io/cplot/bessel2-1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel2-2.png" width="70%"> | <img src="https://nschloe.github.io/cplot/bessel2-3.png" width="70%"> |
-| :------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------: |
-|                 Bessel function, second kind, order 1                 |                              Bessel function, second kind, order 2                                |                              Bessel function, second kind, order 3                                |
+| :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
+|                 Bessel function, second kind, order 1                 |                 Bessel function, second kind, order 2                 |                 Bessel function, second kind, order 3                 |
 
 | <img src="https://nschloe.github.io/cplot/hankel1a.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hankel1b.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hankel2.png" width="70%"> |
-| :------------------------------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------: |
-|                           Hankel function of first kind (n=1.0)                           |                           Hankel function of first kind (n=3.1)                           |                          Hankel function of second kind (n=1.0)                           |
+| :------------------------------------------------------------------: | :------------------------------------------------------------------: | :-----------------------------------------------------------------: |
+|                Hankel function of first kind (n=1.0)                 |                Hankel function of first kind (n=3.1)                 |               Hankel function of second kind (n=1.0)                |
 
 | <img src="https://nschloe.github.io/cplot/fresnel-s.png" width="70%"> | <img src="https://nschloe.github.io/cplot/fresnel-c.png" width="70%"> | <img src="https://nschloe.github.io/cplot/faddeeva.png" width="70%"> |
 | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :------------------------------------------------------------------: |
-|                               [Fresnel S](https://en.wikipedia.org/wiki/Fresnel_integral)                               |                               [Fresnel C](https://en.wikipedia.org/wiki/Fresnel_integral)                               |                          [Faddeeva function](https://en.wikipedia.org/wiki/Faddeeva_function)                           |
+|      [Fresnel S](https://en.wikipedia.org/wiki/Fresnel_integral)      |      [Fresnel C](https://en.wikipedia.org/wiki/Fresnel_integral)      | [Faddeeva function](https://en.wikipedia.org/wiki/Faddeeva_function) |
 
-| <img src="https://nschloe.github.io/cplot/airy-ai.png" width="70%"> | <img src="https://nschloe.github.io/cplot/airy-bi.png" width="70%"> | <img src="https://nschloe.github.io/cplot/airye-ai.png" width="70%"> |
-| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :------------------------------------------------------------------: |
-|                          [Airy function Ai](https://en.wikipedia.org/wiki/Airy_function)                           |                                 [Bi](https://en.wikipedia.org/wiki/Airy_function)                                  |                       [Exponentially scaled eAi](https://en.wikipedia.org/wiki/Airy_function)                       |
+| <img src="https://nschloe.github.io/cplot/airy-ai.png" width="70%"> | <img src="https://nschloe.github.io/cplot/airy-bi.png" width="70%"> |  <img src="https://nschloe.github.io/cplot/airye-ai.png" width="70%">   |
+| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :---------------------------------------------------------------------: |
+|   [Airy function Ai](https://en.wikipedia.org/wiki/Airy_function)   |          [Bi](https://en.wikipedia.org/wiki/Airy_function)          | [Exponentially scaled eAi](https://en.wikipedia.org/wiki/Airy_function) |
 
 | <img src="https://nschloe.github.io/cplot/tanh-sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/sinh-sinh.png" width="70%"> | <img src="https://nschloe.github.io/cplot/exp-sinh.png" width="70%"> |
 | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :------------------------------------------------------------------: |
 |                       `tanh(pi / 2 * sinh(z))`                        |                       `sinh(pi / 2 * sinh(z))`                        |                       `exp(pi / 2 * sinh(z))`                        |
 
+| <img src="https://nschloe.github.io/cplot/kleinj.png" width="70%"> |   <img src="https://nschloe.github.io/cplot/dedekind-eta.png" width="70%">   |
+| :----------------------------------------------------------------: | :--------------------------------------------------------------------------: |
+| [Klein's _j_-invariant](https://en.wikipedia.org/wiki/J-invariant) | [Dedekind eta function](https://en.wikipedia.org/wiki/Dedekind_eta_function) |
 
-| <img src="https://nschloe.github.io/cplot/kleinj.png" width="70%"> | <img src="https://nschloe.github.io/cplot/dedekind-eta.png" width="70%"> |
-| :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
-|         [Klein's _j_-invariant](https://en.wikipedia.org/wiki/J-invariant)                     |                 [Dedekind eta function](https://en.wikipedia.org/wiki/Dedekind_eta_function)                      |
+| <img src="https://nschloe.github.io/cplot/lambert-1.png" width="70%">  | <img src="https://nschloe.github.io/cplot/lambert-von-mangoldt.png" width="70%"> | <img src="https://nschloe.github.io/cplot/lambert-liouville.png" width="70%"> |
+| :--------------------------------------------------------------------: | :------------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
+| [Lambert series](https://en.wikipedia.org/wiki/Lambert_series) with 1s |                  Lambert series with von-Mangoldt-coefficients                   |                  Lambert series with Liouville-coefficients                   |
 
-| <img src="https://nschloe.github.io/cplot/lambert-1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/lambert-von-mangoldt.png" width="70%"> | <img src="https://nschloe.github.io/cplot/lambert-liouville.png" width="70%"> |
-| :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :------------------------------------------------------------------: |
-|                      [Lambert series](https://en.wikipedia.org/wiki/Lambert_series) with 1s                        |                       Lambert series with von-Mangoldt-coefficients                        |                      Lambert series with Liouville-coefficients                        |
 </details>
 
 ### Testing

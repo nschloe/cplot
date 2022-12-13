@@ -253,6 +253,10 @@ args = [
     ("arccos.png", np.arccos, (-2, +2), (-2, +2)),
     ("arctan.png", np.arctan, (-2, +2), (-2, +2)),
     #
+    ("arcsinh.png", np.arcsinh, (-2, +2), (-2, +2)),
+    ("arccosh.png", np.arccosh, (-2, +2), (-2, +2)),
+    ("arctanh.png", np.arctanh, (-2, +2), (-2, +2)),
+    #
     ("sinz-z.png", lambda z: np.sin(z) / z, (-7, +7), (-7, +7)),
     ("cosz-z.png", lambda z: np.cos(z) / z, (-7, +7), (-7, +7)),
     ("tanz-z.png", lambda z: np.tan(z) / z, (-7, +7), (-7, +7)),
