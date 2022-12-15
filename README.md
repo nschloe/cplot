@@ -192,9 +192,9 @@ All plots are created with default settings.
 | :------------------------------------------------------------------: | :-------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
 | [`mpmath.zeta`](https://en.wikipedia.org/wiki/Riemann_zeta_function) |                          Bernoulli function                           | [Dirichlet eta function](https://en.wikipedia.org/wiki/Dirichlet_eta_function) |
 
-|        <img src="https://nschloe.github.io/cplot/hurwitz-zeta-1-3.png" width="70%">         | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-24-25.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-3-4i.png" width="70%"> |
+|        <img src="https://nschloe.github.io/cplot/hurwitz-zeta-1-3.png" width="70%">         | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-24-25.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-a-3-4i.png" width="70%"> |
 | :-----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
-| [Hurwitz zeta function](https://en.wikipedia.org/wiki/Hurwitz_zeta_function) with `a = 1/3` |                     Hurwitz zeta function with `a = 24/25`                     |                    Hurwitz zeta function with `a = 3 + 4i`                    |
+| [Hurwitz zeta function](https://en.wikipedia.org/wiki/Hurwitz_zeta_function) with `a = 1/3` |                     Hurwitz zeta function with `a = 24/25`                     |                    Hurwitz zeta function with `s = 3 + 4i`                    |
 
 |   <img src="https://nschloe.github.io/cplot/gamma.png" width="70%">   | <img src="https://nschloe.github.io/cplot/reciprocal-gamma.png" width="70%"> |    <img src="https://nschloe.github.io/cplot/digamma.png" width="70%">    |
 | :-------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :-----------------------------------------------------------------------: |

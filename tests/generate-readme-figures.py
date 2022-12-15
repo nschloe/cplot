@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 from typing import Callable
 
@@ -18,6 +19,7 @@ from scipy.special import (
     hankel2,
     jn,
     lambertw,
+    loggamma,
     sici,
     wofz,
     yv,
@@ -49,19 +51,46 @@ def _wrap(fun: Callable) -> Callable:
     return wrapped_fun
 
 
-def zeta(z, a=1):
-    z = np.asarray(z)
-    z_shape = z.shape
+def hurwitz_zeta(s, a):
+    s = np.asarray(s)
 
     out = []
-    for val in z.flatten():
+    for val in s.flatten():
         try:
             val = fp.zeta(complex(val), a)
         except Exception:
             val = np.nan
         out.append(val)
 
-    return np.reshape(out, z_shape)
+    return np.reshape(out, s.shape)
+
+
+def hurwitz_zeta_a(s, a):
+    """
+    Like hurwitz_zeta(), but with the vectorization in the second component.
+    """
+    a = np.asarray(a)
+
+    out = []
+    for val in a.flatten():
+        try:
+            val = fp.zeta(s, complex(val))
+        except Exception:
+            val = np.nan
+        out.append(val)
+
+    return np.reshape(out, a.shape)
+
+
+def zeta(z):
+    return hurwitz_zeta(z, 1)
+
+
+def polygamma(z, n):
+    """
+    Polygamma function for complex arguments
+    """
+    return (-1) ** (n + 1) * math.factorial(n) * hurwitz_zeta(z, n + 1)
 
 
 def riemann_xi(z):
@@ -148,24 +177,24 @@ cplot.plot(
     lambda z: np.cos(np.log(z) / z) / z, (-1, 1, n), (-1, 1, n), abs_scaling=10.0
 )
 plt.savefig(plot_dir / "siam.png", transparent=True, bbox_inches="tight")
-plt.close()
+plt.clf()
 
 n = 400
 cplot.plot_abs(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z-abs.png", bbox_inches="tight")
-plt.close()
+plt.clf()
 
 cplot.plot_arg(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z-arg.png", bbox_inches="tight")
-plt.close()
+plt.clf()
 
 cplot.plot_contours(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z-contours.png", bbox_inches="tight")
-plt.close()
+plt.clf()
 
 cplot.plot(lambda z: np.sin(z**3) / z, (-2, 2, n), (-2, 2, n))
 plt.savefig(plot_dir / "sinz3z.png", transparent=True, bbox_inches="tight")
-plt.close()
+plt.clf()
 
 
 args = [
@@ -272,13 +301,27 @@ args = [
     ("bernoulli.png", bernoulli, (-30, +30), (-30, +30)),
     ("dirichlet-eta.png", dirichlet_eta, (-30, +30), (-30, +30)),
     #
-    ("hurwitz-zeta-1-3.png", lambda z: zeta(z, 1 / 3), (-10, +10), (-10, +10)),
-    ("hurwitz-zeta-24-25.png", lambda z: zeta(z, 24 / 25), (-10, +10), (-10, +10)),
-    ("hurwitz-zeta-3-4i.png", lambda z: zeta(z, 3 + 4j), (-10, +10), (-10, +10)),
+    ("hurwitz-zeta-1-3.png", lambda z: hurwitz_zeta(z, 1 / 3), (-10, +10), (-10, +10)),
+    (
+        "hurwitz-zeta-24-25.png",
+        lambda z: hurwitz_zeta(z, 24 / 25),
+        (-10, +10),
+        (-10, +10),
+    ),
+    (
+        "hurwitz-zeta-a-3-4i.png",
+        lambda z: hurwitz_zeta_a(3 + 4j, z),
+        (-10, +10),
+        (-10, +10),
+    ),
     #
     ("gamma.png", gamma, (-5, +5), (-5, +5)),
     ("reciprocal-gamma.png", lambda z: 1 / gamma(z), (-5, +5), (-5, +5)),
+    ("loggamma.png", loggamma, (-5, +5), (-5, +5)),
+    #
     ("digamma.png", digamma, (-5, +5), (-5, +5)),
+    ("polygamma1.png", lambda z: polygamma(z, 1), (-5, +5), (-5, +5)),
+    ("polygamma2.png", lambda z: polygamma(z, 2), (-5, +5), (-5, +5)),
     #
     #
     ("riemann-xi.png", riemann_xi, (-20, +20), (-20, +20)),
@@ -392,4 +435,4 @@ for filename, fun, x, y in args:
         min_contour_length=1.0e-2 * diag_length,
     )
     plt.savefig(plot_dir / filename, transparent=True, bbox_inches="tight")
-    plt.close()
+    plt.clf()
