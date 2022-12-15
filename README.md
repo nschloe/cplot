@@ -192,13 +192,17 @@ All plots are created with default settings.
 | :------------------------------------------------------------------: | :-------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
 | [`mpmath.zeta`](https://en.wikipedia.org/wiki/Riemann_zeta_function) |                          Bernoulli function                           | [Dirichlet eta function](https://en.wikipedia.org/wiki/Dirichlet_eta_function) |
 
-|        <img src="https://nschloe.github.io/cplot/hurwitz-zeta-1-3.png" width="70%">         | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-24-25.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-3-4i.png" width="70%"> |
-| :-----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
-| [Hurwitz zeta function](https://en.wikipedia.org/wiki/Hurwitz_zeta_function) with `a = 1/3` |                     Hurwitz zeta function with `a = 24/25`                     |                    Hurwitz zeta function with `a = 3 + 4i`                    |
+|        <img src="https://nschloe.github.io/cplot/hurwitz-zeta-1-3.png" width="70%">         | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-24-25.png" width="70%"> | <img src="https://nschloe.github.io/cplot/hurwitz-zeta-a-3-4i.png" width="70%"> |
+| :-----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------: | :-----------------------------------------------------------------------------: |
+| [Hurwitz zeta function](https://en.wikipedia.org/wiki/Hurwitz_zeta_function) with `a = 1/3` |                     Hurwitz zeta function with `a = 24/25`                     |                     Hurwitz zeta function with `s = 3 + 4i`                     |
 
-|   <img src="https://nschloe.github.io/cplot/gamma.png" width="70%">   | <img src="https://nschloe.github.io/cplot/reciprocal-gamma.png" width="70%"> |    <img src="https://nschloe.github.io/cplot/digamma.png" width="70%">    |
-| :-------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
-| [`scipy.special.gamma`](https://en.wikipedia.org/wiki/Gamma_function) | [reciprocal Gamma](https://en.wikipedia.org/wiki/Reciprocal_gamma_function)  | [`scipy.special.digamma`](https://en.wikipedia.org/wiki/Digamma_function) |
+|   <img src="https://nschloe.github.io/cplot/gamma.png" width="70%">   | <img src="https://nschloe.github.io/cplot/reciprocal-gamma.png" width="70%"> |              <img src="https://nschloe.github.io/cplot/loggamma.png" width="70%">               |
+| :-------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
+| [`scipy.special.gamma`](https://en.wikipedia.org/wiki/Gamma_function) | [reciprocal Gamma](https://en.wikipedia.org/wiki/Reciprocal_gamma_function)  | [`scipy.special.loggamma`](https://en.wikipedia.org/wiki/Gamma_function#The_log-gamma_function) |
+
+|    <img src="https://nschloe.github.io/cplot/digamma.png" width="70%">    | <img src="https://nschloe.github.io/cplot/polygamma1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/polygamma2.png" width="70%"> |
+| :-----------------------------------------------------------------------: | :--------------------------------------------------------------------: | :--------------------------------------------------------------------: |
+| [`scipy.special.digamma`](https://en.wikipedia.org/wiki/Digamma_function) |    [Polygamma 1](https://en.wikipedia.org/wiki/Polygamma_function)     |    [Polygamma 2](https://en.wikipedia.org/wiki/Polygamma_function)     |
 
 |           <img src="https://nschloe.github.io/cplot/riemann-siegel-theta.png" width="70%">           | <img src="https://nschloe.github.io/cplot/riemann-siegel-z.png" width="70%"> | <img src="https://nschloe.github.io/cplot/riemann-xi.png" width="70%"> |
 | :--------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :--------------------------------------------------------------------: |
