@@ -90,7 +90,7 @@ def polygamma(z, n):
     """
     Polygamma function for complex arguments
     """
-    return (-1) ** (n + 1) * math.factorial(n) * hurwitz_zeta(z, n + 1)
+    return (-1) ** (n + 1) * math.factorial(n) * hurwitz_zeta_a(n + 1, z)
 
 
 def riemann_xi(z):
