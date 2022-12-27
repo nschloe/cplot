@@ -188,6 +188,10 @@ All plots are created with default settings.
 | :------------------------------------------------------------------------: | :------------------------------------------------------------: | :--------------------------------------------------------------------: |
 | [Integral sine _Si_](https://en.wikipedia.org/wiki/Trigonometric_integral) |                      Integral cosine _Ci_                      | [Lambert W function](https://en.wikipedia.org/wiki/Lambert_W_function) |
 
+|   <img src="https://nschloe.github.io/cplot/gudermannian.png" width="70%">   | <img src="https://nschloe.github.io/cplot/exp1.png" width="70%"> | <img src="https://nschloe.github.io/cplot/expi.png" width="70%"> |
+| :--------------------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
+| [Gudermannian function](https://en.wikipedia.org/wiki/Gudermannian_function) |                     Exponential integral E1                      |                     Exponential integral Ei                      |
+
 |   <img src="https://nschloe.github.io/cplot/zeta.png" width="70%">   | <img src="https://nschloe.github.io/cplot/bernoulli.png" width="70%"> |   <img src="https://nschloe.github.io/cplot/dirichlet-eta.png" width="70%">    |
 | :------------------------------------------------------------------: | :-------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
 | [`mpmath.zeta`](https://en.wikipedia.org/wiki/Riemann_zeta_function) |                          Bernoulli function                           | [Dirichlet eta function](https://en.wikipedia.org/wiki/Dirichlet_eta_function) |

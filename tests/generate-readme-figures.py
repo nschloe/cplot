@@ -65,6 +65,14 @@ def hurwitz_zeta(s, a):
     return np.reshape(out, s.shape)
 
 
+def gudermannian(z):
+    return 2 * np.arctan(np.tanh(0.5 * z))
+
+
+def gudermannian_inv(z):
+    return 2 * np.arctanh(np.tan(0.5 * z))
+
+
 def hurwitz_zeta_a(s, a):
     """
     Like hurwitz_zeta(), but with the vectorization in the second component.
@@ -292,10 +300,13 @@ args = [
     #
     ("si.png", lambda z: sici(z)[0], (-15, +15), (-15, +15)),
     ("ci.png", lambda z: sici(z)[1], (-15, +15), (-15, +15)),
-    ("expi.png", expi, (-15, +15), (-15, +15)),
-    #
-    ("exp1.png", exp1, (-5, +5), (-5, +5)),
     ("lambertw.png", lambertw, (-5, +5), (-5, +5)),
+    #
+    #
+    ("gudermannian.png", gudermannian, (-10, 10), (-10, 10)),
+    # ("gudermannian_inv.png", gudermannian_inv, (-2, 2), (-2, 2)),
+    ("exp1.png", exp1, (-5, +5), (-5, +5)),
+    ("expi.png", expi, (-15, +15), (-15, +15)),
     #
     ("zeta.png", zeta, (-30, +30), (-30, +30)),
     ("bernoulli.png", bernoulli, (-30, +30), (-30, +30)),
