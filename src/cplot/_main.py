@@ -417,7 +417,7 @@ def plot_arg(*args, add_colorbars: bool = True, **kwargs):
 
 
 # "Phase plot" is a common name for this kind of plots
-plot_phase = plot_abs
+plot_phase = plot_arg
 
 
 # only show the phase, with some default value adjustments
