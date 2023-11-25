@@ -275,7 +275,7 @@ tox
 - [Elias Wegert and Gunter Semmler, _Phase Plots of Complex Functions:
   a Journey in Illustration_, 2011](https://www.ams.org/notices/201106/rtx110600768p.pdf)
 - [Elias Wegert,
-  Calendars _Complex Beauties_, 2011-](https://tu-freiberg.de/en/fakult1/ana/institute/institute-of-applied-analysis/organisation/complex-beauties)
+  Calendars _Complex Beauties_, 2011-](https://blogs.hrz.tu-freiberg.de/mathekalender/english/)
 - [Elias Wegert, _Visual Complex
   Functions_, 2012](https://www.springer.com/gp/book/9783034801799)
 - [empet, _Visualizing complex-valued functions with Matplotlib and Mayavi, Domain coloring method_, 2014](https://nbviewer.org/github/empet/Math/blob/master/DomainColoring.ipynb)
