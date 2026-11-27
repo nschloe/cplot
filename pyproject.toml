@@ -54,6 +54,12 @@ test = [
   "pytest-randomly",
   "scipy",
 ]
+# for tests/generate-readme-figures.py
+figures = [
+  "mpmath",
+  "scipy",
+  "scipyx",
+]
 
 [tool.setuptools.dynamic]
 version = {attr = "cplot.__about__.__version__"}

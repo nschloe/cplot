@@ -39,6 +39,7 @@ style = {
 plt.style.use(style)
 
 plot_dir = Path(__file__).resolve().parent / ".." / "plots"
+plot_dir.mkdir(exist_ok=True)
 
 
 def _wrap(fun: Callable) -> Callable:
@@ -447,3 +448,9 @@ for filename, fun, x, y in args:
     )
     plt.savefig(plot_dir / filename, transparent=True, bbox_inches="tight")
     plt.clf()
+
+
+# Riemann sphere (needs pyvista and an off-screen capable VTK; on headless CI, e.g.,
+# pyvista/setup-headless-display-action)
+p = cplot.riemann_sphere(np.log, off_screen=True)
+p.screenshot(plot_dir / "riemann-log.png", window_size=(1024, 768))
