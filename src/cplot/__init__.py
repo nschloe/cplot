@@ -1,9 +1,12 @@
-from .__about__ import __version__
+from importlib.metadata import version
+
 from ._colors import get_srgb1, scale_abs, scale_abs_inv
 from ._main import Plotter, plot, plot_abs, plot_arg, plot_contours, plot_phase
 from ._riemann_sphere import riemann_sphere
 from ._tri import tricontour_abs, tripcolor
 from .benchmark import show_kovesi_test_image, show_test_function
+
+__version__ = version("cplot")
 
 __all__ = [
     "show_test_function",

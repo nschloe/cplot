@@ -32,7 +32,7 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Visualization",
 ]
-dynamic = ["version"]
+version = "0.9.3"
 requires-python = ">=3.10"
 dependencies = [
   "matplotlib",
@@ -60,9 +60,6 @@ figures = [
   "scipy",
   "scipyx",
 ]
-
-[tool.setuptools.dynamic]
-version = {attr = "cplot.__about__.__version__"}
 
 [project.urls]
 Code = "https://github.com/nschloe/cplot"
