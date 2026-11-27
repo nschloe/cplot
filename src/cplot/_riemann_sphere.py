@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Callable
 
 import numpy as np
@@ -16,8 +17,16 @@ def riemann_sphere(
     abs_scaling: float | Callable[[np.ndarray], np.ndarray] | None = None,
     saturation_adjustment: float = 1.28,
     off_screen: bool = False,
-) -> None:
+):
+    """Plot f on the Riemann sphere. Returns the pyvista.Plotter; call .show() on it."""
     _warn_abs_scaling(abs_scaling)
+    if filename is not None:
+        warnings.warn(
+            "riemann_sphere(): filename is unused and deprecated; call "
+            ".screenshot(filename) on the returned plotter instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     import meshzoo
     import pyvista as pv
@@ -33,7 +42,7 @@ def riemann_sphere(
     Z = (x + 1j * y) / (1 - z)
 
     rgb = get_srgb1(
-        f(Z),
+        np.broadcast_to(np.asarray(f(Z)), Z.shape),
         _resolve_abs_scaling(abs_scaling),
         saturation_adjustment,
     )

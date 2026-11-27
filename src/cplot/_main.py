@@ -96,9 +96,9 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
     cb0.ax.yaxis.set_label_coords(0.5, -0.03)
 
     if isinstance(abs_contours, (int, float)):
-        a = abs_contours
+        a = f"{abs_contours:g}"
         scaled_vals = abs_scaling(
-            np.array([1 / a**3, 1 / a**2, 1 / a, 1, a, a**2, a**3])
+            np.array([abs_contours**k for k in range(-3, 4)], dtype=float)
         )
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
         if isinstance(abs_contours, int) and abs_contours < 4:
@@ -130,9 +130,10 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
                 ]
             )
     else:
-        scaled_vals = abs_scaling(np.asarray(abs_contours))
+        abs_contours = np.asarray(abs_contours, dtype=float)
+        scaled_vals = abs_scaling(abs_contours)
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
-        cb0.set_ticklabels(["0", *[f"{val}" for val in scaled_vals], "∞"])
+        cb0.set_ticklabels(["0", *[f"{val:g}" for val in abs_contours], "∞"])
 
 
 def _contour_abs_colors(
@@ -307,6 +308,13 @@ class Plotter:
         return _plot(self.Z, fz, self.extent, *args, **kwargs)
 
 
+def _evaluate(f: Callable[[np.ndarray], np.ndarray], Z: np.ndarray) -> np.ndarray:
+    # always pass a flat vector, makes it easier for f(); broadcast so that functions
+    # returning a scalar (constants) work, too
+    fz = np.asarray(f(Z.ravel()))
+    return np.broadcast_to(fz, (Z.size,)).reshape(Z.shape)
+
+
 def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
@@ -317,9 +325,7 @@ def plot(
     extent = (x_range[0], x_range[1], y_range[0], y_range[1])
     Z = _get_z_grid_for_image(x_range, y_range)
 
-    # always reshape to vector, makes it easier for f()
-    Z_shape = Z.shape
-    fz = f(Z.flatten()).reshape(Z_shape)
+    fz = _evaluate(f, Z)
 
     _plot(Z, fz, extent, *args, **kwargs)
     return plt
@@ -389,10 +395,7 @@ def _plot(
         saturation_adjustment=saturation_adjustment,
     )
 
-    if contours_abs is None:
-        contours_abs = 2
-
-    elif isinstance(contours_abs, str) and contours_abs == "auto":
+    if isinstance(contours_abs, str) and contours_abs == "auto":
         # contours at powers of 2, or at powers of the (deprecated) float abs_scaling
         contours_abs = abs_scaling if isinstance(abs_scaling, (int, float)) else 2
 
@@ -444,7 +447,8 @@ def _plot(
 
     if add_colorbars[0]:
         cax1 = divider.append_axes("right", size="5%", pad=colorbar_pad[0])
-        _add_colorbar_abs(cax1, asc, contours_abs)
+        # without abs contours, still label the colorbar at powers of 2
+        _add_colorbar_abs(cax1, asc, 2 if contours_abs is None else contours_abs)
 
     if add_colorbars[1]:
         cax2 = divider.append_axes("right", size="5%", pad=colorbar_pad[1])
@@ -456,7 +460,7 @@ def _plot(
 def plot_abs(
     *args,
     add_colorbars: bool = True,
-    contours_abs: str | float | list[float] | None = None,
+    contours_abs: str | float | list[float] | None = "auto",
     **kwargs,
 ):
     return plot(
@@ -484,10 +488,10 @@ def plot_arg(*args, add_colorbars: bool = True, **kwargs):
 
 
 # "Phase plot" is a common name for this kind of plots
-plot_phase = plot_abs
+plot_phase = plot_arg
 
 
-# only show the phase, with some default value adjustments
+# only show the contours, no colors
 def plot_contours(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
@@ -499,9 +503,7 @@ def plot_contours(
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
 
-    # always reshape to vector, makes it easier for f()
-    Z_shape = Z.shape
-    fz = f(Z.flatten()).reshape(Z_shape)
+    fz = _evaluate(f, Z)
 
     if contours_arg is not None:
         _plot_contour_arg(
