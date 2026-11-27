@@ -39,7 +39,6 @@ plt = cplot.plot(
     f,
     (-2.0, +2.0, 400),
     (-2.0, +2.0, 400),
-    # abs_scaling=lambda x: x / (x + 1),  # how to scale the lightness in domain coloring
     # contours_abs=2.0,
     # contours_arg=(-np.pi / 2, 0, np.pi / 2, np.pi),
     # emphasize_abs_contour_1: bool = True,
@@ -71,6 +70,11 @@ Features of this software:
 - cplot uses [OKLAB](https://bottosson.github.io/posts/oklab/), a perceptually
   uniform color space for the argument colors.
   This avoids streaks of colors occurring with other color spaces, e.g., HSL.
+- The lightness encodes `abs(z)` with a fixed scaling, so plots of different functions
+  are comparable: `abs(z) == 1` is mid-grey, zeros are black, poles are white, and
+  `abs(1/z)` is exactly as light as `abs(z)` is dark. The scaling has fat tails, so
+  lightness keeps changing over many orders of magnitude instead of saturating to
+  pure black/white (see `cplot.scale_abs`).
 - The contour `abs(z) == 1` is emphasized, other abs contours are at 2, 4, 8, etc. and
   1/2, 1/4, 1/8, etc., respectively. This makes it easy to tell the absolte value
   precisely.

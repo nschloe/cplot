@@ -9,15 +9,18 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from ._colors import get_srgb1
+from ._main import _resolve_abs_scaling, _warn_abs_scaling
 
 
 def tripcolor(
     triang,
     fz: ArrayLike,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    # deprecated; plots use a fixed lightness scaling (cplot.scale_abs)
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
 ):
+    _warn_abs_scaling(abs_scaling)
     fz = np.asarray(fz)
-    rgb = get_srgb1(fz, abs_scaling=abs_scaling)
+    rgb = get_srgb1(fz, abs_scaling=_resolve_abs_scaling(abs_scaling))
 
     # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
     n = fz.shape[0]

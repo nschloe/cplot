@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Callable
 
 import matplotlib.pyplot as plt
@@ -9,7 +10,7 @@ from matplotlib import cm, colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.typing import ArrayLike
 
-from ._colors import get_srgb1
+from ._colors import get_srgb1, scale_abs
 
 
 def _get_z_grid_for_image(
@@ -32,7 +33,7 @@ def _get_z_grid_for_image(
 def _plot_colors(
     fz,
     extent,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
     saturation_adjustment: float = 1.28,
 ):
     rgb_vals = get_srgb1(
@@ -82,10 +83,13 @@ def _add_colorbar_arg(cax, saturation_adjustment: float):
 
 
 def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[float]):
-    # abs colorbar
+    # abs colorbar; use the actual (grey) lightness values of the plot
+    s = np.linspace(0.0, 1.0, 256)
+    greys = get_srgb1(np.ones(256), abs_scaling=lambda _: s, saturation_adjustment=0.0)
+    greys = np.pad(greys, ((0, 0), (0, 1)), constant_values=1.0)
     norm = colors.Normalize(vmin=0, vmax=1)
     cb0 = plt.colorbar(
-        cm.ScalarMappable(norm=norm, cmap=cm.gray),
+        cm.ScalarMappable(norm=norm, cmap=colors.ListedColormap(greys)),
         cax=cax,
     )
     cb0.set_label("abs", rotation=0, ha="center", va="top")
@@ -101,13 +105,13 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
             cb0.set_ticklabels(
                 [
                     "0",
-                    f"$\\frac{{1}}{{{abs_contours ** 3}}}$",
-                    f"$\\frac{{1}}{{{abs_contours ** 2}}}$",
-                    f"$\\frac{{1}}{{{abs_contours ** 1}}}$",
+                    f"$\\frac{{1}}{{{abs_contours**3}}}$",
+                    f"$\\frac{{1}}{{{abs_contours**2}}}$",
+                    f"$\\frac{{1}}{{{abs_contours**1}}}$",
                     "$1$",
-                    f"{abs_contours ** 1}",
-                    f"{abs_contours ** 2}",
-                    f"{abs_contours ** 3}",
+                    f"{abs_contours**1}",
+                    f"{abs_contours**2}",
+                    f"{abs_contours**3}",
                     "$\\infty$",
                 ]
             )
@@ -281,6 +285,29 @@ def plot(
     return plt
 
 
+def _flat_lightness(r: np.ndarray) -> np.ndarray:
+    # constant lightness, used for plot_arg()
+    return np.full_like(r, 0.5, dtype=float)
+
+
+def _warn_abs_scaling(abs_scaling, stacklevel: int = 3) -> None:
+    if abs_scaling is not None and abs_scaling is not _flat_lightness:
+        warnings.warn(
+            "abs_scaling is deprecated and will be removed in a future version. "
+            "cplot uses a fixed lightness scaling so that plots are comparable.",
+            DeprecationWarning,
+            stacklevel=stacklevel,
+        )
+
+
+def _resolve_abs_scaling(abs_scaling) -> Callable:
+    if abs_scaling is None:
+        return scale_abs
+    return (
+        abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling)
+    )
+
+
 def _abs_scaling_from_float(val: float) -> Callable:
     assert val > 1
     alpha = np.log(2) / np.log(val)
@@ -295,9 +322,8 @@ def _plot(
     Z: np.ndarray,
     fz: np.ndarray,
     extent: tuple[float, float, float, float],
-    # If you're changing contours_abs to x and want the abs_scaling to follow along,
-    # you'll have to set it to the same value.
-    abs_scaling: float | Callable[[np.ndarray], np.ndarray] = 2,
+    # deprecated; plots use a fixed lightness scaling (cplot.scale_abs)
+    abs_scaling: float | Callable[[np.ndarray], np.ndarray] | None = None,
     # Literal["auto"]
     contours_abs: float | list[float] | None | str = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
@@ -312,7 +338,9 @@ def _plot(
 ):
     assert Z.shape == fz.shape
 
-    asc = abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling)
+    # user -> plot() / Plotter.plot() -> _plot() -> _warn_abs_scaling()
+    _warn_abs_scaling(abs_scaling, stacklevel=4)
+    asc = _resolve_abs_scaling(abs_scaling)
 
     _plot_colors(
         fz,
@@ -324,11 +352,9 @@ def _plot(
     if contours_abs is None:
         contours_abs = 2
 
-    elif contours_abs == "auto":
-        assert isinstance(
-            abs_scaling, (int, float)
-        ), f'if contours_abs="auto", abs_scaling must be int or float, not {abs_scaling}'
-        contours_abs = abs_scaling
+    elif isinstance(contours_abs, str) and contours_abs == "auto":
+        # contours at powers of 2, or at powers of the (deprecated) float abs_scaling
+        contours_abs = abs_scaling if isinstance(abs_scaling, (int, float)) else 2
 
     if contours_abs is not None:
         _plot_contour_abs(
@@ -407,7 +433,7 @@ def plot_abs(
 def plot_arg(*args, add_colorbars: bool = True, **kwargs):
     return plot(
         *args,
-        abs_scaling=lambda r: np.full_like(r, 0.5),
+        abs_scaling=_flat_lightness,
         contours_abs=None,
         contours_arg=None,
         emphasize_abs_contour_1=False,

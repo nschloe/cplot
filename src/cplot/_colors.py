@@ -6,81 +6,100 @@ import npx
 import numpy as np
 from numpy.typing import ArrayLike
 
+# Lightness: |f| -> s in [0, 1]
+# -----------------------------
+# The scaling is fixed (no parameters) so that plots of different functions are
+# directly comparable: the same lightness always means the same |f|. It is
+#
+#   s = σ(asinh(ln(r) / 2)),   σ(t) = 1 / (1 + exp(-t)),
+#
+# or, equivalently, the classical r / (r + 1) applied to a log-compressed r,
+#
+#   s = w / (w + 1),   w = y + sqrt(1 + y²),   y = ln(r) / 2.
+#
+# Properties:
+#
+#  * s(1/r) = 1 - s(r), so the inverse of a function is exactly as light as the
+#    original function is dark. s(1) = 1/2.
+#
+#  * Near r = 1, w ≈ r^(1/2), so the scaling behaves like r^a / (r^a + 1) with
+#    a = 1/2.
+#
+#  * Far from r = 1, w only grows like ln(r), so the tails are fat:
+#    1 - s ~ 1 / |ln r| instead of 1 - s ~ r^(-a). Lightness keeps changing over many
+#    orders of magnitude, and pure black / pure white (in 8-bit sRGB) are effectively
+#    reserved for exactly 0 / infinity; the first pure-black pixel appears at
+#    |f| ≈ 1e-36.
+#
+#  * There is no sharp knee in the curve; steeper slopes at r = 1 combined with fat
+#    tails lead to visible edges around |f| = 1.
+#
+# s is used as the toe-corrected OKLab lightness L_r (Ottosson,
+# <https://bottosson.github.io/posts/colorpicker/#intermission---a-new-lightness-estimate-for-oklab>),
+# which is closer to perceived lightness than OKLab's L, in particular for dark
+# colors.
+#
+# Hue: arg -> hue
+# ---------------
+# The hue is the argument rotated such that positive real values are green, plus a
+# small periodic correction that makes neighboring arguments equally far apart (in
+# CAM16-UCS) on the circle |f| = 1. The correction is tabulated in _HUE_CORRECTION
+# at 64 equidistant arguments in [-pi, pi). arg 0 is not moved.
 
-# A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.  One
-# desirable property is
-#
-# (1)  f(1/r) = 1 - f(r).
-#
-# This makes sure that the representation of the inverse of a function is exactly as
-# light as the original function is dark. The function g_a(r) = 1 - a^r (with some 0 < a
-# < 1), as it is sometimes suggested (e.g., on Wikipedia
-# <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).
-#
-# A common alternative is
-#
-#   h(r) = r^a / (r^a + 1)
-#
-# with a configurable parameter a.
-#
-#  * For a=1.21268891, this function is very close to the popular alternative 2/pi *
-#  arctan(r) (which also fulfills the above property)
-#
-#  * For a=1.21428616 is is close to g_{1/2} (between 0 and 1).
-#
-#  * For a=1.49486991 it is close to x/2 (between 0 and 1).
-#
-#  * For a=2 it is the stereographic projection onto the Riemann sphere.
-#    For other a, it's the projection onto something else than a sphere. For a=1, for
-#    example, the projection onto the line f(t) = t-1.
-#
-# Disadvantage of this choice:
-#
-#  h'(r) = (a * r^{a-1} * (r^a + 1) - r^a * a * r^{a-1}) / (r^a + 1) ** 2
-#        = a * r^{a-1} / (r^a + 1) ** 2
-#
-# so h'(r)=0 at r=0 for all a > 1. This means that h(r) has an inflection point in (0,
-# 1) for all a > 1. For 0 < alpha < 1, the derivative at 0 is infty.
-#
-# Only for a=1, the derivative is 1/2. For arctan, it's 1 / pi.
-#
-# There are other choices of the form f(x) = s(x) / (s(x) + 1). s has to
-# fulfill s(x)*s(1/x) = 1, see <https://math.stackexchange.com/a/221415/36678>
-# for a characterization of such functions. This leads to the characterization
-#
-#  f(x) = phi(x) / (phi(x) + phi(1/x))
-#
-# for _any_ phi(x). For phi(x)=sqrt(x), one gets f(x)=x/(x+1). Ideas here are
-# phi = log1p or log1p(log1p) (and so forth).
-#
-# Another choice that fulfills (1) is
-#
-#           / r / 2          for 0 <= x <= 1,
-#   f(r) = |
-#           \ 1 - 1 / (2r)   for x > 1,
-#
-# but its second derivative is discontinuous at 1, and one does actually notice this
-#
-#            / 1/2         for 0 <= x <= 1,
-#   f'(r) = |
-#            \ 1/2 / r^2   for x > 1,
-#
-#             / 0          for 0 <= x <= 1,
-#   f''(r) = |
-#             \ -1 / r^3   for x > 1,
-#
-# TODO find parametrized function that is free of inflection points for the param=0
-# (or infty) is this last f(r).
-#
+
+def scale_abs(r: ArrayLike) -> np.ndarray:
+    """Map |f| in [0, infinity] to lightness s in [0, 1], s(1/r) = 1 - s(r)."""
+    r = np.asarray(r, dtype=float)
+    with np.errstate(divide="ignore"):
+        x = np.log(r)
+    # σ(t) = (1 + tanh(t / 2)) / 2 is numerically stable for all t
+    return 0.5 * (1.0 + np.tanh(0.5 * np.arcsinh(0.5 * x)))
+
+
+def scale_abs_inv(s: ArrayLike) -> np.ndarray:
+    """Inverse of scale_abs."""
+    s = np.asarray(s, dtype=float)
+    with np.errstate(divide="ignore", over="ignore"):
+        return np.exp(2.0 * np.sinh(np.log(s / (1.0 - s))))
+
+
+def _toe_inv(lr: np.ndarray) -> np.ndarray:
+    # Ottosson's toe, inverse: toe-corrected lightness L_r -> OKLab L
+    k1 = 0.206
+    k2 = 0.03
+    k3 = (1.0 + k1) / (1.0 + k2)
+    return (lr * lr + k1 * lr) / (k3 * (lr + k2))
+
+
+# Rotate the angles such a "green" color represents positive real values. The rotation
+# is chosen such that the ratio g/(r+b) (in rgb) is the largest for the point 1.0.
+_HUE_OFFSET = 0.8936868 * np.pi
+
+_HUE_T = np.linspace(-np.pi, np.pi, 64, endpoint=False)
+# fmt: off
+_HUE_CORRECTION = np.array([
+    -0.05253, -0.04273, -0.03096, -0.01760, -0.00327, +0.01116, +0.02472, +0.03652,
+    +0.04588, +0.05245, +0.05621, +0.05739, +0.05643, +0.05383, +0.05018, +0.04605,
+    +0.04199, +0.03844, +0.03568, +0.03374, +0.03240, +0.03127, +0.02992, +0.02807,
+    +0.02557, +0.02249, +0.01897, +0.01524, +0.01154, +0.00806, +0.00496, +0.00228,
+    +0.00000, -0.00198, -0.00384, -0.00081, -0.00009, -0.00311, -0.00862, -0.01534,
+    -0.02191, -0.02690, -0.02867, -0.02533, -0.01918, -0.02511, -0.03090, -0.03644,
+    -0.04163, -0.04644, -0.05084, -0.05484, -0.05846, -0.06175, -0.06470, -0.06732,
+    -0.06956, -0.07131, -0.07242, -0.07269, -0.07188, -0.06971, -0.06591, -0.06024,
+])
+# fmt: on
+
+
 def get_srgb1(
     z: ArrayLike,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
     saturation_adjustment: float = 1.28,
 ) -> np.ndarray:
     z = np.asarray(z)
 
     angle = np.arctan2(z.imag, z.real)
-    absval_scaled = abs_scaling(np.abs(z))
+    absval = np.abs(z)
+    absval_scaled = scale_abs(absval) if abs_scaling is None else abs_scaling(absval)
 
     # We may have NaNs, so don't be too strict here.
     # assert np.all(absval_scaled >= 0)
@@ -91,18 +110,19 @@ def get_srgb1(
     r0 = 0.08499547839164734
     r0 *= saturation_adjustment
 
-    # Rotate the angles such a "green" color represents positive real values. The
-    # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
-    # point 1.0.
-    offset = 0.8936868 * np.pi
+    hue = (
+        angle
+        + np.interp(angle, _HUE_T, _HUE_CORRECTION, period=2 * np.pi)
+        + _HUE_OFFSET
+    )
     # Map (r, angle) to a point in the color space; bicone mapping similar to what
     # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
     rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
     ok_coords = np.array(
         [
-            absval_scaled,
-            rd * np.cos(angle + offset),
-            rd * np.sin(angle + offset),
+            _toe_inv(absval_scaled),
+            rd * np.cos(hue),
+            rd * np.sin(hue),
         ]
     )
     xyz100 = oklab_to_xyz100(ok_coords)
