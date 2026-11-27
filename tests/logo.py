@@ -1,44 +1,52 @@
+"""Update the color disk in assets/cplot-logo.svg with cplot's current colors.
+
+The disk shows the phase wheel at |f| = 1, i.e., the colors of z / |z|, with positive
+reals to the right.
+
+    uv run tests/logo.py
+"""
+
+import base64
+import io
+import re
+from pathlib import Path
+
 import matplotlib.pyplot as plt
-import matplotlib.tri as tri
 import numpy as np
 
 import cplot
 
+logo = Path(__file__).resolve().parent / ".." / "assets" / "cplot-logo.svg"
 
-def create_logo():
-    # Adapted from
-    # <https://matplotlib.org/gallery/images_contours_and_fields/tripcolor_demo.html#sphx-glr-gallery-images-contours-and-fields-tripcolor-demo-py>
-    # First create the x and y coordinates of the points.
-    n_angles = 314
-    n_radii = 100
-    radii = np.linspace(0.0, 1.0, n_radii)
 
-    angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
-    angles = np.repeat(angles[..., np.newaxis], n_radii, axis=1)
-    angles[:, 1::2] += np.pi / n_angles
+def create_disk(n: int = 338, supersample: int = 4) -> bytes:
+    m = n * supersample
+    x = (np.arange(m) + 0.5) / m * 2 - 1
+    X, Y = np.meshgrid(x, -x)  # image rows go downwards; Im(z) upwards
+    z = X + 1j * Y
+    with np.errstate(invalid="ignore"):
+        rgb = cplot.get_srgb1(z / np.abs(z))
+    rgb = np.nan_to_num(rgb)
+    alpha = (np.abs(z) <= 1.0).astype(float)
+    rgba = np.dstack([rgb * alpha[..., None], alpha])  # premultiplied for averaging
+    # box-filter downsampling for antialiasing
+    rgba = rgba.reshape(n, supersample, n, supersample, 4).mean(axis=(1, 3))
+    a = rgba[..., 3:]
+    rgba[..., :3] = np.where(a > 0, rgba[..., :3] / np.maximum(a, 1e-12), 0.0)
+    buf = io.BytesIO()
+    plt.imsave(buf, np.clip(rgba, 0, 1), format="png")
+    return buf.getvalue()
 
-    x = (radii * np.cos(angles)).flatten()
-    y = (radii * np.sin(angles)).flatten()
 
-    # Create the Triangulation; no triangles so Delaunay triangulation created.
-    triang = tri.Triangulation(x, y)
-
-    # print(triang)
-    # exit(1)
-    # import dmsh
-    # geo = dmsh.Circle([0.0, 0.0], 1.0)
-    # X, cells = dmsh.generate(geo, 0.1)
-
-    z = x + 1j * y
-    # z /= np.abs(z)
-
-    cplot.tripcolor(triang, z, alpha=0)
-    plt.gca().set_aspect("equal", "datalim")
-    plt.axis("off")
-
-    plt.savefig("logo.png", transparent=True)
-    return
+def update_logo():
+    svg = logo.read_text()
+    b64 = base64.b64encode(create_disk()).decode()
+    svg, count = re.subn(
+        r'(xlink:href="data:image/png;base64,)[^"]*(")', rf"\g<1>{b64}\g<2>", svg
+    )
+    assert count == 1
+    logo.write_text(svg)
 
 
 if __name__ == "__main__":
-    create_logo()
+    update_logo()
