@@ -78,7 +78,7 @@ Features of this software:
 - The contour `abs(z) == 1` is emphasized, other abs contours are at 2, 4, 8, etc. and
   1/2, 1/4, 1/8, etc., respectively. This makes it easy to tell the absolte value
   precisely.
-- For `arg(z) == 0`, the color is green, for `arg(z) == pi/2` it's blue, for `arg(z) = -pi / 2` it's orange, and for `arg(z) = pi` it's pink.
+- For `arg(z) == 0`, the color is red, for `arg(z) == pi/2` it's yellow/olive, for `arg(z) = pi` it's teal, and for `arg(z) = -pi / 2` it's violet (the conventional red → yellow → green → cyan → blue → magenta direction).
 
 Other useful functions:
 

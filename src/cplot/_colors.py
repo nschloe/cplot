@@ -29,22 +29,37 @@ from numpy.typing import ArrayLike
 #    1 - s ~ 1 / |ln r| instead of 1 - s ~ r^(-a). Lightness keeps changing over many
 #    orders of magnitude, and pure black / pure white (in 8-bit sRGB) are effectively
 #    reserved for exactly 0 / infinity; the first pure-black pixel appears at
-#    |f| ≈ 1e-36.
+#    |f| ≈ 1e-175, the first pure-white one at |f| ≈ 1e204.
 #
 #  * There is no sharp knee in the curve; steeper slopes at r = 1 combined with fat
 #    tails lead to visible edges around |f| = 1.
 #
-# s is used as the toe-corrected OKLab lightness L_r (Ottosson,
+# s is mapped to the toe-corrected OKLab lightness L_r (Ottosson,
 # <https://bottosson.github.io/posts/colorpicker/#intermission---a-new-lightness-estimate-for-oklab>),
 # which is closer to perceived lightness than OKLab's L, in particular for dark
-# colors.
+# colors, via L_r = s^p with p = ln(0.6) / ln(0.5). This keeps 0 -> black and
+# infinity -> white, but puts |f| = 1 at L_r = 0.6 instead of 0.5: colors are a bit
+# lighter, which helps the warm hues (orange, yellow) that look brown/olive when dark.
 #
 # Hue: arg -> hue
 # ---------------
-# The hue is the argument rotated such that positive real values are green, plus a
-# small periodic correction that makes neighboring arguments equally far apart (in
-# CAM16-UCS) on the circle |f| = 1. The correction is tabulated in _HUE_CORRECTION
-# at 64 equidistant arguments in [-pi, pi). arg 0 is not moved.
+# Positive real values are red (the OKLab hue of sRGB red, 29°); the hue runs in the
+# conventional direction red -> yellow -> green -> cyan -> blue -> magenta, so
+# +i is yellow-olive, -1 teal, -i violet.
+#
+# Two small periodic corrections, tabulated at 64 equidistant arguments in [-pi, pi)
+# and fitted on the circle |f| = 1 (with colour-science's CAM16 and Hellwig 2022
+# models, average surround):
+#
+#  * _HUE_CORRECTION makes neighboring arguments equally far apart in CAM16-UCS
+#    (even "speed" of color change); arg 0 is not moved.
+#
+#  * _LIGHTNESS_CORRECTION is added to OKLab L such that all hues have the same
+#    perceived lightness (Hellwig 2022 J_HK, which includes the Helmholtz-Kohlrausch
+#    effect). It is scaled with the chroma, so it vanishes for black, white, and grey.
+#
+# Both are linearly interpolated (and not a smooth fit) since they have kinks where
+# the color circle touches the sRGB gamut.
 
 
 def scale_abs(r: ArrayLike) -> np.ndarray:
@@ -71,21 +86,30 @@ def _toe_inv(lr: np.ndarray) -> np.ndarray:
     return (lr * lr + k1 * lr) / (k3 * (lr + k2))
 
 
-# Rotate the angles such a "green" color represents positive real values. The rotation
-# is chosen such that the ratio g/(r+b) (in rgb) is the largest for the point 1.0.
-_HUE_OFFSET = 0.8936868 * np.pi
+_HUE_OFFSET = np.deg2rad(29.0)
+_LIGHTNESS_EXPONENT = np.log(0.6) / np.log(0.5)
 
-_HUE_T = np.linspace(-np.pi, np.pi, 64, endpoint=False)
+_CORRECTION_T = np.linspace(-np.pi, np.pi, 64, endpoint=False)
 # fmt: off
 _HUE_CORRECTION = np.array([
-    -0.05253, -0.04273, -0.03096, -0.01760, -0.00327, +0.01116, +0.02472, +0.03652,
-    +0.04588, +0.05245, +0.05621, +0.05739, +0.05643, +0.05383, +0.05018, +0.04605,
-    +0.04199, +0.03844, +0.03568, +0.03374, +0.03240, +0.03127, +0.02992, +0.02807,
-    +0.02557, +0.02249, +0.01897, +0.01524, +0.01154, +0.00806, +0.00496, +0.00228,
-    +0.00000, -0.00198, -0.00384, -0.00081, -0.00009, -0.00311, -0.00862, -0.01534,
-    -0.02191, -0.02690, -0.02867, -0.02533, -0.01918, -0.02511, -0.03090, -0.03644,
-    -0.04163, -0.04644, -0.05084, -0.05484, -0.05846, -0.06175, -0.06470, -0.06732,
-    -0.06956, -0.07131, -0.07242, -0.07269, -0.07188, -0.06971, -0.06591, -0.06024,
+    -0.02465, -0.02903, -0.03468, -0.04063, -0.04675, -0.05295, -0.05916, -0.06529,
+    -0.07127, -0.07703, -0.08252, -0.08773, -0.09264, -0.09729, -0.10168, -0.10576,
+    -0.10945, -0.11262, -0.11507, -0.11656, -0.11683, -0.11558, -0.11255, -0.10750,
+    -0.10029, -0.09089, -0.07945, -0.06635, -0.05216, -0.03765, -0.02365, -0.01091,
+    +0.00000, +0.00881, +0.01552, +0.02035, +0.02366, +0.02587, +0.02742, +0.02865,
+    +0.02983, +0.03110, +0.03245, +0.03378, +0.03490, +0.03558, +0.03565, +0.03495,
+    +0.03343, +0.03109, +0.02798, +0.02421, +0.01994, +0.01538, +0.01076, +0.00629,
+    +0.00215, -0.00153, -0.00476, -0.00766, -0.01044, -0.01334, -0.01720, -0.02150,
+])
+_LIGHTNESS_CORRECTION = np.array([
+    -0.02474, -0.02335, -0.02193, -0.02060, -0.01949, -0.01869, -0.01820, -0.01794,
+    -0.01782, -0.01773, -0.01753, -0.01716, -0.01654, -0.01565, -0.01450, -0.01312,
+    -0.01154, -0.00981, -0.00799, -0.00613, -0.00428, -0.00249, -0.00079, +0.00078,
+    +0.00220, +0.00348, +0.00465, +0.00574, +0.00683, +0.00798, +0.00926, +0.01072,
+    +0.01238, +0.01426, +0.01631, +0.01850, +0.02076, +0.02299, +0.02508, +0.02693,
+    +0.02843, +0.02950, +0.03008, +0.03015, +0.02970, +0.02872, +0.02721, +0.02518,
+    +0.02261, +0.01950, +0.01587, +0.01175, +0.00724, +0.00245, -0.00246, -0.00733,
+    -0.01197, -0.01619, -0.01980, -0.02267, -0.02468, -0.02589, -0.02637, -0.02593,
 ])
 # fmt: on
 
@@ -112,15 +136,21 @@ def get_srgb1(
 
     hue = (
         angle
-        + np.interp(angle, _HUE_T, _HUE_CORRECTION, period=2 * np.pi)
+        + np.interp(angle, _CORRECTION_T, _HUE_CORRECTION, period=2 * np.pi)
         + _HUE_OFFSET
     )
     # Map (r, angle) to a point in the color space; bicone mapping similar to what
     # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
-    rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
+    chroma_weight = 1.0 - 2.0 * abs(absval_scaled - 0.5)
+    rd = r0 * chroma_weight
+    lightness = _toe_inv(absval_scaled**_LIGHTNESS_EXPONENT) + (
+        chroma_weight
+        * (saturation_adjustment / 1.28)
+        * np.interp(angle, _CORRECTION_T, _LIGHTNESS_CORRECTION, period=2 * np.pi)
+    )
     ok_coords = np.array(
         [
-            _toe_inv(absval_scaled),
+            lightness,
             rd * np.cos(hue),
             rd * np.sin(hue),
         ]
