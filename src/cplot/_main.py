@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Callable
 
 import matplotlib.pyplot as plt
@@ -9,7 +10,7 @@ from matplotlib import cm, colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.typing import ArrayLike
 
-from ._colors import get_srgb1
+from ._colors import get_srgb1, lightness_r, scale_abs, srgb1_grey
 
 
 def _get_z_grid_for_image(
@@ -32,7 +33,7 @@ def _get_z_grid_for_image(
 def _plot_colors(
     fz,
     extent,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda r: r / (r + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
     saturation_adjustment: float = 1.28,
 ):
     rgb_vals = get_srgb1(
@@ -82,32 +83,35 @@ def _add_colorbar_arg(cax, saturation_adjustment: float):
 
 
 def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[float]):
-    # abs colorbar
+    # abs colorbar; use the actual (grey) lightness values of the plot
+    s = np.linspace(0.0, 1.0, 256)
+    greys = get_srgb1(np.ones(256), abs_scaling=lambda _: s, saturation_adjustment=0.0)
+    greys = np.pad(greys, ((0, 0), (0, 1)), constant_values=1.0)
     norm = colors.Normalize(vmin=0, vmax=1)
     cb0 = plt.colorbar(
-        cm.ScalarMappable(norm=norm, cmap=cm.gray),
+        cm.ScalarMappable(norm=norm, cmap=colors.ListedColormap(greys)),
         cax=cax,
     )
     cb0.set_label("abs", rotation=0, ha="center", va="top")
     cb0.ax.yaxis.set_label_coords(0.5, -0.03)
 
     if isinstance(abs_contours, (int, float)):
-        a = abs_contours
+        a = f"{abs_contours:g}"
         scaled_vals = abs_scaling(
-            np.array([1 / a**3, 1 / a**2, 1 / a, 1, a, a**2, a**3])
+            np.array([abs_contours**k for k in range(-3, 4)], dtype=float)
         )
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
         if isinstance(abs_contours, int) and abs_contours < 4:
             cb0.set_ticklabels(
                 [
                     "0",
-                    f"$\\frac{{1}}{{{abs_contours ** 3}}}$",
-                    f"$\\frac{{1}}{{{abs_contours ** 2}}}$",
-                    f"$\\frac{{1}}{{{abs_contours ** 1}}}$",
+                    f"$\\frac{{1}}{{{abs_contours**3}}}$",
+                    f"$\\frac{{1}}{{{abs_contours**2}}}$",
+                    f"$\\frac{{1}}{{{abs_contours**1}}}$",
                     "$1$",
-                    f"{abs_contours ** 1}",
-                    f"{abs_contours ** 2}",
-                    f"{abs_contours ** 3}",
+                    f"{abs_contours**1}",
+                    f"{abs_contours**2}",
+                    f"{abs_contours**3}",
                     "$\\infty$",
                 ]
             )
@@ -126,9 +130,34 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
                 ]
             )
     else:
-        scaled_vals = abs_scaling(np.asarray(abs_contours))
+        abs_contours = np.asarray(abs_contours, dtype=float)
+        scaled_vals = abs_scaling(abs_contours)
         cb0.set_ticks([0.0, *scaled_vals, 1.0])
-        cb0.set_ticklabels(["0", *[f"{val}" for val in scaled_vals], "∞"])
+        cb0.set_ticklabels(["0", *[f"{val:g}" for val in abs_contours], "∞"])
+
+
+def _contour_abs_colors(
+    levels: ArrayLike,
+    abs_scaling: Callable[[np.ndarray], np.ndarray],
+    alpha: float,
+    sign: ArrayLike,
+    contrast: float = 0.09,
+) -> list[str]:
+    """Grey line colors for the contours |f| = level.
+
+    The background lightness along |f| = c is the same for all arguments, namely that
+    of abs_scaling(c). Pick a grey that, drawn with opacity alpha, is `contrast`
+    lighter (sign > 0) or darker (sign < 0) than the background, measured in
+    toe-corrected OKLab lightness L_r. This makes all contours equally visible,
+    including the ones close to |f| = 1 where the background is mid-grey.
+    """
+    s = abs_scaling(np.asarray(levels, dtype=float))
+    lr = lightness_r(s)
+    background = srgb1_grey(lr)
+    target = srgb1_grey(np.clip(lr + np.sign(sign) * contrast, 0.0, 1.0))
+    # matplotlib blends in sRGB: out = (1 - alpha) * background + alpha * line
+    line = np.clip((target - (1.0 - alpha) * background) / alpha, 0.0, 1.0)
+    return [colors.to_hex((g, g, g)) for g in line]
 
 
 def _plot_contour_abs(
@@ -142,10 +171,14 @@ def _plot_contour_abs(
     color: str | None = None,
     min_contour_length: float | None = None,
     linewidth: float | None = None,
+    # If given, the line colors are adapted to the background lightness
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
 ):
     vals = np.abs(fz)
 
     def _plot_contour(levels, colors, linestyles, alpha):
+        if len(levels) == 0:
+            return
         matplotx.contour(
             Z.real,
             Z.imag,
@@ -160,6 +193,16 @@ def _plot_contour_abs(
             min_jump=1.0e-15,
             linewidths=linewidth,
         )
+
+    def _colors(levels, default):
+        if color:
+            return color
+        if abs_scaling is None:
+            return default
+        # lighter lines where |f| <= 1 (dark background), darker where |f| > 1
+        levels = np.asarray(levels, dtype=float)
+        sign = np.where(levels <= 1.0, 1.0, -1.0)
+        return _contour_abs_colors(levels, abs_scaling, alpha, sign)
 
     if isinstance(contours, (float, int)):
         base = contours
@@ -179,21 +222,23 @@ def _plot_contour_abs(
         contours_neg = [base**k for k in range(min_exp, 0)]
         contours_pos = [base**k for k in range(1, max_exp + 1)]
 
-        _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
+        _plot_contour(contours_neg, _colors(contours_neg, "0.8"), "solid", alpha)
 
-        if emphasize_contour_1:
+        if color is None and abs_scaling is not None:
+            # |f| = 1 is drawn like the |f| < 1 contours (light); it is recognizable
+            # as the line where the contours switch from light to dark.
+            light = _contour_abs_colors([1.0], abs_scaling, alpha, +1.0)
+            _plot_contour([1.0], light, "solid", alpha)
+        elif emphasize_contour_1 and color is None:
             # subtle emphasize
             _plot_contour([1.0], "0.6", "solid", 0.7)
-            # "dash":
-            # _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
-            # _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
         else:
             _plot_contour([1.0], color if color else "0.8", "solid", alpha)
 
-        _plot_contour(contours_pos, color if color else "0.3", "solid", alpha)
+        _plot_contour(contours_pos, _colors(contours_pos, "0.3"), "solid", alpha)
     else:
         contours = np.asarray(contours)
-        _plot_contour(contours, color if color else "0.8", "solid", alpha)
+        _plot_contour(contours, _colors(contours, "0.8"), "solid", alpha)
 
 
 def _plot_contour_arg(
@@ -263,6 +308,13 @@ class Plotter:
         return _plot(self.Z, fz, self.extent, *args, **kwargs)
 
 
+def _evaluate(f: Callable[[np.ndarray], np.ndarray], Z: np.ndarray) -> np.ndarray:
+    # always pass a flat vector, makes it easier for f(); broadcast so that functions
+    # returning a scalar (constants) work, too
+    fz = np.asarray(f(Z.ravel()))
+    return np.broadcast_to(fz, (Z.size,)).reshape(Z.shape)
+
+
 def plot(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
@@ -273,12 +325,33 @@ def plot(
     extent = (x_range[0], x_range[1], y_range[0], y_range[1])
     Z = _get_z_grid_for_image(x_range, y_range)
 
-    # always reshape to vector, makes it easier for f()
-    Z_shape = Z.shape
-    fz = f(Z.flatten()).reshape(Z_shape)
+    fz = _evaluate(f, Z)
 
     _plot(Z, fz, extent, *args, **kwargs)
     return plt
+
+
+def _flat_lightness(r: np.ndarray) -> np.ndarray:
+    # constant lightness, used for plot_arg()
+    return np.full_like(r, 0.5, dtype=float)
+
+
+def _warn_abs_scaling(abs_scaling, stacklevel: int = 3) -> None:
+    if abs_scaling is not None and abs_scaling is not _flat_lightness:
+        warnings.warn(
+            "abs_scaling is deprecated and will be removed in a future version. "
+            "cplot uses a fixed lightness scaling so that plots are comparable.",
+            DeprecationWarning,
+            stacklevel=stacklevel,
+        )
+
+
+def _resolve_abs_scaling(abs_scaling) -> Callable:
+    if abs_scaling is None:
+        return scale_abs
+    return (
+        abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling)
+    )
 
 
 def _abs_scaling_from_float(val: float) -> Callable:
@@ -295,9 +368,8 @@ def _plot(
     Z: np.ndarray,
     fz: np.ndarray,
     extent: tuple[float, float, float, float],
-    # If you're changing contours_abs to x and want the abs_scaling to follow along,
-    # you'll have to set it to the same value.
-    abs_scaling: float | Callable[[np.ndarray], np.ndarray] = 2,
+    # deprecated; plots use a fixed lightness scaling (cplot.scale_abs)
+    abs_scaling: float | Callable[[np.ndarray], np.ndarray] | None = None,
     # Literal["auto"]
     contours_abs: float | list[float] | None | str = "auto",
     contours_arg: ArrayLike | None = (-np.pi / 2, 0, np.pi / 2, np.pi),
@@ -312,7 +384,9 @@ def _plot(
 ):
     assert Z.shape == fz.shape
 
-    asc = abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling)
+    # user -> plot() / Plotter.plot() -> _plot() -> _warn_abs_scaling()
+    _warn_abs_scaling(abs_scaling, stacklevel=4)
+    asc = _resolve_abs_scaling(abs_scaling)
 
     _plot_colors(
         fz,
@@ -321,14 +395,9 @@ def _plot(
         saturation_adjustment=saturation_adjustment,
     )
 
-    if contours_abs is None:
-        contours_abs = 2
-
-    elif contours_abs == "auto":
-        assert isinstance(
-            abs_scaling, (int, float)
-        ), f'if contours_abs="auto", abs_scaling must be int or float, not {abs_scaling}'
-        contours_abs = abs_scaling
+    if isinstance(contours_abs, str) and contours_abs == "auto":
+        # contours at powers of 2, or at powers of the (deprecated) float abs_scaling
+        contours_abs = abs_scaling if isinstance(abs_scaling, (int, float)) else 2
 
     if contours_abs is not None:
         _plot_contour_abs(
@@ -336,7 +405,8 @@ def _plot(
             fz,
             contours=contours_abs,
             emphasize_contour_1=emphasize_abs_contour_1,
-            alpha=0.2,
+            alpha=0.4,
+            abs_scaling=asc,
             min_contour_length=min_contour_length,
             linewidth=linewidth,
         )
@@ -377,7 +447,8 @@ def _plot(
 
     if add_colorbars[0]:
         cax1 = divider.append_axes("right", size="5%", pad=colorbar_pad[0])
-        _add_colorbar_abs(cax1, asc, contours_abs)
+        # without abs contours, still label the colorbar at powers of 2
+        _add_colorbar_abs(cax1, asc, 2 if contours_abs is None else contours_abs)
 
     if add_colorbars[1]:
         cax2 = divider.append_axes("right", size="5%", pad=colorbar_pad[1])
@@ -389,7 +460,7 @@ def _plot(
 def plot_abs(
     *args,
     add_colorbars: bool = True,
-    contours_abs: str | float | list[float] | None = None,
+    contours_abs: str | float | list[float] | None = "auto",
     **kwargs,
 ):
     return plot(
@@ -407,7 +478,7 @@ def plot_abs(
 def plot_arg(*args, add_colorbars: bool = True, **kwargs):
     return plot(
         *args,
-        abs_scaling=lambda r: np.full_like(r, 0.5),
+        abs_scaling=_flat_lightness,
         contours_abs=None,
         contours_arg=None,
         emphasize_abs_contour_1=False,
@@ -417,10 +488,10 @@ def plot_arg(*args, add_colorbars: bool = True, **kwargs):
 
 
 # "Phase plot" is a common name for this kind of plots
-plot_phase = plot_abs
+plot_phase = plot_arg
 
 
-# only show the phase, with some default value adjustments
+# only show the contours, no colors
 def plot_contours(
     f: Callable[[np.ndarray], np.ndarray],
     x_range: tuple[float, float, int],
@@ -432,9 +503,7 @@ def plot_contours(
 ):
     Z = _get_z_grid_for_image(x_range, y_range)
 
-    # always reshape to vector, makes it easier for f()
-    Z_shape = Z.shape
-    fz = f(Z.flatten()).reshape(Z_shape)
+    fz = _evaluate(f, Z)
 
     if contours_arg is not None:
         _plot_contour_arg(

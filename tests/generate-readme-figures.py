@@ -39,6 +39,7 @@ style = {
 plt.style.use(style)
 
 plot_dir = Path(__file__).resolve().parent / ".." / "plots"
+plot_dir.mkdir(exist_ok=True)
 
 
 def _wrap(fun: Callable) -> Callable:
@@ -182,7 +183,7 @@ def bernoulli(z):
 # <https://en.wikipedia.org/wiki/Hundred-dollar,_Hundred-digit_Challenge_problems>
 n = 401
 cplot.plot(
-    lambda z: np.cos(np.log(z) / z) / z, (-1, 1, n), (-1, 1, n), abs_scaling=10.0
+    lambda z: np.cos(np.log(z) / z) / z, (-1, 1, n), (-1, 1, n), contours_abs=10.0
 )
 plt.savefig(plot_dir / "siam.png", transparent=True, bbox_inches="tight")
 plt.clf()
@@ -447,3 +448,9 @@ for filename, fun, x, y in args:
     )
     plt.savefig(plot_dir / filename, transparent=True, bbox_inches="tight")
     plt.clf()
+
+
+# Riemann sphere (needs pyvista and an off-screen capable VTK; on headless CI, e.g.,
+# pyvista/setup-headless-display-action)
+p = cplot.riemann_sphere(np.log, off_screen=True)
+p.screenshot(plot_dir / "riemann-log.png", window_size=(1024, 768))

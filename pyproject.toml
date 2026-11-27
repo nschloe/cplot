@@ -2,8 +2,13 @@
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+# previously flake8 (E, W, F, B, C90) and isort (I)
+select = ["E", "W", "F", "B", "C90", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 18
 
 [project]
 name = "cplot"
@@ -19,19 +24,19 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Visualization",
 ]
-dynamic = ["version"]
-requires-python = ">=3.7"
+version = "0.9.3"
+requires-python = ">=3.10"
 dependencies = [
   "matplotlib",
   "matplotx[all] >= 0.3.10",
-  "npx",
   "numpy >= 1.20.0",
 ]
 
@@ -41,10 +46,26 @@ all = [
   "pyvista",
 ]
 
-[tool.setuptools.dynamic]
-version = {attr = "cplot.__about__.__version__"}
+[dependency-groups]
+test = [
+  "mpmath",
+  "pytest",
+  "pytest-codeblocks >= 0.15.0",
+  "pytest-randomly",
+  "scipy",
+]
+# for tests/generate-readme-figures.py
+figures = [
+  "mpmath",
+  "scipy",
+  "scipyx",
+]
 
 [project.urls]
 Code = "https://github.com/nschloe/cplot"
 Issues = "https://github.com/nschloe/cplot/issues"
 Funding = "https://github.com/sponsors/nschloe"
+
+[tool.pytest.ini_options]
+# the README code blocks call plt.show(); tests render with Agg (see tests/conftest.py)
+filterwarnings = ["ignore:FigureCanvasAgg is non-interactive:UserWarning"]

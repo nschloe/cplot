@@ -1,23 +1,33 @@
 from __future__ import annotations
 
+import warnings
 from typing import Callable
 
 import numpy as np
 
 from ._colors import get_srgb1
-from ._main import _abs_scaling_from_float
+from ._main import _resolve_abs_scaling, _warn_abs_scaling
 
 
 def riemann_sphere(
     f: Callable[[np.ndarray], np.ndarray],
     filename: str | None = None,
     n: int = 50,
-    # If you're changing contours_abs to x and want the abs_scaling to follow along,
-    # you'll have to set it to the same value.
-    abs_scaling: float | Callable[[np.ndarray], np.ndarray] = 2,
+    # deprecated; plots use a fixed lightness scaling (cplot.scale_abs)
+    abs_scaling: float | Callable[[np.ndarray], np.ndarray] | None = None,
     saturation_adjustment: float = 1.28,
     off_screen: bool = False,
-) -> None:
+):
+    """Plot f on the Riemann sphere. Returns the pyvista.Plotter; call .show() on it."""
+    _warn_abs_scaling(abs_scaling)
+    if filename is not None:
+        warnings.warn(
+            "riemann_sphere(): filename is unused and deprecated; call "
+            ".screenshot(filename) on the returned plotter instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
     import meshzoo
     import pyvista as pv
     import vtk
@@ -32,8 +42,8 @@ def riemann_sphere(
     Z = (x + 1j * y) / (1 - z)
 
     rgb = get_srgb1(
-        f(Z),
-        abs_scaling if callable(abs_scaling) else _abs_scaling_from_float(abs_scaling),
+        np.broadcast_to(np.asarray(f(Z)), Z.shape),
+        _resolve_abs_scaling(abs_scaling),
         saturation_adjustment,
     )
 

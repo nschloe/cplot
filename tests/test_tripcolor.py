@@ -33,10 +33,9 @@ def test_tripcolor():
 
     cplot.tripcolor(triang, z)
     plt.gca().set_aspect("equal", "datalim")
-    plt.show()
 
 
-def test_tricontour():
+def test_tricontour(tmp_path):
     # Adapted from
     # <https://matplotlib.org/gallery/images_contours_and_fields/tripcolor_demo.html#sphx-glr-gallery-images-contours-and-fields-tripcolor-demo-py>
     # First create the x and y coordinates of the points.
@@ -69,8 +68,7 @@ def test_tricontour():
     # cplot.tricontour_arg(triang, fz)
 
     plt.gca().set_aspect("equal", "datalim")
-    plt.savefig("out.png", bbox_inches="tight")
-    plt.show()
+    plt.savefig(tmp_path / "out.png", bbox_inches="tight")
 
 
 if __name__ == "__main__":

@@ -8,16 +8,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import ArrayLike
 
-from ._colors import get_srgb1
+from ._colors import get_srgb1, scale_abs
+from ._main import _contour_abs_colors, _resolve_abs_scaling, _warn_abs_scaling
 
 
 def tripcolor(
     triang,
     fz: ArrayLike,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    # deprecated; plots use a fixed lightness scaling (cplot.scale_abs)
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
 ):
+    _warn_abs_scaling(abs_scaling)
     fz = np.asarray(fz)
-    rgb = get_srgb1(fz, abs_scaling=abs_scaling)
+    rgb = get_srgb1(fz, abs_scaling=_resolve_abs_scaling(abs_scaling))
 
     # https://github.com/matplotlib/matplotlib/issues/10265#issuecomment-358684592
     n = fz.shape[0]
@@ -28,9 +31,29 @@ def tripcolor(
 
 
 def tricontour_abs(triang, fz: ArrayLike, contours: ArrayLike | None = None):
-    vals = np.abs(fz)
+    vals = np.abs(np.asarray(fz))
 
-    def plot_contours(levels, colors, linestyles, alpha):
+    # matplotlib's tricontour rejects non-finite values; mask out the triangles that
+    # touch them
+    is_bad = ~np.isfinite(vals)
+    finite_vals = vals[~is_bad]
+    if len(finite_vals) == 0:
+        return plt
+    if np.any(is_bad):
+        mask = np.any(is_bad[triang.triangles], axis=1)
+        if triang.mask is not None:
+            mask |= triang.mask
+        triang = mpl.tri.Triangulation(triang.x, triang.y, triang.triangles, mask=mask)
+        vals = np.where(is_bad, 1.0, vals)
+
+    alpha = 0.4
+
+    def plot_contours(levels):
+        if len(levels) == 0:
+            return
+        # same line colors as in plot(): constant contrast to the tripcolor background
+        sign = np.where(np.asarray(levels) <= 1.0, 1.0, -1.0)
+        colors = _contour_abs_colors(levels, scale_abs, alpha, sign)
         with warnings.catch_warnings():
             warnings.filterwarnings(
                 "ignore", "No contour levels were found within the data range."
@@ -40,25 +63,21 @@ def tricontour_abs(triang, fz: ArrayLike, contours: ArrayLike | None = None):
                 vals,
                 levels=levels,
                 colors=colors,
-                linestyles=linestyles,
+                linestyles="solid",
                 alpha=alpha,
             )
 
     if contours is None:
         base = 2.0
-        min_exp = np.log(np.min(vals)) / np.log(base)
-        min_exp = int(max(min_exp, -100))
-        max_exp = np.log(np.max(vals)) / np.log(base)
-        max_exp = int(min(max_exp, 100))
-        contours_neg = [base**k for k in range(min_exp, 0)]
-        contours_pos = [base**k for k in range(1, max_exp + 1)]
-
-        plot_contours(levels=contours_neg, colors="0.8", linestyles="solid", alpha=0.2)
-        plot_contours([1.0], colors="0.8", linestyles=[(5, (5, 5))], alpha=0.3)
-        plot_contours([1.0], colors="0.3", linestyles=[(0, (5, 5))], alpha=0.3)
-        plot_contours(levels=contours_pos, colors="0.3", linestyles="solid", alpha=0.2)
+        with np.errstate(divide="ignore"):
+            min_exp = int(max(np.log(np.min(finite_vals)) / np.log(base), -100))
+            max_exp = int(min(np.log(np.max(finite_vals)) / np.log(base), 100))
+        plot_contours([base**k for k in range(min_exp, 0)])
+        if np.min(finite_vals) <= 1.0 <= np.max(finite_vals):
+            plot_contours([1.0])
+        plot_contours([base**k for k in range(1, max_exp + 1)])
     else:
-        plot_contours(levels=contours, colors="0.8", linestyles="solid", alpha=0.2)
+        plot_contours(sorted(np.asarray(contours, dtype=float)))
 
     return plt
 

@@ -5,15 +5,8 @@
 
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.org/project/cplot)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cplot.svg?style=flat-square)](https://pypi.org/pypi/cplot/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5599493.svg?style=flat-square)](https://doi.org/10.5281/zenodo.5599493)
-[![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
-[![Downloads](https://pepy.tech/badge/cplot/month)](https://pepy.tech/project/cplot)
-
-[![Discord](https://img.shields.io/static/v1?logo=discord&logoColor=white&label=chat&message=on%20discord&color=7289da&style=flat-square)](https://discord.gg/hnTJ5MRX2Y)
-
-[![gh-actions](https://img.shields.io/github/workflow/status/nschloe/cplot/ci?style=flat-square)](https://github.com/nschloe/cplot/actions?query=workflow%3Aci)
-[![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5599493.svg)](https://doi.org/10.5281/zenodo.5599493)
+[![ci](https://github.com/nschloe/cplot/actions/workflows/tests.yml/badge.svg)](https://github.com/nschloe/cplot/actions/workflows/tests.yml)
 
 cplot helps plotting complex-valued functions in a visually appealing manner.
 
@@ -39,7 +32,6 @@ plt = cplot.plot(
     f,
     (-2.0, +2.0, 400),
     (-2.0, +2.0, 400),
-    # abs_scaling=lambda x: x / (x + 1),  # how to scale the lightness in domain coloring
     # contours_abs=2.0,
     # contours_arg=(-np.pi / 2, 0, np.pi / 2, np.pi),
     # emphasize_abs_contour_1: bool = True,
@@ -54,14 +46,14 @@ plt.show()
 
 Historically, plotting of complex functions was in one of three ways
 
-| <img src="https://nschloe.github.io/cplot/sinz3z-abs.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-arg.svg" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-contours.svg" width="70%"> |
+| <img src="https://nschloe.github.io/cplot/sinz3z-abs.png" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-arg.png" width="70%"> | <img src="https://nschloe.github.io/cplot/sinz3z-contours.png" width="70%"> |
 | :--------------------------------------------------------------------: | :--------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
 |          Only show the absolute value; sometimes as a 3D plot          |   Only show the phase/the argument in a color wheel (phase portrait)   |                   Show contour lines for both arg and abs                   |
 
 Combining all three of them gives you a _cplot_:
 
 <p align="center">
-  <img src="https://nschloe.github.io/cplot/sinz3z.svg" width="60%">
+  <img src="https://nschloe.github.io/cplot/sinz3z.png" width="60%">
 </p>
 
 See also [Wikipedia: Domain coloring](https://en.wikipedia.org/wiki/Domain_coloring).
@@ -71,10 +63,15 @@ Features of this software:
 - cplot uses [OKLAB](https://bottosson.github.io/posts/oklab/), a perceptually
   uniform color space for the argument colors.
   This avoids streaks of colors occurring with other color spaces, e.g., HSL.
+- The lightness encodes `abs(z)` with a fixed scaling, so plots of different functions
+  are comparable: `abs(z) == 1` is mid-grey, zeros are black, poles are white, and
+  `abs(1/z)` is exactly as light as `abs(z)` is dark. The scaling has fat tails, so
+  lightness keeps changing over many orders of magnitude instead of saturating to
+  pure black/white (see `cplot.scale_abs`).
 - The contour `abs(z) == 1` is emphasized, other abs contours are at 2, 4, 8, etc. and
   1/2, 1/4, 1/8, etc., respectively. This makes it easy to tell the absolte value
   precisely.
-- For `arg(z) == 0`, the color is green, for `arg(z) == pi/2` it's blue, for `arg(z) = -pi / 2` it's orange, and for `arg(z) = pi` it's pink.
+- For `arg(z) == 0`, the color is red, for `arg(z) == pi/2` it's yellow/olive, for `arg(z) = pi` it's teal, and for `arg(z) = -pi / 2` it's violet (the conventional red → yellow → green → cyan → blue → magenta direction).
 
 Other useful functions:
 
@@ -259,8 +256,12 @@ All plots are created with default settings.
 To run the cplot unit tests, check out this repository and run
 
 ```
-tox
+uv run --group test --extra all pytest --codeblocks
 ```
+
+The README figures are created with `tests/generate-readme-figures.py` (written to
+`plots/`). On every push to `main`, the `pages` workflow regenerates them and publishes
+them, together with `assets/`, to <https://nschloe.github.io/cplot/>.
 
 ### Similar projects and further reading
 

@@ -2,85 +2,140 @@ from __future__ import annotations
 
 from typing import Callable
 
-import npx
 import numpy as np
 from numpy.typing import ArrayLike
 
+# Lightness: |f| -> s in [0, 1]
+# -----------------------------
+# The scaling is fixed (no parameters) so that plots of different functions are
+# directly comparable: the same lightness always means the same |f|. It is
+#
+#   s = σ(asinh(ln(r) / 2)),   σ(t) = 1 / (1 + exp(-t)),
+#
+# or, equivalently, the classical r / (r + 1) applied to a log-compressed r,
+#
+#   s = w / (w + 1),   w = y + sqrt(1 + y²),   y = ln(r) / 2.
+#
+# Properties:
+#
+#  * s(1/r) = 1 - s(r), so the inverse of a function is exactly as light as the
+#    original function is dark. s(1) = 1/2.
+#
+#  * Near r = 1, w ≈ r^(1/2), so the scaling behaves like r^a / (r^a + 1) with
+#    a = 1/2.
+#
+#  * Far from r = 1, w only grows like ln(r), so the tails are fat:
+#    1 - s ~ 1 / |ln r| instead of 1 - s ~ r^(-a). Lightness keeps changing over many
+#    orders of magnitude, and pure black / pure white (in 8-bit sRGB) are effectively
+#    reserved for exactly 0 / infinity; the first pure-black pixel appears at
+#    |f| ≈ 1e-175, the first pure-white one at |f| ≈ 1e204.
+#
+#  * There is no sharp knee in the curve; steeper slopes at r = 1 combined with fat
+#    tails lead to visible edges around |f| = 1.
+#
+# s is mapped to the toe-corrected OKLab lightness L_r (Ottosson,
+# <https://bottosson.github.io/posts/colorpicker/#intermission---a-new-lightness-estimate-for-oklab>),
+# which is closer to perceived lightness than OKLab's L, in particular for dark
+# colors, via L_r = s^p with p = ln(0.6) / ln(0.5). This keeps 0 -> black and
+# infinity -> white, but puts |f| = 1 at L_r = 0.6 instead of 0.5: colors are a bit
+# lighter, which helps the warm hues (orange, yellow) that look brown/olive when dark.
+#
+# Hue: arg -> hue
+# ---------------
+# Positive real values are red (the OKLab hue of sRGB red, 29°); the hue runs in the
+# conventional direction red -> yellow -> green -> cyan -> blue -> magenta, so
+# +i is yellow-olive, -1 teal, -i violet.
+#
+# Two small periodic corrections, tabulated at 64 equidistant arguments in [-pi, pi)
+# and fitted on the circle |f| = 1 (with colour-science's CAM16 and Hellwig 2022
+# models, average surround):
+#
+#  * _HUE_CORRECTION makes neighboring arguments equally far apart in CAM16-UCS
+#    (even "speed" of color change); arg 0 is not moved.
+#
+#  * _LIGHTNESS_CORRECTION is added to OKLab L such that all hues have the same
+#    perceived lightness (Hellwig 2022 J_HK, which includes the Helmholtz-Kohlrausch
+#    effect). It is scaled with the chroma, so it vanishes for black, white, and grey.
+#
+# Both are linearly interpolated (and not a smooth fit) since they have kinks where
+# the color circle touches the sRGB gamut.
 
-# A number of scalings f that map the magnitude [0, infty] to [0, 1] are possible.  One
-# desirable property is
-#
-# (1)  f(1/r) = 1 - f(r).
-#
-# This makes sure that the representation of the inverse of a function is exactly as
-# light as the original function is dark. The function g_a(r) = 1 - a^r (with some 0 < a
-# < 1), as it is sometimes suggested (e.g., on Wikipedia
-# <https://en.wikipedia.org/wiki/Domain_coloring>) does _not_ fulfill (1).
-#
-# A common alternative is
-#
-#   h(r) = r^a / (r^a + 1)
-#
-# with a configurable parameter a.
-#
-#  * For a=1.21268891, this function is very close to the popular alternative 2/pi *
-#  arctan(r) (which also fulfills the above property)
-#
-#  * For a=1.21428616 is is close to g_{1/2} (between 0 and 1).
-#
-#  * For a=1.49486991 it is close to x/2 (between 0 and 1).
-#
-#  * For a=2 it is the stereographic projection onto the Riemann sphere.
-#    For other a, it's the projection onto something else than a sphere. For a=1, for
-#    example, the projection onto the line f(t) = t-1.
-#
-# Disadvantage of this choice:
-#
-#  h'(r) = (a * r^{a-1} * (r^a + 1) - r^a * a * r^{a-1}) / (r^a + 1) ** 2
-#        = a * r^{a-1} / (r^a + 1) ** 2
-#
-# so h'(r)=0 at r=0 for all a > 1. This means that h(r) has an inflection point in (0,
-# 1) for all a > 1. For 0 < alpha < 1, the derivative at 0 is infty.
-#
-# Only for a=1, the derivative is 1/2. For arctan, it's 1 / pi.
-#
-# There are other choices of the form f(x) = s(x) / (s(x) + 1). s has to
-# fulfill s(x)*s(1/x) = 1, see <https://math.stackexchange.com/a/221415/36678>
-# for a characterization of such functions. This leads to the characterization
-#
-#  f(x) = phi(x) / (phi(x) + phi(1/x))
-#
-# for _any_ phi(x). For phi(x)=sqrt(x), one gets f(x)=x/(x+1). Ideas here are
-# phi = log1p or log1p(log1p) (and so forth).
-#
-# Another choice that fulfills (1) is
-#
-#           / r / 2          for 0 <= x <= 1,
-#   f(r) = |
-#           \ 1 - 1 / (2r)   for x > 1,
-#
-# but its second derivative is discontinuous at 1, and one does actually notice this
-#
-#            / 1/2         for 0 <= x <= 1,
-#   f'(r) = |
-#            \ 1/2 / r^2   for x > 1,
-#
-#             / 0          for 0 <= x <= 1,
-#   f''(r) = |
-#             \ -1 / r^3   for x > 1,
-#
-# TODO find parametrized function that is free of inflection points for the param=0
-# (or infty) is this last f(r).
-#
+
+def scale_abs(r: ArrayLike) -> np.ndarray:
+    """Map |f| in [0, infinity] to lightness s in [0, 1], s(1/r) = 1 - s(r)."""
+    r = np.asarray(r, dtype=float)
+    with np.errstate(divide="ignore"):
+        x = np.log(r)
+    # σ(t) = (1 + tanh(t / 2)) / 2 is numerically stable for all t
+    return 0.5 * (1.0 + np.tanh(0.5 * np.arcsinh(0.5 * x)))
+
+
+def scale_abs_inv(s: ArrayLike) -> np.ndarray:
+    """Inverse of scale_abs."""
+    s = np.asarray(s, dtype=float)
+    with np.errstate(divide="ignore", over="ignore"):
+        return np.exp(2.0 * np.sinh(np.log(s / (1.0 - s))))
+
+
+def _toe_inv(lr: np.ndarray) -> np.ndarray:
+    # Ottosson's toe, inverse: toe-corrected lightness L_r -> OKLab L
+    k1 = 0.206
+    k2 = 0.03
+    k3 = (1.0 + k1) / (1.0 + k2)
+    return (lr * lr + k1 * lr) / (k3 * (lr + k2))
+
+
+_HUE_OFFSET = np.deg2rad(29.0)
+_LIGHTNESS_EXPONENT = np.log(0.6) / np.log(0.5)
+
+
+def lightness_r(s: ArrayLike) -> np.ndarray:
+    """Toe-corrected OKLab lightness L_r that get_srgb1 uses for scaled |f| = s."""
+    return np.asarray(s, dtype=float) ** _LIGHTNESS_EXPONENT
+
+
+def srgb1_grey(lr: ArrayLike) -> np.ndarray:
+    """sRGB value (in [0, 1]) of the grey with toe-corrected OKLab lightness lr."""
+    lr = np.asarray(lr, dtype=float)
+    lab = np.array([_toe_inv(lr), np.zeros_like(lr), np.zeros_like(lr)])
+    return xyz100_to_srgb1(oklab_to_xyz100(lab))[1]
+
+
+_CORRECTION_T = np.linspace(-np.pi, np.pi, 64, endpoint=False)
+# fmt: off
+_HUE_CORRECTION = np.array([
+    -0.02465, -0.02903, -0.03468, -0.04063, -0.04675, -0.05295, -0.05916, -0.06529,
+    -0.07127, -0.07703, -0.08252, -0.08773, -0.09264, -0.09729, -0.10168, -0.10576,
+    -0.10945, -0.11262, -0.11507, -0.11656, -0.11683, -0.11558, -0.11255, -0.10750,
+    -0.10029, -0.09089, -0.07945, -0.06635, -0.05216, -0.03765, -0.02365, -0.01091,
+    +0.00000, +0.00881, +0.01552, +0.02035, +0.02366, +0.02587, +0.02742, +0.02865,
+    +0.02983, +0.03110, +0.03245, +0.03378, +0.03490, +0.03558, +0.03565, +0.03495,
+    +0.03343, +0.03109, +0.02798, +0.02421, +0.01994, +0.01538, +0.01076, +0.00629,
+    +0.00215, -0.00153, -0.00476, -0.00766, -0.01044, -0.01334, -0.01720, -0.02150,
+])
+_LIGHTNESS_CORRECTION = np.array([
+    -0.02474, -0.02335, -0.02193, -0.02060, -0.01949, -0.01869, -0.01820, -0.01794,
+    -0.01782, -0.01773, -0.01753, -0.01716, -0.01654, -0.01565, -0.01450, -0.01312,
+    -0.01154, -0.00981, -0.00799, -0.00613, -0.00428, -0.00249, -0.00079, +0.00078,
+    +0.00220, +0.00348, +0.00465, +0.00574, +0.00683, +0.00798, +0.00926, +0.01072,
+    +0.01238, +0.01426, +0.01631, +0.01850, +0.02076, +0.02299, +0.02508, +0.02693,
+    +0.02843, +0.02950, +0.03008, +0.03015, +0.02970, +0.02872, +0.02721, +0.02518,
+    +0.02261, +0.01950, +0.01587, +0.01175, +0.00724, +0.00245, -0.00246, -0.00733,
+    -0.01197, -0.01619, -0.01980, -0.02267, -0.02468, -0.02589, -0.02637, -0.02593,
+])
+# fmt: on
+
+
 def get_srgb1(
     z: ArrayLike,
-    abs_scaling: Callable[[np.ndarray], np.ndarray] = lambda x: x / (x + 1),
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
     saturation_adjustment: float = 1.28,
 ) -> np.ndarray:
     z = np.asarray(z)
 
     angle = np.arctan2(z.imag, z.real)
-    absval_scaled = abs_scaling(np.abs(z))
+    absval = np.abs(z)
+    absval_scaled = scale_abs(absval) if abs_scaling is None else abs_scaling(absval)
 
     # We may have NaNs, so don't be too strict here.
     # assert np.all(absval_scaled >= 0)
@@ -91,18 +146,25 @@ def get_srgb1(
     r0 = 0.08499547839164734
     r0 *= saturation_adjustment
 
-    # Rotate the angles such a "green" color represents positive real values. The
-    # rotation is chosen such that the ratio g/(r+b) (in rgb) is the largest for the
-    # point 1.0.
-    offset = 0.8936868 * np.pi
+    hue = (
+        angle
+        + np.interp(angle, _CORRECTION_T, _HUE_CORRECTION, period=2 * np.pi)
+        + _HUE_OFFSET
+    )
     # Map (r, angle) to a point in the color space; bicone mapping similar to what
     # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
-    rd = r0 - r0 * 2 * abs(absval_scaled - 0.5)
+    chroma_weight = 1.0 - 2.0 * abs(absval_scaled - 0.5)
+    rd = r0 * chroma_weight
+    lightness = _toe_inv(lightness_r(absval_scaled)) + (
+        chroma_weight
+        * (saturation_adjustment / 1.28)
+        * np.interp(angle, _CORRECTION_T, _LIGHTNESS_CORRECTION, period=2 * np.pi)
+    )
     ok_coords = np.array(
         [
-            absval_scaled,
-            rd * np.cos(angle + offset),
-            rd * np.sin(angle + offset),
+            lightness,
+            rd * np.cos(hue),
+            rd * np.sin(hue),
         ]
     )
     xyz100 = oklab_to_xyz100(ok_coords)
@@ -128,7 +190,7 @@ def oklab_to_xyz100(lab: np.ndarray) -> np.ndarray:
         ]
     )
     M2inv = np.linalg.inv(M2)
-    return npx.dot(M1inv, npx.dot(M2inv, lab) ** 3) * 100
+    return np.tensordot(M1inv, np.tensordot(M2inv, lab, axes=1) ** 3, axes=1) * 100
 
 
 def _xyy_to_xyz100(xyy: np.ndarray) -> np.ndarray:
@@ -157,7 +219,8 @@ def xyz100_to_srgb_linear(xyz: np.ndarray) -> np.ndarray:
 
     # https://en.wikipedia.org/wiki/SRGB#The_forward_transformation_(CIE_XYZ_to_sRGB)
     # https://www.color.org/srgb.pdf
-    out = npx.solve(invM, xyz) / 100
+    xyz = np.asarray(xyz)
+    out = np.linalg.solve(invM, xyz.reshape(3, -1)).reshape(xyz.shape) / 100
     out = out.clip(0.0, 1.0)
     return out
 
