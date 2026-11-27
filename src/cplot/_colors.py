@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Callable
 
-import npx
 import numpy as np
 from numpy.typing import ArrayLike
 
@@ -191,7 +190,7 @@ def oklab_to_xyz100(lab: np.ndarray) -> np.ndarray:
         ]
     )
     M2inv = np.linalg.inv(M2)
-    return npx.dot(M1inv, npx.dot(M2inv, lab) ** 3) * 100
+    return np.tensordot(M1inv, np.tensordot(M2inv, lab, axes=1) ** 3, axes=1) * 100
 
 
 def _xyy_to_xyz100(xyy: np.ndarray) -> np.ndarray:
@@ -220,7 +219,8 @@ def xyz100_to_srgb_linear(xyz: np.ndarray) -> np.ndarray:
 
     # https://en.wikipedia.org/wiki/SRGB#The_forward_transformation_(CIE_XYZ_to_sRGB)
     # https://www.color.org/srgb.pdf
-    out = npx.solve(invM, xyz) / 100
+    xyz = np.asarray(xyz)
+    out = np.linalg.solve(invM, xyz.reshape(3, -1)).reshape(xyz.shape) / 100
     out = out.clip(0.0, 1.0)
     return out
 

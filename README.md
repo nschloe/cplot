@@ -5,15 +5,9 @@
 
 [![PyPi Version](https://img.shields.io/pypi/v/cplot.svg?style=flat-square)](https://pypi.org/project/cplot)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cplot.svg?style=flat-square)](https://pypi.org/pypi/cplot/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5599493.svg?style=flat-square)](https://doi.org/10.5281/zenodo.5599493)
-[![GitHub stars](https://img.shields.io/github/stars/nschloe/cplot.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/cplot)
-[![Downloads](https://pepy.tech/badge/cplot/month)](https://pepy.tech/project/cplot)
-
-[![Discord](https://img.shields.io/static/v1?logo=discord&logoColor=white&label=chat&message=on%20discord&color=7289da&style=flat-square)](https://discord.gg/hnTJ5MRX2Y)
-
-[![gh-actions](https://img.shields.io/github/workflow/status/nschloe/cplot/ci?style=flat-square)](https://github.com/nschloe/cplot/actions?query=workflow%3Aci)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5599493.svg)](https://doi.org/10.5281/zenodo.5599493)
+[![ci](https://github.com/nschloe/cplot/actions/workflows/tests.yml/badge.svg)](https://github.com/nschloe/cplot/actions/workflows/tests.yml)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 
 cplot helps plotting complex-valued functions in a visually appealing manner.
 
@@ -263,8 +257,11 @@ All plots are created with default settings.
 To run the cplot unit tests, check out this repository and run
 
 ```
-tox
+uv run --group test --extra all pytest --codeblocks
 ```
+
+The README figures are created with `tests/generate-readme-figures.py` (written to
+`plots/`).
 
 ### Similar projects and further reading
 
