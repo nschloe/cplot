@@ -111,11 +111,13 @@ def test_constant_function():
 
 
 def test_contours_abs_none():
+    plt.figure()
     cplot.plot(np.sin, (-1, 1, 50), (-1, 1, 50), contours_abs=None, contours_arg=None)
     assert len(plt.gcf().axes[0].collections) == 0
 
 
 def test_colorbar_labels_for_list():
+    plt.figure()
     cplot.plot(np.sin, (-1, 1, 50), (-1, 1, 50), contours_abs=[0.5, 2])
     labels = [t.get_text() for t in plt.gcf().axes[1].get_yticklabels()]
     assert labels == ["0", "0.5", "2", "∞"]
