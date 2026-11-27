@@ -28,6 +28,4 @@ jobs:
       - name: Test
         run: >-
           uv run --python ${{ matrix.python-version }} --group test --extra all
-          pytest --codeblocks --cov cplot --cov-report xml --cov-report term
-      - uses: codecov/codecov-action@v5
-        if: ${{ matrix.python-version == '3.14' }}
+          pytest --codeblocks

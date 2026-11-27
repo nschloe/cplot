@@ -7,7 +7,6 @@
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cplot.svg?style=flat-square)](https://pypi.org/pypi/cplot/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5599493.svg)](https://doi.org/10.5281/zenodo.5599493)
 [![ci](https://github.com/nschloe/cplot/actions/workflows/tests.yml/badge.svg)](https://github.com/nschloe/cplot/actions/workflows/tests.yml)
-[![codecov](https://img.shields.io/codecov/c/github/nschloe/cplot.svg?style=flat-square)](https://codecov.io/gh/nschloe/cplot)
 
 cplot helps plotting complex-valued functions in a visually appealing manner.
 

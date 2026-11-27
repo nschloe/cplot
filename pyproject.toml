@@ -51,7 +51,6 @@ test = [
   "mpmath",
   "pytest",
   "pytest-codeblocks >= 0.15.0",
-  "pytest-cov",
   "pytest-randomly",
   "scipy",
 ]
