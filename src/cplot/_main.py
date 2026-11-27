@@ -10,7 +10,7 @@ from matplotlib import cm, colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.typing import ArrayLike
 
-from ._colors import get_srgb1, scale_abs
+from ._colors import get_srgb1, lightness_r, scale_abs, srgb1_grey
 
 
 def _get_z_grid_for_image(
@@ -135,6 +135,30 @@ def _add_colorbar_abs(cax, abs_scaling: Callable, abs_contours: float | list[flo
         cb0.set_ticklabels(["0", *[f"{val}" for val in scaled_vals], "∞"])
 
 
+def _contour_abs_colors(
+    levels: ArrayLike,
+    abs_scaling: Callable[[np.ndarray], np.ndarray],
+    alpha: float,
+    sign: ArrayLike,
+    contrast: float = 0.09,
+) -> list[str]:
+    """Grey line colors for the contours |f| = level.
+
+    The background lightness along |f| = c is the same for all arguments, namely that
+    of abs_scaling(c). Pick a grey that, drawn with opacity alpha, is `contrast`
+    lighter (sign > 0) or darker (sign < 0) than the background, measured in
+    toe-corrected OKLab lightness L_r. This makes all contours equally visible,
+    including the ones close to |f| = 1 where the background is mid-grey.
+    """
+    s = abs_scaling(np.asarray(levels, dtype=float))
+    lr = lightness_r(s)
+    background = srgb1_grey(lr)
+    target = srgb1_grey(np.clip(lr + np.sign(sign) * contrast, 0.0, 1.0))
+    # matplotlib blends in sRGB: out = (1 - alpha) * background + alpha * line
+    line = np.clip((target - (1.0 - alpha) * background) / alpha, 0.0, 1.0)
+    return [colors.to_hex((g, g, g)) for g in line]
+
+
 def _plot_contour_abs(
     Z,
     fz,
@@ -146,10 +170,14 @@ def _plot_contour_abs(
     color: str | None = None,
     min_contour_length: float | None = None,
     linewidth: float | None = None,
+    # If given, the line colors are adapted to the background lightness
+    abs_scaling: Callable[[np.ndarray], np.ndarray] | None = None,
 ):
     vals = np.abs(fz)
 
     def _plot_contour(levels, colors, linestyles, alpha):
+        if len(levels) == 0:
+            return
         matplotx.contour(
             Z.real,
             Z.imag,
@@ -164,6 +192,16 @@ def _plot_contour_abs(
             min_jump=1.0e-15,
             linewidths=linewidth,
         )
+
+    def _colors(levels, default):
+        if color:
+            return color
+        if abs_scaling is None:
+            return default
+        # lighter lines where |f| <= 1 (dark background), darker where |f| > 1
+        levels = np.asarray(levels, dtype=float)
+        sign = np.where(levels <= 1.0, 1.0, -1.0)
+        return _contour_abs_colors(levels, abs_scaling, alpha, sign)
 
     if isinstance(contours, (float, int)):
         base = contours
@@ -183,21 +221,23 @@ def _plot_contour_abs(
         contours_neg = [base**k for k in range(min_exp, 0)]
         contours_pos = [base**k for k in range(1, max_exp + 1)]
 
-        _plot_contour(contours_neg, color if color else "0.8", "solid", alpha)
+        _plot_contour(contours_neg, _colors(contours_neg, "0.8"), "solid", alpha)
 
-        if emphasize_contour_1:
+        if color is None and abs_scaling is not None:
+            # |f| = 1 is drawn like the |f| < 1 contours (light); it is recognizable
+            # as the line where the contours switch from light to dark.
+            light = _contour_abs_colors([1.0], abs_scaling, alpha, +1.0)
+            _plot_contour([1.0], light, "solid", alpha)
+        elif emphasize_contour_1 and color is None:
             # subtle emphasize
             _plot_contour([1.0], "0.6", "solid", 0.7)
-            # "dash":
-            # _plot_contour([1.0], "0.8", [(0, (5, 5))], 0.2)
-            # _plot_contour([1.0], "0.3", [(5, (5, 5))], 0.2)
         else:
             _plot_contour([1.0], color if color else "0.8", "solid", alpha)
 
-        _plot_contour(contours_pos, color if color else "0.3", "solid", alpha)
+        _plot_contour(contours_pos, _colors(contours_pos, "0.3"), "solid", alpha)
     else:
         contours = np.asarray(contours)
-        _plot_contour(contours, color if color else "0.8", "solid", alpha)
+        _plot_contour(contours, _colors(contours, "0.8"), "solid", alpha)
 
 
 def _plot_contour_arg(
@@ -362,7 +402,8 @@ def _plot(
             fz,
             contours=contours_abs,
             emphasize_contour_1=emphasize_abs_contour_1,
-            alpha=0.2,
+            alpha=0.4,
+            abs_scaling=asc,
             min_contour_length=min_contour_length,
             linewidth=linewidth,
         )

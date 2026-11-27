@@ -89,6 +89,19 @@ def _toe_inv(lr: np.ndarray) -> np.ndarray:
 _HUE_OFFSET = np.deg2rad(29.0)
 _LIGHTNESS_EXPONENT = np.log(0.6) / np.log(0.5)
 
+
+def lightness_r(s: ArrayLike) -> np.ndarray:
+    """Toe-corrected OKLab lightness L_r that get_srgb1 uses for scaled |f| = s."""
+    return np.asarray(s, dtype=float) ** _LIGHTNESS_EXPONENT
+
+
+def srgb1_grey(lr: ArrayLike) -> np.ndarray:
+    """sRGB value (in [0, 1]) of the grey with toe-corrected OKLab lightness lr."""
+    lr = np.asarray(lr, dtype=float)
+    lab = np.array([_toe_inv(lr), np.zeros_like(lr), np.zeros_like(lr)])
+    return xyz100_to_srgb1(oklab_to_xyz100(lab))[1]
+
+
 _CORRECTION_T = np.linspace(-np.pi, np.pi, 64, endpoint=False)
 # fmt: off
 _HUE_CORRECTION = np.array([
@@ -143,7 +156,7 @@ def get_srgb1(
     # HSL looks like <https://en.wikipedia.org/wiki/HSL_and_HSV>.
     chroma_weight = 1.0 - 2.0 * abs(absval_scaled - 0.5)
     rd = r0 * chroma_weight
-    lightness = _toe_inv(absval_scaled**_LIGHTNESS_EXPONENT) + (
+    lightness = _toe_inv(lightness_r(absval_scaled)) + (
         chroma_weight
         * (saturation_adjustment / 1.28)
         * np.interp(angle, _CORRECTION_T, _LIGHTNESS_CORRECTION, period=2 * np.pi)
