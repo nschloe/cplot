@@ -2,8 +2,13 @@
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+# previously flake8 (E, W, F, B, C90) and isort (I)
+select = ["E", "W", "F", "B", "C90", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 18
 
 [project]
 name = "cplot"
